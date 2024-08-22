@@ -1,0 +1,8 @@
+services: 
+    assetinfoservice:
+        image: assetinfoservice
+        build: 
+            context: .
+            dockerfile: ./assetinfoservice/Dockerfile
+        ports: 
+           - "42000:8080"

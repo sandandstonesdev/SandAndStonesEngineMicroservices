@@ -1,0 +1,6 @@
+@AssetInfoService_HostAddress = http://localhost:5239
+
+GET {{AssetInfoService_HostAddress}}/assetinfo/
+Accept: application/json
+
+###
