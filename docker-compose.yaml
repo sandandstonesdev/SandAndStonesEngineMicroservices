@@ -1,8 +1,8 @@
 services: 
     assetinfoservice:
-        image: assetinfoservice
+        image: inputassetbatchservice
         build: 
             context: .
-            dockerfile: ./assetinfoservice/Dockerfile
+            dockerfile: ./inputassetbatchservice/Dockerfile
         ports: 
            - "42000:8080"

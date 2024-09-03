@@ -13,16 +13,17 @@
       "commandName": "Project",
       "dotnetRunMessages": true,
       "launchBrowser": true,
-      "launchUrl": "assetInfo",
+      "launchUrl": "assetBatch/0",
       "applicationUrl": "http://localhost:5239",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
+        "ASPNETCORE_ENVIRONMENT": "Development",
+        "ASPNETCORE_URLS": "http//*:80/;http://*:8080/;https://*:443/;https://*:8081/"
       }
     },
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "assetInfo",
+      "launchUrl": "assetBatch/0",
       "environmentVariables": {
         "ASPNETCORE_ENVIRONMENT": "Development"
       }

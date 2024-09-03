@@ -1,0 +1,59 @@
+{
+  "id": 0,
+  "assets": [
+    {
+      "id": 0,
+      "name": "wall",
+      "startPos": [ 0, 0 ],
+      "endPos": [ 16, 8 ],
+      "assetBatchType": "ClientRectBatch",
+      "assetType": "Background",
+      "color": [ 1, 1, 1, 1 ],
+      "text": "",
+      "animationTextureFiles": [ "wall.png" ],
+      "depth": 2.0,
+      "scale": 1.0
+    },
+    {
+      "id": 1,
+      "name": "character",
+      "startPos": [ 0, 7 ],
+      "endPos": [ 1, 8 ],
+      "assetBatchType": "ClientRectBatch",
+      "assetType": "CharacterSprite",
+      "color": [ 0, 1, 0, 1 ],
+      "text": "",
+      "animationTextureFiles": [ "char2.png", "char2_move.png" ],
+      "depth": 0.5,
+      "scale": 1.0
+    },
+    {
+      "id": 2,
+      "name": "torch",
+      "instances": 8,
+      "startPos": [ 0, 6 ],
+      "endPos": [ 1, 7 ],
+      "instancePosOffset": [ 2, 0 ],
+      "assetBatchType": "ClientRectBatch",
+      "assetType": "Background",
+      "color": [ 1, 1, 1, 1 ],
+      "text": "",
+      "animationTextureFiles": [ "torch.png", "torch2.png" ],
+      "depth": 1.0,
+      "scale": 1.0
+    },
+    {
+      "id": 3,
+      "name": "fps_info",
+      "startPos": [ 0, 0 ],
+      "endPos": [ 1, 1 ],
+      "assetBatchType": "ClientRectBatch",
+      "assetType": "FPSText",
+      "color": [ 0, 0, 1, 1 ],
+      "text": "FPS: 0",
+      "animationTextureFiles": [ "letters.png" ],
+      "depth": 1.0,
+      "scale": 1.0
+    }
+  ]
+}

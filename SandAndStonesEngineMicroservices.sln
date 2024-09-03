@@ -3,11 +3,16 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssetInfoService", "AssetInfoService\AssetInfoService.csproj", "{0327CD03-A21E-4B37-A68A-432F09CDC9B1}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputAssetBatchService", "InputAssetBatchService\InputAssetBatchService.csproj", "{0327CD03-A21E-4B37-A68A-432F09CDC9B1}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerCompose", "DockerCompose", "{12435D87-71BF-46C5-B5F8-120D972AA938}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yaml = docker-compose.yaml
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{15D9A501-4D68-4AA4-B4B7-AB2B6CB68FF5}"
+	ProjectSection(SolutionItems) = preProject
+		inputassetbatchservice-deployment.yaml = inputassetbatchservice-deployment.yaml
 	EndProjectSection
 EndProject
 Global
