@@ -1,6 +1,6 @@
 ﻿using System.Text.Json.Serialization;
 
-namespace SandAndStonesEngine.Assets.AssetConfig
+namespace InputAssetBatchService.AssetConfig
 {
     public  class InputAssetBatch
     {

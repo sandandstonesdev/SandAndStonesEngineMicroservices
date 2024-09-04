@@ -1,4 +1,4 @@
-﻿using SandAndStonesEngine.Assets.AssetConfig;
+﻿using InputAssetBatchService.AssetConfig;
 
 namespace InputAssetBatchService.Repositories
 {

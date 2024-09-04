@@ -1,6 +1,6 @@
 ﻿using InputAssetBatchService.Repositories;
 
-namespace SandAndStonesEngine.GameFactories
+namespace InputAssetBatchService
 {
     public class Startup
     {

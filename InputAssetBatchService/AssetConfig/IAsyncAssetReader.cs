@@ -1,4 +1,4 @@
-﻿namespace SandAndStonesEngine.Assets.AssetConfig
+﻿namespace InputAssetBatchService.AssetConfig
 {
     public interface IAsyncAssetReader
     {

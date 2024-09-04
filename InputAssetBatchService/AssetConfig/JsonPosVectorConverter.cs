@@ -1,12 +1,10 @@
-﻿using System.Globalization;
-using System.Numerics;
-using System.Reflection.PortableExecutable;
+﻿using System.Numerics;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
-namespace SandAndStonesEngine.Assets.AssetConfig
+namespace InputAssetBatchService.AssetConfig
 {
-    public class JsonAssetBatchConverter : JsonConverter<Vector4>
+    public class JsonPosVectorConverter : JsonConverter<Vector4>
     {
         public override Vector4 Read(
             ref Utf8JsonReader reader,
@@ -27,7 +25,10 @@ namespace SandAndStonesEngine.Assets.AssetConfig
             JsonSerializerOptions options)
         {
 
-            writer.WriteStringValue($"[{vectorValue.X}, {vectorValue.Y}, {vectorValue.Z}]");
+            writer.WriteStartArray();
+            writer.WriteNumberValue(vectorValue.X);
+            writer.WriteNumberValue(vectorValue.Y);
+            writer.WriteEndArray();
         }
     }
 }
