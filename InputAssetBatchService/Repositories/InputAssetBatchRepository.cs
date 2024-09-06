@@ -1,4 +1,4 @@
-﻿using InputAssetBatchService.AssetConfig;
+﻿using SandAndStonesLibrary.AssetConfig;
 
 namespace InputAssetBatchService.Repositories
 {
@@ -9,9 +9,9 @@ namespace InputAssetBatchService.Repositories
         {
             string path = string.Empty;
             if (id == 0)
-                path = "./AssetConfig/assets.json";
+                path = "./assets.json";
             else if (id == 1)
-                path = "./AssetConfig/statusBarAssets.json";
+                path = "./statusBarAssets.json";
                 
             var reader = new InputAssetReader(path);
             var batchData = await reader.ReadBatchAsync();

@@ -7,7 +7,7 @@ namespace InputAssetBatchService.Controllers
     [Route("[controller]")]
     public class InputAssetBatchController : ControllerBase
     {
-        IInputAssetBatchRepository _repository;
+        private readonly IInputAssetBatchRepository _repository;
         public InputAssetBatchController(IInputAssetBatchRepository repository) 
         {
             _repository = repository;
