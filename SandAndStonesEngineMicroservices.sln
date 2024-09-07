@@ -15,6 +15,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{15D9A501-4D6
 		inputassetbatchservice-deployment.yaml = inputassetbatchservice-deployment.yaml
 	EndProjectSection
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "InputTextureService", "InputTextureService\InputTextureService.csproj", "{892DF350-D2AC-4E57-996B-47CD77D72582}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -25,6 +27,10 @@ Global
 		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{892DF350-D2AC-4E57-996B-47CD77D72582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{892DF350-D2AC-4E57-996B-47CD77D72582}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{892DF350-D2AC-4E57-996B-47CD77D72582}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{892DF350-D2AC-4E57-996B-47CD77D72582}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
