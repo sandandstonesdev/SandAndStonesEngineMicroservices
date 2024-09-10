@@ -8,7 +8,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="SandAndStones.SandAndStonesLibrary" Version="1.0.1" />
+    <PackageReference Include="SandAndStones.SandAndStonesLibrary" Version="1.0.3" />
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
   </ItemGroup>
 
 </Project>
