@@ -63,6 +63,10 @@ export default defineConfig({
             '^/logout': {
                 target: 'https://localhost:7232/',
                 secure: false
+            },
+            '^/profile': {
+                target: 'https://localhost:7232/',
+                secure: false
             }
         },
         port: 5173,

@@ -1,23 +1,21 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
-
 const UserContext = createContext({});
 
 interface User {
     email: string;
 }
 
+function AuthProvider(props: { children: React.ReactNode }) {
 
-function AuthorizedView(props: { children: React.ReactNode }) {
 
     const [authorized, setAuthorized] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true); // add a loading state
+
     const emptyuser: User = { email: "" };
-
     const [user, setUser] = useState(emptyuser);
-
-
+    
     useEffect(() => {
         // Get the cookie value
         let retryCount = 0; // initialize the retry count
@@ -38,7 +36,7 @@ function AuthorizedView(props: { children: React.ReactNode }) {
                 // check the status code
                 if (response.status == 200) {
                     console.log("Authorized");
-                    let j: any = await response.json();
+                    const j: any = await response.json();
                     setUser({ email: j.email });
                     setAuthorized(true);
                     return response; // return the response
@@ -95,7 +93,7 @@ function AuthorizedView(props: { children: React.ReactNode }) {
         } else {
             return (
                 <>
-                    <Navigate to="/login" />
+                    <Navigate to="/login"></Navigate>
                 </>
             )
         }
@@ -105,7 +103,7 @@ function AuthorizedView(props: { children: React.ReactNode }) {
 
 export function AuthorizedUser(props: { value: string }) {
     // Consume the username from the UserContext
-    let user: any = React.useContext(UserContext);
+    const user = React.useContext(UserContext) as User;
 
     // Display the username in a h1 tag
     if (props.value == "email")
@@ -114,4 +112,4 @@ export function AuthorizedUser(props: { value: string }) {
         return <></>
 }
 
-export default AuthorizedView;
+export default AuthProvider;

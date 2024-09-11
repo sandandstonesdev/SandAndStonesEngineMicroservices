@@ -1,17 +1,17 @@
-import InputAsset from "../components/InputAsset.tsx";
-import InputTexture from "../components/InputTexture.tsx";
-import LogoutLink from "../components/LogoutLink.tsx";
-import AuthorizedView, { AuthorizedUser } from "../components/AuthorizedView.tsx";
+import { Outlet } from "react-router-dom";
+import AuthProvider from "../components/AuthProvider.tsx";
+import Navbar from "../components/Navbar.tsx";
 
 function Home() {
     return (
         <div>
-        <p>SandAndStones Management Website</p>
-        <AuthorizedView>
-            <span><LogoutLink>Logout <AuthorizedUser value="email" /></LogoutLink></span>
-            <InputAsset />
-            <InputTexture />
-            </AuthorizedView>
+            <h1>SandAndStonesDev</h1>
+            <div>
+                <AuthProvider>
+                    <Navbar />
+                    <Outlet />
+                </AuthProvider>
+            </div>
         </div>
     );
 }
