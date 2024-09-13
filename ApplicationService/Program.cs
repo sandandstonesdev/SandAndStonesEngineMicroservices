@@ -53,13 +53,6 @@ namespace ApplicationService
 
             app.MapIdentityApi<ApplicationUser>();
 
-            app.MapGet("/pingauth", (ClaimsPrincipal user) =>
-            {
-                var email = user.FindFirstValue(ClaimTypes.Email); // get the user's email from the claim
-                return Results.Json(new { Email = email }); ; // return the email as a plain text response
-            }).RequireAuthorization();
-
-
             if (app.Environment.IsDevelopment())
             {
                 app.UseSwagger();

@@ -1,22 +1,16 @@
 import { useEffect, } from 'react';
-import { useNavigate } from "react-router-dom";
-import { Navigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
+import { useAuth } from './AuthProvider';
 
 function Logout() {
+    const auth = useAuth();
+
     const navigate = useNavigate();
-
     const handleLogout = () => {
-        fetch("/logout", {
-            method: "POST",
-            headers: {
-                "Content-Type": "application/json",
-            },
-            body: ""
-
-        }).then((data) => {
-                if (data.ok) {
-
-                    navigate("/login", { replace: true });
+        fetch("/userauthorization/logout").then((data) => {
+            if (data.ok) {
+                    auth.removeUser()
+                    navigate('/login', { replace: true });
                 }
                 else {
                     console.error("Logout error");
@@ -30,9 +24,12 @@ function Logout() {
     
     useEffect(() => {
         handleLogout()
-    }, []);
+    });
 
-    return <Navigate to="/login"></Navigate>;
+    return (
+        <>
+            <Navigate to="/login" replace={true} />
+        </>);
 }
 
 export default Logout;

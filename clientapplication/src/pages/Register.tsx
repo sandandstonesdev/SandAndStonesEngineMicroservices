@@ -84,7 +84,7 @@ function Register() {
                     />
                 </div>
                 <div>
-                    <button type="submit">Register</button>
+                    <button type="button">Register</button>
                 </div>
             </form>
 

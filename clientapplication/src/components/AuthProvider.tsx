@@ -1,115 +1,73 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { Navigate } from 'react-router-dom';
+import { createContext, useContext, useEffect, useState } from 'react';
 
-const UserContext = createContext({});
+import { User } from '../types/User';
 
-interface User {
-    email: string;
+interface AuthContext {
+    user: User | null;
+    setUser: (user: User | null) => void;
 }
 
-function AuthProvider(props: { children: React.ReactNode }) {
+export const AuthContext = createContext<AuthContext>({
+    user: null,
+    setUser: () => { },
+});
 
+export const useLocalStorage = () => {
+    const [value, setValue] = useState<string | null>(null);
 
-    const [authorized, setAuthorized] = useState<boolean>(false);
-    const [loading, setLoading] = useState<boolean>(true); // add a loading state
+    const setItem = (key: string, value: string) => {
+        localStorage.setItem(key, value);
+        setValue(value);
+    };
 
-    const emptyuser: User = { email: "" };
-    const [user, setUser] = useState(emptyuser);
+    const getItem = (key: string) => {
+        const value = localStorage.getItem(key);
+        setValue(value);
+        return value;
+    };
+
+    const removeItem = (key: string) => {
+        localStorage.removeItem(key);
+        setValue(null);
+    };
+
+    return { value, setItem, getItem, removeItem };
+};
+
+export const useUser = () => {
+    const { user, setUser } = useContext(AuthContext);
+    const { getItem, setItem } = useLocalStorage();
+
+    const addUser = (user: User) => {
+        setUser(user);
+        setItem("user", JSON.stringify(user));
+    };
+
+    const removeUser = () => {
+        setUser(null);
+        setItem("user", "");
+    };
+
+    const getUser = () => {
+        const userItem = getItem("user")
+        if (userItem === null || userItem === "")
+            return null;
+        const user: User = JSON.parse(userItem)
+        return user;
+    };
+
+    return { user, addUser, removeUser, getUser, getItem, setUser };
+};
+
+export const useAuth = () => {
+    const { user, addUser, removeUser, setUser, getUser } = useUser();
     
     useEffect(() => {
-        // Get the cookie value
-        let retryCount = 0; // initialize the retry count
-        const maxRetries = 10; // set the maximum number of retries
-        const delay: number = 1000; // set the delay in milliseconds
-
-        // define a delay function that returns a promise
-        function wait(delay: number) {
-            return new Promise((resolve) => setTimeout(resolve, delay));
+        const user = getUser();
+        if (user) {
+            addUser(user);
         }
+    }, [addUser, getUser]);
 
-        // define a fetch function that retries until status 200 or 401
-        async function fetchWithRetry(url: string, options: any) {
-            try {
-                // make the fetch request
-                const response = await fetch(url, options);
-
-                // check the status code
-                if (response.status == 200) {
-                    console.log("Authorized");
-                    const j: any = await response.json();
-                    setUser({ email: j.email });
-                    setAuthorized(true);
-                    return response; // return the response
-                } else if (response.status == 401) {
-                    console.log("Unauthorized");
-                    return response; // return the response
-                } else {
-                    // throw an error to trigger the catch block
-                    throw new Error("" + response.status);
-                }
-            } catch (error) {
-                // increment the retry count
-                retryCount++;
-                // check if the retry limit is reached
-                if (retryCount > maxRetries) {
-                    // stop retrying and rethrow the error
-                    throw error;
-                } else {
-                    // wait for some time and retry
-                    await wait(delay);
-                    return fetchWithRetry(url, options);
-                }
-            }
-        }
-
-        // call the fetch function with retry logic
-        fetchWithRetry("/pingauth", {
-            method: "GET",
-        })
-            .catch((error) => {
-                // handle the final error
-                console.log(error.message);
-            })
-            .finally(() => {
-                setLoading(false);  // set loading to false when the fetch is done
-            });
-    }, []);
-
-
-    if (loading) {
-        return (
-            <>
-                <p>Loading...</p>
-            </>
-        );
-    }
-    else {
-        if (authorized && !loading) {
-            return (
-                <>
-                    <UserContext.Provider value={user}>{props.children}</UserContext.Provider>
-                </>
-            );
-        } else {
-            return (
-                <>
-                    <Navigate to="/login"></Navigate>
-                </>
-            )
-        }
-    }
-
-}
-
-export function AuthorizedUser(props: { value: string }) {
-    // Consume the username from the UserContext
-    const user = React.useContext(UserContext) as User;
-
-    // Display the username in a h1 tag
-    if (props.value == "email")
-        return <>{user.email}</>;
-    else
-        return <></>
-}
-
-export default AuthProvider;
+    return { user, addUser, removeUser, setUser };
+};

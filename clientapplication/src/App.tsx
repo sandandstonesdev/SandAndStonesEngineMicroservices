@@ -2,47 +2,56 @@ import './App.css';
 
 import {
     createBrowserRouter,
-    createRoutesFromElements,
-    Route,
     RouterProvider
 } from 'react-router-dom';
 import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
 import Register from './pages/Register.tsx';
 import About from './pages/About.tsx';
-import NoMatch from './components/NoMatch.tsx';
 import Logout from './components/Logout.tsx';
 import Profile from './components/Profile.tsx';
+import ProtectedRoute from './components/ProtectedRoute.tsx';
+import { AuthContext, useAuth } from './components/AuthProvider.tsx';
+
+const router = createBrowserRouter([
+    {
+        path: '/',
+        element: (
+            <ProtectedRoute>
+                <Home/>
+            </ProtectedRoute>
+        ),
+    },
+    {
+        path: '/login',
+        element: <Login />,
+    },
+    {
+        path: '/about',
+        element: <About />,
+    },
+    {
+        path: '/register',
+        element: <Register />,
+    },
+    {
+        path: '/profile',
+        element: <Profile />,
+    },
+    {
+        path: '/logout',
+        element: <Logout />,
+    },
+]);
 
 function App() {
-    const router = createBrowserRouter(
-        createRoutesFromElements(
-            <Route path="/" element={<AppContent />}>
-                <Route path="/home" element={<Home />} />
-                <Route path="/about" element={<About />} />
-                <Route path="/login" element={<Login />} />
-                <Route path="/register" element={<Register />} />
-                <Route path="/profile" element={<Profile />} />
-                <Route path="/logout" element={<Logout />} />
-                <Route path="*" element={<NoMatch />} />
-            </Route>
-        )
-    );
-
+    const { user, setUser } = useAuth();
+    
     return (
-        <div className="App">
+        <AuthContext.Provider value={{ user, setUser }}>
             <RouterProvider router={router} />
-        </div>
+        </AuthContext.Provider>
     );
-
 };
 
 export default App;
-
-const AppContent = () => {
-    return (
-        <>
-            <Home />
-        </>
-    );
-};

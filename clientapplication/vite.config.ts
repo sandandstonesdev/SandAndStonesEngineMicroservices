@@ -40,15 +40,15 @@ export default defineConfig({
     },
     server: {
         proxy: {
+            '^/home': {
+                target: 'https://localhost:7232/',
+                secure: false
+            },
             '^/inputasset': {
                 target: 'https://localhost:7232/',
                 secure: false
             },
             '^/texture': {
-                target: 'https://localhost:7232/',
-                secure: false
-            },
-            '^/pingauth': {
                 target: 'https://localhost:7232/',
                 secure: false
             },
