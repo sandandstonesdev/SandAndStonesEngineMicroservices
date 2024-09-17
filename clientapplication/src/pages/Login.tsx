@@ -1,30 +1,20 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../components/AuthProvider";
 
 function Login() {
     const auth = useAuth();
-
-    const [input, setInput] = useState({
-        email: "",
-        password: "",
-    });
+    const emailRef = useRef<HTMLInputElement>(null);
+    const passwordRef = useRef<HTMLInputElement>(null);
+    
     const [error, setError] = useState<string>("");
     
     const navigate = useNavigate();
 
-    const handleInput = (e: any) => {
-        e.preventDefault();
-        const { name, value } = e.target;
-        setInput((prev) => ({
-            ...prev,
-            [name]: value,
-        }));
-    };
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (input.email !== "" && input.password !== "") {
+        if (emailRef.current!.value !== "" && passwordRef.current!.value !== "")
+        {
             setError("");
 
             fetch("/login", {
@@ -33,15 +23,15 @@ function Login() {
                     "Content-Type": "application/json",
                 },
                 body: JSON.stringify({
-                    email: input.email,
-                    password: input.password,
+                    email: emailRef.current!.value,
+                    password: passwordRef.current!.value,
                 }),
             }).then((data) => {
                 console.log(data);
                 if (data.ok) {
                     auth.addUser({
-                        email: input.email,
-                        password: input.password,
+                        email: emailRef.current!.value,
+                        password: passwordRef.current!.value,
                     });
                     setError("Successful Login.");
                     navigate('/', { replace: true });
@@ -59,37 +49,30 @@ function Login() {
             setError("Please fill in all fields.");
         }
     }
-        
+
+    useEffect(() => {
+        emailRef.current!.focus();
+        passwordRef.current!.focus();
+    });
+
     return (
         <div className="containerbox">
             <h3>Sign In</h3>
             <form onSubmit={handleSubmit}>
-                <div>
                     <label className="forminput" htmlFor="email">Email:</label>
-                </div>
-                <div>
-                    <input
-                        type="email"
+                    <input type="email"
                         id="email"
-                        name="email"
+                        ref={emailRef}
                         placeholder="mail@domain.com"
-                        onChange={handleInput}
                     />
-                </div>
-                <div>
-                    <label htmlFor="password">Password:</label>
-                </div>
-                <div>
+                    <label className="password">Password:</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
-                        onChange={handleInput}
+                        ref={passwordRef}
                     />
-                </div>
-                <div>
                     <button type="submit">Login</button>
-                </div>
             </form>
             {error && <p className="submit">{error}</p>}
         </div>
