@@ -1,7 +1,7 @@
 import { useState } from "react";
 
 interface CollapsedItem {
-    name: string; content: string
+    name: string; content: any
 }
 
 export type CollapsedProps = {
