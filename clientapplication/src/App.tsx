@@ -6,12 +6,14 @@ import {
 } from 'react-router-dom';
 import Home from './pages/Home.tsx';
 import Login from './pages/Login.tsx';
+import Profile from './pages/Profile.tsx';
 import Register from './pages/Register.tsx';
 import About from './pages/About.tsx';
 import Logout from './components/Logout.tsx';
-import Profile from './components/Profile.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
 import { AuthContext, useAuth } from './components/AuthProvider.tsx';
+import Assets from './pages/Assets.tsx';
+import Textures from './pages/Textures.tsx';
 
 const router = createBrowserRouter([
     {
@@ -37,6 +39,14 @@ const router = createBrowserRouter([
     {
         path: '/profile',
         element: <Profile />,
+    },
+    {
+        path: '/assets',
+        element: <Assets />,
+    },
+    {
+        path: '/textures',
+        element: <Textures />,
     },
     {
         path: '/logout',

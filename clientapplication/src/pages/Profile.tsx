@@ -1,8 +1,8 @@
 import { Link } from "react-router-dom";
 import { User } from "../types/User";
-import Navbar from "./Navbar";
+import Navbar from "../components/Navbar";
 import { useEffect, useState } from "react";
-import { useUser } from "./AuthProvider";
+import { useUser } from "../components/AuthProvider";
 
 function Profile() {
     const { getUser } = useUser();
