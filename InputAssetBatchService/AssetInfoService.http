@@ -1,6 +1,0 @@
-@AssetInfoService_HostAddress = http://localhost:5239
-
-GET {{AssetInfoService_HostAddress}}/assetBatch/0
-Accept: application/json
-
-###

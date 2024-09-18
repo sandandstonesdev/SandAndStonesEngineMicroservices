@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.10.35013.160
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputAssetBatchService", "InputAssetBatchService\InputAssetBatchService.csproj", "{0327CD03-A21E-4B37-A68A-432F09CDC9B1}"
-EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerCompose", "DockerCompose", "{12435D87-71BF-46C5-B5F8-120D972AA938}"
 	ProjectSection(SolutionItems) = preProject
 		docker-compose.yaml = docker-compose.yaml
@@ -15,15 +13,23 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{15D9A501-4D6
 		inputassetbatchservice-deployment.yaml = inputassetbatchservice-deployment.yaml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "InputTextureService", "InputTextureService\InputTextureService.csproj", "{892DF350-D2AC-4E57-996B-47CD77D72582}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.UI", "SandAndStones.UI\SandAndStones.UI.csproj", "{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApplicationService", "ApplicationService\ApplicationService.csproj", "{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Infrastructure", "SandAndStones.Infrastructure\SandAndStones.Infrastructure.csproj", "{AD756031-6504-4C85-BD5B-1D221D0A74F4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure", "Infrastructure\Infrastructure.csproj", "{AD756031-6504-4C85-BD5B-1D221D0A74F4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Domain", "SandAndStones.Domain\SandAndStones.Domain.csproj", "{3C1D8B38-94D5-4108-BD6D-CACC37811A69}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Domain", "Domain\Domain.csproj", "{3C1D8B38-94D5-4108-BD6D-CACC37811A69}"
+Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "sandandstones.clientapplication", "sandandstones.clientapplication\sandandstones.clientapplication.esproj", "{1BCEB47B-3A98-4B0C-A418-28B81175639D}"
 EndProject
-Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "clientapplication", "ClientApplication\clientapplication.esproj", "{1BCEB47B-3A98-4B0C-A418-28B81175639D}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Api", "SandAndStones.Api", "{A3DACF92-5E99-4C6E-A028-4394D35C31A7}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Api", "SandAndStones.Api\SandAndStones.Api.csproj", "{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.UI", "SandAndStones.UI", "{A0862194-CE98-4015-93A8-2600AEDDA688}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Domain", "SandAndStones.Domain", "{5DD7A80E-F4CF-4C31-B352-B9B2C349A4DF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Infrastructure", "SandAndStones.Infrastructure", "{BD987DDD-88C7-44C9-A0CB-2B0B0293A953}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -31,14 +37,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{0327CD03-A21E-4B37-A68A-432F09CDC9B1}.Release|Any CPU.Build.0 = Release|Any CPU
-		{892DF350-D2AC-4E57-996B-47CD77D72582}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{892DF350-D2AC-4E57-996B-47CD77D72582}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{892DF350-D2AC-4E57-996B-47CD77D72582}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{892DF350-D2AC-4E57-996B-47CD77D72582}.Release|Any CPU.Build.0 = Release|Any CPU
 		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -57,9 +55,19 @@ Global
 		{1BCEB47B-3A98-4B0C-A418-28B81175639D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{1BCEB47B-3A98-4B0C-A418-28B81175639D}.Release|Any CPU.Build.0 = Release|Any CPU
 		{1BCEB47B-3A98-4B0C-A418-28B81175639D}.Release|Any CPU.Deploy.0 = Release|Any CPU
+		{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84} = {A0862194-CE98-4015-93A8-2600AEDDA688}
+		{AD756031-6504-4C85-BD5B-1D221D0A74F4} = {BD987DDD-88C7-44C9-A0CB-2B0B0293A953}
+		{3C1D8B38-94D5-4108-BD6D-CACC37811A69} = {5DD7A80E-F4CF-4C31-B352-B9B2C349A4DF}
+		{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B47B0CA-2F85-418E-AF19-DD93D4EC431A}

@@ -1,6 +1,0 @@
-@InputTextureService_HostAddress = http://localhost:5177
-
-GET {{InputTextureService_HostAddress}}/textures
-Accept: application/json
-
-###

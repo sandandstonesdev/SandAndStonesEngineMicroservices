@@ -1,6 +1,0 @@
-@ApplicationService_HostAddress = http://localhost:5295
-
-GET {{ApplicationService_HostAddress}}/inputasset/
-Accept: application/json
-
-###

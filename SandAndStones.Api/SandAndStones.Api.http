@@ -1,0 +1,6 @@
+@SandAndStones.Api_HostAddress = http://localhost:5049
+
+GET {{SandAndStones.Api_HostAddress}}/assetBatch/0
+Accept: application/json
+
+###

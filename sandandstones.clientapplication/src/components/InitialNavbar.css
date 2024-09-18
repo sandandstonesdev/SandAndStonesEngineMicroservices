@@ -1,0 +1,21 @@
+.initialnav {
+    background-color: #222;
+    color: white;
+    display: flex;
+    margin-left: auto;
+    margin-right: auto;
+    width: 20%;
+    justify-content: space-between;
+    align-items: stretch;
+    gap: 1rem;
+    padding: 16px, 32px;
+}
+
+.initialnav a {
+    margin-right: 20px;
+}
+
+.initialnav a.active {
+    text-decoration: none;
+    font-weight: bold;
+}
