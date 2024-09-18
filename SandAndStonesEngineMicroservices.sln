@@ -10,7 +10,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "DockerCompose", "DockerComp
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{15D9A501-4D68-4AA4-B4B7-AB2B6CB68FF5}"
 	ProjectSection(SolutionItems) = preProject
-		inputassetbatchservice-deployment.yaml = inputassetbatchservice-deployment.yaml
+		assetservice-deployment.yaml = assetservice-deployment.yaml
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.UI", "SandAndStones.UI\SandAndStones.UI.csproj", "{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}"

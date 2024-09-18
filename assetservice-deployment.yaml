@@ -1,25 +1,25 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: inputassetbatchservice-deployment
+  name: assetservice-deployment
   labels:
-    app: inputassetbatchservice
+    app: assetservice
 spec:
   replicas: 1
   selector:
     matchLabels:
-      app: inputassetbatchservice
+      app: assetservice
   template:
     metadata:
       labels:
-        app: inputassetbatchservice
+        app: assetservice
     spec:
       securityContext:
         runAsNonRoot: false
       containers:
-      - image: inputassetbatchservice:latest
+      - image: assetservice:latest
         imagePullPolicy: Never
-        name: inputassetbatchservice
+        name: assetservice
         ports:
         - containerPort: 8080
         resources:
@@ -35,10 +35,10 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  name: inputassetbatch-clusterip-srv
+  name: assetservice-clusterip-srv
 spec:
   type: ClusterIP
   selector:
-    app: inputassetbatchservice
+    app: assetservice
   ports:
     - port: 8080

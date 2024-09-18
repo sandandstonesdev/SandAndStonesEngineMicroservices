@@ -1,8 +1,8 @@
 services: 
     assetinfoservice:
-        image: inputassetbatchservice
+        image: assetservice
         build: 
             context: .
-            dockerfile: ./inputassetbatchservice/Dockerfile
+            dockerfile: ./SandAndStones.Api/Dockerfile
         ports: 
            - "42000:8080"
