@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <RepositoryUrl>https://github.com/sandandstonesdev/SandAndStonesLibrary</RepositoryUrl>
+    <Title>SandAndStones.Shared</Title>
+    <PackageId>SandAndStones.Shared</PackageId>
+    <Version>1.1.0</Version>
+    <Authors>sandandstonesdev</Authors>
+    <Product>SandAndStones.Shared</Product>
+    <Company>sandandstonesdev</Company>
+    <Description>Common Library for Engine and Microservices</Description>
+    <Copyright>©2023-2024 Paweł Aksiutowicz</Copyright>
+	<RepositoryType>git</RepositoryType>
+	<IncludeSymbols>true</IncludeSymbols>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="TextureConfig\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="SkiaSharp" Version="2.88.8" />
+  </ItemGroup>
+
+</Project>

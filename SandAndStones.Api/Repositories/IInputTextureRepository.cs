@@ -1,4 +1,4 @@
-﻿using InputTextureService.TextureConfig;
+﻿using SandAndStones.Shared.TextureConfig;
 
 namespace SandAndStones.Api
 {

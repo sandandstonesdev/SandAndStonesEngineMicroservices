@@ -1,4 +1,4 @@
-using InputTextureService.TextureConfig;
+using SandAndStones.Shared.TextureConfig;
 using Microsoft.AspNetCore.Mvc;
 using SkiaSharp;
 using System.Runtime.InteropServices;
