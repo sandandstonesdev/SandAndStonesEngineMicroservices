@@ -1,4 +1,4 @@
-﻿namespace SandAndStones.UI.DTO
+﻿namespace SandAndStones.Api.DTO
 {
     public class LoginDTO
     {

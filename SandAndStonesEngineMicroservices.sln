@@ -13,8 +13,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "K8S", "K8S", "{15D9A501-4D6
 		assetservice-deployment.yaml = assetservice-deployment.yaml
 	EndProjectSection
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.UI", "SandAndStones.UI\SandAndStones.UI.csproj", "{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Infrastructure", "SandAndStones.Infrastructure\SandAndStones.Infrastructure.csproj", "{AD756031-6504-4C85-BD5B-1D221D0A74F4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Domain", "SandAndStones.Domain\SandAndStones.Domain.csproj", "{3C1D8B38-94D5-4108-BD6D-CACC37811A69}"
@@ -24,8 +22,6 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Api", "SandAndStones.Api", "{A3DACF92-5E99-4C6E-A028-4394D35C31A7}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Api", "SandAndStones.Api\SandAndStones.Api.csproj", "{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}"
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.UI", "SandAndStones.UI", "{A0862194-CE98-4015-93A8-2600AEDDA688}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Domain", "SandAndStones.Domain", "{5DD7A80E-F4CF-4C31-B352-B9B2C349A4DF}"
 EndProject
@@ -45,10 +41,6 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84}.Release|Any CPU.Build.0 = Release|Any CPU
 		{AD756031-6504-4C85-BD5B-1D221D0A74F4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{AD756031-6504-4C85-BD5B-1D221D0A74F4}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{AD756031-6504-4C85-BD5B-1D221D0A74F4}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -80,7 +72,6 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
-		{184D6CBE-F904-4AD1-80E6-A0D70C5EFF84} = {A0862194-CE98-4015-93A8-2600AEDDA688}
 		{AD756031-6504-4C85-BD5B-1D221D0A74F4} = {BD987DDD-88C7-44C9-A0CB-2B0B0293A953}
 		{3C1D8B38-94D5-4108-BD6D-CACC37811A69} = {5DD7A80E-F4CF-4C31-B352-B9B2C349A4DF}
 		{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}

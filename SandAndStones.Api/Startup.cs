@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.EntityFrameworkCore;
+using SandAndStones.Infrastructure.Data;
 
 namespace SandAndStones.Api
 {
@@ -16,6 +17,12 @@ namespace SandAndStones.Api
             var textureRepository = new InputTextureRepository();
             textureRepository.Init();
             services.AddSingleton<IInputTextureRepository>(textureRepository);
+
+            var connectionString = _configuration.GetConnectionString("AppDbConnectionString") ?? throw new InvalidOperationException("Connection string not found."); ;
+            services.AddDbContext<ApplicationDbContext>(options =>
+            {
+                options.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+            });
         }
     }
 }

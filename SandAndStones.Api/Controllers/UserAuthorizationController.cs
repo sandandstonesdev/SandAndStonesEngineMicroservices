@@ -1,12 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using SandAndStones.Infrastructure;
+using SandAndStones.Api.DTO;
 using SandAndStones.Infrastructure.Models;
-using SandAndStones.UI.DTO;
 using System.Security.Claims;
 
-namespace SandAndStones.UI.Controllers
+namespace SandAndStones.Api
 {
     [ApiController]
     [Route("[controller]")]

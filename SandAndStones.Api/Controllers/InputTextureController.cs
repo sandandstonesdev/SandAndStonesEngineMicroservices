@@ -1,4 +1,7 @@
+using InputTextureService.TextureConfig;
 using Microsoft.AspNetCore.Mvc;
+using SkiaSharp;
+using System.Runtime.InteropServices;
 
 namespace SandAndStones.Api
 {
@@ -33,6 +36,25 @@ namespace SandAndStones.Api
             if (texture is null)
                 return NotFound();
             return Ok(texture);
+        }
+
+        [Route("/texture/")]
+        [HttpGet]
+        public async Task<IActionResult> Get()
+        {
+            IAsyncTextureReader _inputAssetReader = new InputTextureReader("wall.png");
+            InputTexture inputTexture = _inputAssetReader.ReadTextureAsync().Result;
+            if (inputTexture.Loaded)
+            {
+                using var image = SKImage.FromPixelCopy(new SKImageInfo(256, 256), inputTexture.Data);
+                using SKBitmap bitmap = SKBitmap.FromImage(image);
+                using var data = bitmap.Encode(SKEncodedImageFormat.Png, 0);
+                byte[] lastData = MemoryMarshal.AsBytes(data.AsSpan()).ToArray();
+
+                return File(lastData, "image/png", "wall.png");
+            }
+
+            return NotFound();
         }
     }
 }
