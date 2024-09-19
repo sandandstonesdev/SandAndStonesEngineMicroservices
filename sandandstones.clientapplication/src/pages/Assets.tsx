@@ -1,15 +1,9 @@
 import Navbar from "../components/Navbar";
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
+import { InputAssetBatch } from "../types/InputAssetBatch";
 
 const BASE_URL = "https://localhost:5173"; 
-
-interface AssetInfo {
-    id: number;
-    name: string;
-    description: string
-}
-
 interface ItemInfo {
     name: string;
     content: string
@@ -29,11 +23,16 @@ function Assets() {
             setIsLoading(true);
 
             try {
-                const response = await fetch(`${BASE_URL}/inputasset/`);
-                const assets = (await response.json()) as AssetInfo[];
-                const mappedItems = assets.map(({ name, description }) => {
-                    return { name: name, content: description }
+                const response = await fetch(`${BASE_URL}/assetBatch/0`);
+                const inputAssetBatch = (await response.json()) as InputAssetBatch;
+
+                const mappedItems = inputAssetBatch.assets.map(({ name, ...rest }) => {
+                    return {
+                        name: name,
+                        content: JSON.stringify(rest, null, 2)
+                    }
                 });
+
                 setItems(mappedItems);
             } catch (e: any) {
                 console.log(e);

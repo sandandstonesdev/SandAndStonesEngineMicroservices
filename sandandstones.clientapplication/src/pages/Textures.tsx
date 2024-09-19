@@ -1,14 +1,9 @@
 import Navbar from "../components/Navbar";
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
+import { InputAssetBatch } from "../types/InputAssetBatch";
 
 const BASE_URL = "https://localhost:5173"; 
-
-interface AssetInfo {
-    id: number;
-    name: string;
-    description: string
-}
 
 interface ImageItemInfo {
     name: string;
@@ -29,18 +24,31 @@ function Textures() {
             setIsLoading(true);
 
             try {
-                const response = await fetch(`${BASE_URL}/inputasset/`);
-                const assets = (await response.json()) as AssetInfo[];
-                const imageUrl = `${BASE_URL}/texture/`;
-                const mappedItems = assets.map(({ name }) => {
+
+                const response = await fetch(`${BASE_URL}/assetBatch/0`);
+                const inputAssetBatch = (await response.json()) as InputAssetBatch;
+                const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles }) => {
                     return {
-                        name: name, content: <>
-                            <div>
-                                <img src={imageUrl} alt="wall.png" />
-                            </div > </> }
+                        name: name,
+                        textureNames: animationTextureFiles,
+                        content: JSON.stringify(animationTextureFiles),
+                        textures: 0
+                    }
                 });
 
-                setItems(mappedItems);
+                const mappedItemsWithImages = mappedItems.map(({ name, textureNames }) => {
+                    const imageUrl = `${BASE_URL}/textureFile/${textureNames[0]}`;
+                    return {
+                        name: name,
+                        content: <>
+                            <div>
+                                <img src={imageUrl} alt={textureNames[0]} />
+                            </div >
+                        </>
+                    }
+                });
+                
+                setItems(mappedItemsWithImages);
             } catch (e: any) {
                 console.log(e);
             } finally {

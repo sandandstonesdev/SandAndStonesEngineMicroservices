@@ -38,11 +38,11 @@ namespace SandAndStones.Api
             return Ok(texture);
         }
 
-        [Route("/texture/")]
-        [HttpGet]
-        public async Task<IActionResult> Get()
+        [Route("/textureFile/{name}")]
+        [HttpGet()]
+        public async Task<IActionResult> GetTextureById(string name)
         {
-            IAsyncTextureReader _inputAssetReader = new InputTextureReader("wall.png");
+            IAsyncTextureReader _inputAssetReader = new InputTextureReader(name);
             InputTexture inputTexture = _inputAssetReader.ReadTextureAsync().Result;
             if (inputTexture.Loaded)
             {
@@ -51,7 +51,7 @@ namespace SandAndStones.Api
                 using var data = bitmap.Encode(SKEncodedImageFormat.Png, 0);
                 byte[] lastData = MemoryMarshal.AsBytes(data.AsSpan()).ToArray();
 
-                return File(lastData, "image/png", "wall.png");
+                return File(lastData, "image/png", name);
             }
 
             return NotFound();

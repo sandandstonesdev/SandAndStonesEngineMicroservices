@@ -23,15 +23,5 @@ namespace SandAndStones.Api
 
             return Ok(assetBatch);
         }
-
-        [Route("/inputasset/")]
-        [HttpGet()]
-        public IEnumerable<InputAssetDTO> Get()
-        {
-            return Enumerable.Range(1, 5).Select(index =>
-                                new InputAssetDTO(index,
-                                                    $"InputAssetName{index}",
-                                                    $"Description: InputAssetName{index} description test")).ToArray();
-        }
     }
 }

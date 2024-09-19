@@ -44,11 +44,11 @@ export default defineConfig({
                 target: 'https://localhost:7232/',
                 secure: false
             },
-            '^/inputasset': {
+            '^/assetBatch': {
                 target: 'https://localhost:7232/',
                 secure: false
             },
-            '^/texture': {
+            '^/textureFile': {
                 target: 'https://localhost:7232/',
                 secure: false
             },
