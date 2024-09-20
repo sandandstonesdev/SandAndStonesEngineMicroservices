@@ -16,12 +16,23 @@ namespace SandAndStones.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            var server = _configuration["DbServer"] ?? "";
+            var port = _configuration["DbPort"] ?? "";
+            var user = _configuration["DbUser"] ?? "";
+            var password = _configuration["DbPass"] ?? "";
+            var dbName = _configuration["DbName"] ?? "";
+            
+            var connectionString = _enviroment.IsDevelopment() ?
+                _configuration.GetConnectionString("AppDbConnectionString") :
+                $"Server={server}, {port}; Database={dbName}; User Id={user}; Password={password};TrustServerCertificate=true";
+
+            _ = connectionString ?? throw new InvalidOperationException("Connection string not found."); ;
+
             services.AddTransient<IInputAssetBatchRepository, InputAssetBatchRepository>();
             var textureRepository = new InputTextureRepository();
             textureRepository.Init();
             services.AddSingleton<IInputTextureRepository>(textureRepository);
 
-            var connectionString = _configuration.GetConnectionString("AppDbConnectionString") ?? throw new InvalidOperationException("Connection string not found."); ;
             Console.WriteLine(connectionString);
             Console.WriteLine(_enviroment.IsDevelopment() ? "Development" : "Production");
             

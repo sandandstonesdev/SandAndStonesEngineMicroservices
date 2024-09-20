@@ -1,9 +1,42 @@
-services: 
+networks:
+    appnetwork:
+        name: appnetwork
+        driver: bridge
+
+volumes:
+    app-db-data:
+            
+services:
     assetinfoservice:
         image: assetservice
         build: 
             context: .
             dockerfile: ./SandAndStones.Api/Dockerfile
+        environment:
+            DbServer: "mssql-server"
+            DbPort: "1433"
+            DbUser: "sa"
+            DbPass: "Docker1234!"
+            DbName: "SandAndStones.Database"
         ports: 
            - "42000:8080"
-        network_mode: "host"
+        depends_on:
+           - mssql-server
+        networks:
+            - appnetwork
+    
+    mssql-server:
+        container_name: sqldb
+        image: mcr.microsoft.com/mssql/server:latest
+        environment:
+          - ACCEPT_EULA=Y
+          - MSSQL_SA_PASSWORD=Docker1234!
+          - MSSQL_PID=Express
+        volumes:
+        - type: volume
+          source: app-db-data
+          target: /var/opt/mssql
+        ports:
+          - 5433:1433
+        networks:
+            - appnetwork
