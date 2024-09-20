@@ -1,0 +1,26 @@
+name: MicroservicesCi
+on:
+  push: 
+    branches: [master]
+  pull_request:
+    branches: 
+    - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps: 
+      - uses: actions/checkout@4
+      - name: Setup .NET Core SDK
+        uses: actions/setup-dotnet@v4.0.1
+        with:
+          dotnet-version: 8.0.x
+      - name: Restore
+        run: dotnet restore ./SandAndStonesEngineMicroservices.sln
+      - name: Build
+        run: dotnet build ./SandAndStonesEngineMicroservices.sln --configuration Release --no-restore
+      - name: Test
+        run: dotnet test ./SandAndStonesEngineMicroservices.sln
+      
+      
