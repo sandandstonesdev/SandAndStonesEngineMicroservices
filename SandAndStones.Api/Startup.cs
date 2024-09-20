@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
 using SandAndStones.Infrastructure.Data;
 
 namespace SandAndStones.Api
