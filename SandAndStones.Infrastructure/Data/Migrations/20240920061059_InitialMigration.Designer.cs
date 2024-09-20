@@ -12,7 +12,7 @@ using SandAndStones.Infrastructure.Data;
 namespace SandAndStones.Infrastructure.Data.Migrations
 {
     [DbContext(typeof(ApplicationDbContext))]
-    [Migration("20240918102818_InitialMigration")]
+    [Migration("20240920061059_InitialMigration")]
     partial class InitialMigration
     {
         /// <inheritdoc />

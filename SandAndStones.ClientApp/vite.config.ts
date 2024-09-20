@@ -35,7 +35,7 @@ export default defineConfig({
     plugins: [plugin()],
     resolve: {
         alias: {
-            '@': fileURLToPath(new URL('./', import.meta.url))
+            '@': fileURLToPath(new URL('./src', import.meta.url))
         }
     },
     server: {

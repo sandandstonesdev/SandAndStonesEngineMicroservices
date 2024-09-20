@@ -6,3 +6,4 @@ services:
             dockerfile: ./SandAndStones.Api/Dockerfile
         ports: 
            - "42000:8080"
+        network_mode: "host"

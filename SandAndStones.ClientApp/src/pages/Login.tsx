@@ -40,9 +40,11 @@ function Login() {
                     setError("Successful Login.");
                     navigate('/', { replace: true });
                 }
-                else
-                    setError("Error Logging In.");
-
+                else {
+                    const email = emailRef.current!.value;
+                    const password = passwordRef.current!.value;
+                    setError("Error Logging In. " + email + " " + password);
+                }
             })
                 .catch((error) => {
                     console.error(error);

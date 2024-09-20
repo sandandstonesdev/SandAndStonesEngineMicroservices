@@ -1,4 +1,4 @@
-
+using Microsoft.EntityFrameworkCore;
 using SandAndStones.Infrastructure.Data;
 using SandAndStones.Infrastructure.Models;
 
@@ -10,7 +10,7 @@ namespace SandAndStones.Api
         {
             var builder = WebApplication.CreateBuilder(args);
 
-            var startup = new Startup(builder.Configuration);
+            var startup = new Startup(builder.Configuration, builder.Environment);
             startup.ConfigureServices(builder.Services);
 
             builder.Services.AddAuthorization();
@@ -45,8 +45,8 @@ namespace SandAndStones.Api
             using (var serviceScope = app.Services.CreateScope())
             {
                 var dbContext = serviceScope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
-                //dbContext.Database.MigrateAsync().GetAwaiter().GetResult();
-                dbContext.Database.EnsureCreated();
+                dbContext.Database.MigrateAsync().GetAwaiter().GetResult();
+                //dbContext.Database.EnsureCreated();
             }
 
             app.UseDefaultFiles();
