@@ -33,7 +33,7 @@ jobs:
       - name: Publish
         run: dotnet publish ./SandAndStonesEngineMicroservices.sln --configuration Release --no-build --output '${{env.AZURE_WEBAPP_PACKAGE_PATH}}'
       - name: Deployment
-        uses: actions/webapps-deploy@v3.0.1
+        uses: actions/webapps-deploy@v2
         with:
           app_name: ${{env.AZURE_WEBAPP_NAME}}
           publish_profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3A3382B330964CB0A45E7E1A04B2D900}} 
