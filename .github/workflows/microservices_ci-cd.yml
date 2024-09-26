@@ -26,5 +26,6 @@ jobs:
         run: dotnet build ./SandAndStonesEngineMicroservices.sln --configuration Release --no-restore
       - name: Test
         run: dotnet test ./SandAndStonesEngineMicroservices.sln
-      
+      - name: Publish
+        run: dotnet publish ./SandAndStonesEngineMicroservices.sln --configuration Release --no-build
       
