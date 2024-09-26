@@ -31,8 +31,8 @@ jobs:
       - name: Test
         run: dotnet test ./SandAndStonesEngineMicroservices.sln
       - name: Publish
-        run: dotnet publish ./SandAndStonesEngineMicroservices.sln --configuration Release --no-build --output '${{AZURE_WEBAPP_PACKAGE_PATH}}'
-      - name: Deploy
+        run: dotnet publish ./SandAndStonesEngineMicroservices.sln --configuration Release --no-build --output '${{env.AZURE_WEBAPP_PACKAGE_PATH}}'
+      - name: Deployment
         uses: actions/webapps-deploy@v3.0.1
         with:
           app_name: ${{env.AZURE_WEBAPP_NAME}}
