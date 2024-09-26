@@ -35,6 +35,6 @@ jobs:
       - name: Deployment
         uses: azure/webapps-deploy@v2
         with:
-          app_name: ${{env.AZURE_WEBAPP_NAME}}
-          publish_profile: ${{secrets.AZUREAPPSERVICE_PUBLISHPROFILE_3A3382B330964CB0A45E7E1A04B2D900}} 
+          app-name: ${{env.AZURE_WEBAPP_NAME}}
+          publish-profile: ${{secrets.AZURE_PUBLISH_PROFILE_MANUAL}} 
           package: ${{env.AZURE_WEBAPP_PACKAGE_PATH}}
