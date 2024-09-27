@@ -65,25 +65,33 @@ function Login() {
         <>
         <div className="containerbox">
             <h3>Sign In</h3>
-            <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit}>
+                    <div>
                     <label className="forminput" htmlFor="email">Email:</label>
                     <input type="email"
                         id="email"
                         ref={emailRef}
                         placeholder="mail@domain.com"
                     />
+                    </div>
+                    <div>
                     <label className="password">Password:</label>
                     <input
                         type="password"
                         id="password"
                         name="password"
                         ref={passwordRef}
-                    />
-                    <button type="submit">Login</button>
+                        />
+                    </div>
+                    <div>
+                        <button type="submit">Login</button>
+                    </div>
+                    <div>
+                        <button onClick={navigateRegister}>Register</button>
+                    </div>
             </form>
             {error && <p className="submit">{error}</p>}
             </div>
-            <button onClick={navigateRegister} color='blue'>Register</button>
         </>
     );
 }

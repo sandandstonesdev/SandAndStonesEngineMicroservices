@@ -1,10 +1,17 @@
 import { useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 function Register() {
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [confirmPassword, setConfirmPassword] = useState("");    
     const [error, setError] = useState("");
+
+    const navigate = useNavigate();
+
+    const navigateLogin = () => {
+        navigate('/login', { replace: true });
+    }
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
@@ -85,6 +92,9 @@ function Register() {
                 </div>
                 <div>
                     <button type="submit">Register</button>
+                </div>
+                <div>
+                    <button onClick={navigateLogin}>Login</button>
                 </div>
             </form>
 
