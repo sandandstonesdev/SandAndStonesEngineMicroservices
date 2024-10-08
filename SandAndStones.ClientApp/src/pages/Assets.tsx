@@ -2,8 +2,7 @@ import Navbar from "../components/Navbar";
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
 import { InputAssetBatch } from "../types/InputAssetBatch";
-
-const BASE_URL = "https://localhost:5173"; 
+ 
 interface ItemInfo {
     name: string;
     content: string
@@ -23,7 +22,7 @@ function Assets() {
             setIsLoading(true);
 
             try {
-                const response = await fetch(`${BASE_URL}/assetBatch/0`);
+                const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/assetBatch/0`);
                 const inputAssetBatch = (await response.json()) as InputAssetBatch;
 
                 const mappedItems = inputAssetBatch.assets.map(({ name, ...rest }) => {
@@ -34,7 +33,7 @@ function Assets() {
                 });
 
                 setItems(mappedItems);
-            } catch (e: any) {
+            } catch (e: unknown) {
                 console.log(e);
             } finally {
                 setIsLoading(false);
