@@ -11,9 +11,9 @@ import Register from './pages/Register.tsx';
 import About from './pages/About.tsx';
 import Logout from './components/Logout.tsx';
 import ProtectedRoute from './components/ProtectedRoute.tsx';
-import { AuthContext, useAuth } from './components/AuthProvider.tsx';
 import Assets from './pages/Assets.tsx';
 import Textures from './pages/Textures.tsx';
+import { AuthContext, useAuth } from './hooks/useAuth.tsx';
 
 const router = createBrowserRouter([
     {

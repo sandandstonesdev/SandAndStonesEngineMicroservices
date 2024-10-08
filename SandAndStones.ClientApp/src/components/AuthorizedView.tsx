@@ -1,18 +1,13 @@
-import React, { useState, useEffect, createContext } from 'react';
+import React, { useState, useEffect } from 'react';
 import { Navigate } from 'react-router-dom';
-
-const UserContext = createContext({});
-
-interface User {
-    email: string;
-}
-
+import { UserContext } from './UserContext';
+import { User } from '../types/User';
 
 function AuthorizedView(props: { children: React.ReactNode }) {
 
     const [authorized, setAuthorized] = useState<boolean>(false);
     const [loading, setLoading] = useState<boolean>(true); // add a loading state
-    const emptyuser: User = { email: "" };
+    const emptyuser: User = { email: "", password: "" };
 
     const [user, setUser] = useState(emptyuser);
 
@@ -28,7 +23,7 @@ function AuthorizedView(props: { children: React.ReactNode }) {
         }
 
         // define a fetch function that retries until status 200 or 401
-        async function fetchWithRetry(url: string, options: any) {
+        async function fetchWithRetry(url: string, options: RequestInit) {
             try {
                 // make the fetch request
                 const response = await fetch(url, options);
@@ -36,8 +31,8 @@ function AuthorizedView(props: { children: React.ReactNode }) {
                 // check the status code
                 if (response.status == 200) {
                     console.log("Authorized");
-                    let j: any = await response.json();
-                    setUser({ email: j.email });
+                    const user: User = await response.json();
+                    setUser({ email: user.email, password: user.password });
                     setAuthorized(true);
                     return response; // return the response
                 } else if (response.status == 401) {
@@ -104,10 +99,8 @@ function AuthorizedView(props: { children: React.ReactNode }) {
 }
 
 export function AuthorizedUser(props: { value: string }) {
-    // Consume the username from the UserContext
     const user = React.useContext(UserContext) as User;
 
-    // Display the username in a h1 tag
     if (props.value == "email")
         return <>{user.email}</>;
     else
