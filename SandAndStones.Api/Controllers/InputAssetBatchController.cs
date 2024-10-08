@@ -1,5 +1,4 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using SandAndStones.Api.DTO;
 
 namespace SandAndStones.Api
 {

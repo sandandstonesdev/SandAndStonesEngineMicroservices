@@ -1,6 +1,6 @@
 import { useEffect, } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from './AuthProvider';
+import { useAuth } from '../hooks/useAuth';
 
 function Logout() {
     const auth = useAuth();

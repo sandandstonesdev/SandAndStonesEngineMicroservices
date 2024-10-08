@@ -21,20 +21,20 @@ namespace SandAndStones.Api
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser(ApplicationUser user)
+        public async Task<ActionResult> RegisterUser(ApplicationUser applicationUser)
         {
 
             IdentityResult result = new();
 
             try
             {
-                ApplicationUser user_ = new()
+                ApplicationUser user = new()
                 {
-                    Email = user.Email,
-                    UserName = user.UserName,
+                    Email = applicationUser.Email,
+                    UserName = applicationUser.UserName,
                 };
 
-                result = await _userManager.CreateAsync(user_, user.PasswordHash);
+                result = await _userManager.CreateAsync(user, user.PasswordHash);
 
                 if (!result.Succeeded)
                 {
@@ -55,17 +55,17 @@ namespace SandAndStones.Api
 
             try
             {
-                ApplicationUser user_ = await _userManager.FindByEmailAsync(login.Email);
-                if (user_ != null)
+                ApplicationUser user = await _userManager.FindByEmailAsync(login.Email);
+                if (user != null)
                 {
-                    var result = await _signInManager.PasswordSignInAsync(user_, login.Password, login.Remember, false);
+                    var result = await _signInManager.PasswordSignInAsync(user, login.Password, login.Remember, false);
 
                     if (!result.Succeeded)
                     {
                         return Unauthorized(new { message = "Check your login credentials and try again" });
                     }
 
-                    var updateResult = await _userManager.UpdateAsync(user_);
+                    var updateResult = await _userManager.UpdateAsync(user);
                 }
                 else
                 {
@@ -115,8 +115,8 @@ namespace SandAndStones.Api
 
             try
             {
-                var user_ = HttpContext.User;
-                var principals = new ClaimsPrincipal(user_);
+                var user = HttpContext.User;
+                var principals = new ClaimsPrincipal(user);
                 var result = _signInManager.IsSignedIn(principals);
                 if (result)
                 {
