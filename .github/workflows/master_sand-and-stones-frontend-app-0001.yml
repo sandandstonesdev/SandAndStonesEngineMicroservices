@@ -28,7 +28,8 @@ jobs:
           npm run build --if-present
 
       - name: Zip artifact for deployment
-        run: zip release.zip ./SandAndStones.ClientApp/* -r
+        working-directory: ./SandAndStones.ClientApp
+        run: zip release.zip ./* -r
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
