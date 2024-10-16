@@ -27,8 +27,11 @@ jobs:
           npm ci
           npm run build --if-present
 
-      - name: Zip artifact for deployment
-        run: zip release.zip ./SandAndStones.ClientApp/* -r
+      - name: Zip Release
+        uses: TheDoctor0/zip-release@0.6.1
+        with:
+          filename: release.zip
+          path: ./SandAndStones.ClientApp/*
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v3
