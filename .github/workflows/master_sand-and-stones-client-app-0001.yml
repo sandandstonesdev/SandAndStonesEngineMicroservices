@@ -52,9 +52,6 @@ jobs:
         with:
           name: node-app
           
-      - name: Unzip artifact for deployment
-        run: unzip release.zip
-        
       - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v2
         id: deploy-to-webapp
@@ -62,4 +59,4 @@ jobs:
           app-name: 'sand-and-stones-client-app-0001'
           slot-name: 'Production'
           publish-profile: ${{ secrets.AZUREAPPSERVICE_PUBLISHPROFILE_2224E5713E094476925BB66A903D3057 }}
-          package: .
+          package: release.zip
