@@ -48,6 +48,8 @@ namespace SandAndStones.Api
                 dbContext.Database.Migrate();
             }
 
+            app.UseCors("ApiCorsPolicy");
+
             app.UseDefaultFiles();
             app.UseStaticFiles();
 

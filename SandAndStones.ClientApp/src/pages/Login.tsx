@@ -6,7 +6,9 @@ function Login() {
     const auth = useAuth();
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
-    
+
+    console.log("Environment mode:" + import.meta.env.MODE);
+
     const [error, setError] = useState<string>("");
     
     const navigate = useNavigate();
@@ -43,7 +45,7 @@ function Login() {
                 else {
                     const email = emailRef.current!.value;
                     const password = passwordRef.current!.value;
-                    setError("Error Logging In. " + email + " " + password);
+                    setError("Error Logging In. " + email + " " + password + " Status: " + data.status + " " + data.statusText);
                 }
             })
                 .catch((error) => {
@@ -72,6 +74,7 @@ function Login() {
                         id="email"
                         ref={emailRef}
                         placeholder="mail@domain.com"
+                        autoComplete="on"
                     />
                     </div>
                     <div>
@@ -81,6 +84,7 @@ function Login() {
                         id="password"
                         name="password"
                         ref={passwordRef}
+                        autoComplete="on"
                         />
                     </div>
                     <div>
