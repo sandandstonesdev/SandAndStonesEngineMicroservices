@@ -44,8 +44,7 @@ function Register() {
                     if (data.ok)
                         setError("Successful register.");
                     else
-                        setError("Error registering.");
-
+                        setError("Error registering. Details: " + data.status + " " + data.statusText);
                 })
                 .catch((error) => {
                     console.error(error);
