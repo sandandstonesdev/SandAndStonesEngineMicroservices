@@ -21,7 +21,7 @@ namespace SandAndStones.Api
         }
 
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser(ApplicationUser applicationUser)
+        public async Task<ActionResult> RegisterUser([FromBody]LoginDTO applicationUser)
         {
 
             IdentityResult result = new();
@@ -31,7 +31,7 @@ namespace SandAndStones.Api
                 ApplicationUser user = new()
                 {
                     Email = applicationUser.Email,
-                    UserName = applicationUser.UserName,
+                    UserName = applicationUser.Email,
                 };
 
                 result = await _userManager.CreateAsync(user, user.PasswordHash);

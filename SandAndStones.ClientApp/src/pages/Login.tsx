@@ -74,7 +74,6 @@ function Login() {
                         id="email"
                         ref={emailRef}
                         placeholder="mail@domain.com"
-                        autoComplete="on"
                     />
                     </div>
                     <div>
@@ -84,7 +83,6 @@ function Login() {
                         id="password"
                         name="password"
                         ref={passwordRef}
-                        autoComplete="on"
                         />
                     </div>
                     <div>

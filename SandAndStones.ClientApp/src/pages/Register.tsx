@@ -30,6 +30,7 @@ function Register() {
             setError("Passwords do not match.");
         } else {
             setError("");
+
             fetch("/register", {
                 method: "POST",
                 headers: {
