@@ -63,6 +63,7 @@ namespace SandAndStones.Api
 
             app.UseHttpsRedirection();
 
+            app.UseCors("ApiCorsPolicy");
             app.UseAuthorization();
 
             app.MapControllers();

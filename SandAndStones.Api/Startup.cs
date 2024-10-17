@@ -44,7 +44,6 @@ namespace SandAndStones.Api
 
             services.AddCors(options =>
             {
-            
                 options.AddPolicy(name: "ApiCorsPolicy",
                                   builder =>
                                   {
