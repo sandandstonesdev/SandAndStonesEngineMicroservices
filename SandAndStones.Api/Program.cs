@@ -60,6 +60,11 @@ namespace SandAndStones.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
+            else
+            {
+                //app.UseExceptionHandler("/Error");
+                app.UseHsts();
+            }
 
             app.UseHttpsRedirection();
 

@@ -1,6 +1,4 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
 using SandAndStones.Infrastructure.Data;
 
 namespace SandAndStones.Api
@@ -51,7 +49,9 @@ namespace SandAndStones.Api
                                                           "https://sand-and-stones-client-app-0001-cyg9asb6eahgf6ab.canadacentral-01.azurewebsites.net")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader()
-                                      .AllowCredentials();
+                                      .WithExposedHeaders("Content-Disposition")
+                                      .AllowCredentials()
+                                      .SetPreflightMaxAge(TimeSpan.FromSeconds(2520)); ;
                                   });
             });
         }
