@@ -3,6 +3,7 @@ import react from "@vitejs/plugin-react";
 import mkcert from 'vite-plugin-mkcert'
 
 export default defineConfig({
+    base: "/",
     plugins: [react(), mkcert()],
     build: {
         minify: false,
@@ -10,6 +11,7 @@ export default defineConfig({
     preview: {
         port: 8080,
         strictPort: true,
+        host: true,
     },
     server: {
         proxy: {

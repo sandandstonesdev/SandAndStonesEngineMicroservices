@@ -1,4 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using SandAndStones.Infrastructure.Data;
 
@@ -39,6 +40,19 @@ namespace SandAndStones.Api
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+            });
+
+            services.AddCors(options =>
+            {
+                options.AddPolicy(name: "ApiCorsPolicy",
+                                  builder =>
+                                  {
+                                      builder
+                                      .WithOrigins("https://localhost:5173",
+                                                   "https://sand-and-stones-client-app-0001-cyg9asb6eahgf6ab.canadacentral-01.azurewebsites.net")
+                                      .AllowAnyMethod()
+                                      .AllowAnyHeader();
+                                  });
             });
         }
     }
