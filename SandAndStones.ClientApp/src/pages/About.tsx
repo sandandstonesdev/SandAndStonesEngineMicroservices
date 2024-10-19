@@ -1,6 +1,5 @@
-import Image from "../assets/SandAndStonesEngineScreen.png";
 import Navbar from "../components/Navbar";
-
+import ScreenImage from "../images/SandAndStonesEngineScreen.png";
 
 const sectionStyle = {
     width: 400,
@@ -15,7 +14,7 @@ function About() {
             <p>SandAndStonesEngine Screen</p>
             <div className="row">
                 <div className="logo">
-                    <img className="img-fluid" style={sectionStyle} src={Image}></img>
+                    <img className="img-fluid" style={sectionStyle} src={ScreenImage}></img>
                 </div>
             </div>
         </>
