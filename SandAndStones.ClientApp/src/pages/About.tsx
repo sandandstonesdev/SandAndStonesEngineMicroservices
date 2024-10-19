@@ -1,5 +1,4 @@
 import Navbar from "../components/Navbar";
-import ScreenImage from "../images/SandAndStonesEngineScreen.png";
 
 const sectionStyle = {
     width: 400,
@@ -8,13 +7,15 @@ const sectionStyle = {
 
 
 function About() {
+    const screenImageUrl = new URL('./SandAndStonesEngineScreen.png', import.meta.env.VITE_STATIC_IMAGES_URL).href
+    
     return (
         <>
             <Navbar />
             <p>SandAndStonesEngine Screen</p>
             <div className="row">
                 <div className="logo">
-                    <img className="img-fluid" style={sectionStyle} src={ScreenImage}></img>
+                    <img className="img-fluid" style={sectionStyle} src={screenImageUrl}></img>
                 </div>
             </div>
         </>
