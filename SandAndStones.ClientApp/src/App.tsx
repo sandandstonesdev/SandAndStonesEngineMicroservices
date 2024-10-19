@@ -14,6 +14,7 @@ import ProtectedRoute from './components/ProtectedRoute.tsx';
 import Assets from './pages/Assets.tsx';
 import Textures from './pages/Textures.tsx';
 import { AuthContext, useAuth } from './hooks/useAuth.tsx';
+import NotFound from './pages/NotFound.tsx';
 
 const router = createBrowserRouter([
     {
@@ -23,6 +24,7 @@ const router = createBrowserRouter([
                 <Home/>
             </ProtectedRoute>
         ),
+        errorElement: <NotFound />
     },
     {
         path: '/login',
@@ -51,7 +53,7 @@ const router = createBrowserRouter([
     {
         path: '/logout',
         element: <Logout />,
-    },
+    }
 ]);
 
 function App() {

@@ -22,8 +22,8 @@ function Login() {
         if (emailRef.current!.value !== "" && passwordRef.current!.value !== "")
         {
             setError("");
-
-            fetch("/login", {
+            
+            fetch(`${import.meta.env.VITE_APP_BASE_URL}/login`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
@@ -31,6 +31,7 @@ function Login() {
                 body: JSON.stringify({
                     email: emailRef.current!.value,
                     password: passwordRef.current!.value,
+                    remember: false
                 }),
             }).then((data) => {
                 console.log(data);

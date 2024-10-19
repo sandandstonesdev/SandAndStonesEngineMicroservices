@@ -7,7 +7,7 @@ function Logout() {
 
     const navigate = useNavigate();
     const handleLogout = () => {
-        fetch("/userauthorization/logout").then((data) => {
+        fetch(`${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/logout`).then((data) => {
             if (data.ok) {
                     auth.removeUser()
                     navigate('/login', { replace: true });
