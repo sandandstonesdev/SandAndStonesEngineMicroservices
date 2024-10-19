@@ -7,6 +7,7 @@ using System.Security.Claims;
 
 namespace SandAndStones.Api
 {
+    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserAuthorizationController : ControllerBase
@@ -20,6 +21,7 @@ namespace SandAndStones.Api
             _userManager = userManager;
         }
 
+        [AllowAnonymous]
         [HttpPost("register")]
         public async Task<ActionResult> RegisterUser([FromBody]LoginDTO applicationUser)
         {
@@ -49,10 +51,10 @@ namespace SandAndStones.Api
             return Ok(new { message = "Registered Successfully.", result = result });
         }
 
+        [AllowAnonymous]
         [HttpPost("login")]
         public async Task<ActionResult> LoginUser([FromBody]LoginDTO login)
         {
-
             try
             {
                 ApplicationUser user = await _userManager.FindByEmailAsync(login.Email);
@@ -80,7 +82,7 @@ namespace SandAndStones.Api
             return Ok(new { message = "Login Successful." });
         }
 
-        [HttpGet("logout"), Authorize]
+        [HttpGet("logout")]
         public async Task<ActionResult> LogoutUser()
         {
 
@@ -96,7 +98,7 @@ namespace SandAndStones.Api
             return Ok(new { message = "You are logged out." });
         }
 
-        [HttpGet("userInfo/{email}"), Authorize]
+        [HttpGet("userInfo/{email}")]
         public async Task<ActionResult> HomePage(string email)
         {
             ApplicationUser userInfo = await _userManager.FindByEmailAsync(email);

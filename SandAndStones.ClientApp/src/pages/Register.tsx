@@ -31,7 +31,7 @@ function Register() {
         } else {
             setError("");
 
-            fetch("/register", {
+            fetch(`${import.meta.env.VITE_APP_BASE_URL}/register`, {
                 method: "POST",
                 headers: {
                     "Content-Type": "application/json",
