@@ -45,7 +45,7 @@ namespace SandAndStones.Api
                 options.AddPolicy(name: "ApiCorsPolicy",
                                   builder =>
                                   {
-                                      builder.WithOrigins("https://localhost:5173",
+                                      builder.WithOrigins("https://localhost",
                                                           "https://sand-and-stones-client-app-0001-cyg9asb6eahgf6ab.canadacentral-01.azurewebsites.net")
                                       .AllowAnyMethod()
                                       .AllowAnyHeader()
