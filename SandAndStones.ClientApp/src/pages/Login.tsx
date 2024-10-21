@@ -24,7 +24,7 @@ function Login() {
         {
             setError("");
 
-            axiosInstance.post('/login',
+            axiosInstance.post(`${import.meta.env.VITE_APP_BASE_URL}/login`,
                 {
                     email: emailRef.current!.value,
                     password: passwordRef.current!.value,

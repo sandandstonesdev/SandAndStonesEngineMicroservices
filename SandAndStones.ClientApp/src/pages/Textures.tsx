@@ -23,7 +23,7 @@ function Textures() {
             setIsLoading(true);
 
             try {
-                const response = await axiosInstance.get('/assetBatch/0');
+                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/assetBatch/0`);
                 const inputAssetBatch = response.data as InputAssetBatch;
                 const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles }) => {
                     return {
