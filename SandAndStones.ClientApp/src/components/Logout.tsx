@@ -8,7 +8,7 @@ function Logout() {
 
     const navigate = useNavigate();
     const handleLogout = () => {
-        axiosInstance.get('/userAuthorization/logout')
+        axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/logout`)
             .then((response) => {
             console.log(response.data);
             if (response.status == 200) {

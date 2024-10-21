@@ -32,7 +32,7 @@ function Register() {
         } else {
             setError("");
 
-            axiosInstance.post('/register',
+            axiosInstance.post(`${import.meta.env.VITE_APP_BASE_URL}/register`,
                 {
                     email: email,
                     password: password,
