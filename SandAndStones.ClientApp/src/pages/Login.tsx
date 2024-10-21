@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
+import { axiosInstance } from "../hooks/useAxios";
 
 function Login() {
     const auth = useAuth();
@@ -22,20 +23,16 @@ function Login() {
         if (emailRef.current!.value !== "" && passwordRef.current!.value !== "")
         {
             setError("");
-            
-            fetch(`${import.meta.env.VITE_APP_BASE_URL}/login`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+
+            axiosInstance.post('/login',
+                {
                     email: emailRef.current!.value,
                     password: passwordRef.current!.value,
-                    remember: false
-                }),
-            }).then((data) => {
-                console.log(data);
-                if (data.ok) {
+                }
+            )
+            .then((response) => {
+                console.log(response.data);
+                if (response.status == 200) {
                     auth.addUser({
                         email: emailRef.current!.value,
                         password: passwordRef.current!.value,
@@ -46,13 +43,13 @@ function Login() {
                 else {
                     const email = emailRef.current!.value;
                     const password = passwordRef.current!.value;
-                    setError("Error Logging In. " + email + " " + password + " Status: " + data.status + " " + data.statusText);
+                    setError("Error Logging In. " + email + " " + password + " Status: " + response.status + " " + response.statusText);
                 }
             })
-                .catch((error) => {
-                    console.error(error);
-                    setError("Error Logging in.");
-                });
+            .catch((error) => {
+                console.error(error);
+                setError("Error Logging in.");
+            });
         }
         else {
             setError("Please fill in all fields.");

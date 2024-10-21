@@ -2,6 +2,7 @@ import Navbar from "../components/Navbar";
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
 import { InputAssetBatch } from "../types/InputAssetBatch";
+import { axiosInstance } from "../hooks/useAxios";
 
 interface ImageItemInfo {
     name: string;
@@ -22,8 +23,8 @@ function Textures() {
             setIsLoading(true);
 
             try {
-                const response = await fetch(`${import.meta.env.VITE_APP_BASE_URL}/assetBatch/0`);
-                const inputAssetBatch = (await response.json()) as InputAssetBatch;
+                const response = await axiosInstance.get('/assetBatch/0');
+                const inputAssetBatch = response.data as InputAssetBatch;
                 const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles }) => {
                     return {
                         name: name,
