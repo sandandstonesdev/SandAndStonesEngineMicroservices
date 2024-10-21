@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "../hooks/useAuth";
 import { axiosInstance } from "../hooks/useAxios";
+import axios from "axios";
 
 function Login() {
     const auth = useAuth();
@@ -23,12 +24,15 @@ function Login() {
         if (emailRef.current!.value !== "" && passwordRef.current!.value !== "")
         {
             setError("");
+            
+            const formData = axios.toFormData({
+                email: emailRef.current!.value,
+                password: passwordRef.current!.value
+            })
 
-            axiosInstance.post(`${import.meta.env.VITE_APP_BASE_URL}/login`,
-                {
-                    email: emailRef.current!.value,
-                    password: passwordRef.current!.value,
-                }
+            axiosInstance.post(
+                `${import.meta.env.VITE_APP_BASE_URL}/login`,
+                formData
             )
             .then((response) => {
                 console.log(response.data);
