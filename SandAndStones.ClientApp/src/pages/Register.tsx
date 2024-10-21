@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { axiosInstance } from "../hooks/useAxios";
 
 function Register() {
     const [email, setEmail] = useState("");
@@ -31,26 +32,25 @@ function Register() {
         } else {
             setError("");
 
-            fetch(`${import.meta.env.VITE_APP_BASE_URL}/register`, {
-                method: "POST",
-                headers: {
-                    "Content-Type": "application/json",
-                },
-                body: JSON.stringify({
+            axiosInstance.post('/register',
+                {
                     email: email,
                     password: password,
-                }),
-            }).then((data) => {
-                    console.log(data);
-                    if (data.ok)
-                        setError("Successful register.");
-                    else
-                        setError("Error registering. Details: " + data.status + " " + data.statusText);
-                })
-                .catch((error) => {
-                    console.error(error);
-                    setError("Error registering.");
-                });
+                }
+            ).then((response) => {
+                console.log(response.data);
+                if (response.status == 200) {
+                    setError("Successful register.");
+                    navigate('/', { replace: true });
+                }
+                else {
+                    setError("Error registering. Details: " + response.status + " " + response.statusText);
+                }
+            })
+            .catch((error) => {
+                console.error(error);
+                setError("Error registering.");
+            });
         }
     };
 
