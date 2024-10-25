@@ -7,27 +7,18 @@ using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Data
 {
-    public class ApplicationDbContextConfigurator
-    {
-        private readonly ILogger<ApplicationDbContextConfigurator> _logger;
-        private readonly ApplicationDbContext _context;
-        private readonly UserManager<ApplicationUser> _userManager;
-        private readonly RoleManager<IdentityRole> _roleManager;
-        private readonly IConfiguration _configuration;
-
-        public ApplicationDbContextConfigurator(
-            ILogger<ApplicationDbContextConfigurator> logger,
+    public class ApplicationDbContextConfigurator(
+        ILogger<ApplicationDbContextConfigurator> logger,
             ApplicationDbContext context,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
             IConfiguration configuration)
-        {
-            _roleManager = roleManager;
-            _context = context;
-            _logger = logger;
-            _userManager = userManager;
-            _configuration = configuration;
-        }
+    {
+        private readonly ILogger<ApplicationDbContextConfigurator> _logger = logger;
+        private readonly ApplicationDbContext _context = context;
+        private readonly UserManager<ApplicationUser> _userManager = userManager;
+        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
+        private readonly IConfiguration _configuration = configuration;
 
         public async Task InitAsync()
         {

@@ -1,22 +1,15 @@
 ﻿using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SandAndStones.Api.DTO;
 using SandAndStones.Api.Services;
-using SandAndStones.Infrastructure.Models;
 
 namespace SandAndStones.Api
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserAuthorizationController : ControllerBase
+    public class UserAuthorizationController(IAuthService authService) : ControllerBase()
     {
-        private readonly IAuthService _authService;
-
-        public UserAuthorizationController(IAuthService authService) : base()
-        {
-            _authService = authService;
-        }
+        private readonly IAuthService _authService = authService;
 
         [HttpPost("register")]
         public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
