@@ -125,7 +125,12 @@ namespace SandAndStones.Api
 
             app.UseHttpsRedirection();
 
-            app.UseCors("ApiCorsPolicy");
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .SetIsOriginAllowed(origin => true) 
+                .AllowCredentials());
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
