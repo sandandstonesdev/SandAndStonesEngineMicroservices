@@ -4,8 +4,8 @@ import Navbar from "../components/Navbar.tsx";
 function Home() {
     return (
         <div>
-                <Navbar />
-                <Outlet />
+            <Navbar />
+            <Outlet />
         </div>
     );
 }

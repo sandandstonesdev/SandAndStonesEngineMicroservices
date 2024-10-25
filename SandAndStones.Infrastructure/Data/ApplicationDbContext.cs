@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SandAndStones.Infrastructure.Models;
+using static System.Formats.Asn1.AsnWriter;
 
 namespace SandAndStones.Infrastructure.Data
 {
@@ -13,9 +14,6 @@ namespace SandAndStones.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            ApplicationDbContextConfigurations.Configure(builder);
-            ApplicationDbContextConfigurations.SeedData(builder);
         }
     }
 }

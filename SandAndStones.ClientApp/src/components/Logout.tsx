@@ -1,10 +1,14 @@
 import { useEffect, } from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
-import { useAuth } from '../hooks/useAuth';
 import { axiosInstance } from '../hooks/useAxios';
+import { useAuth } from '../context/AuthProvider';
+
+interface AuthObjectSet {
+    setContextToken: (newToken: string | null) => void
+}
 
 function Logout() {
-    const auth = useAuth();
+    const { setContextToken } = useAuth() as AuthObjectSet;
 
     const navigate = useNavigate();
     const handleLogout = () => {
@@ -12,8 +16,8 @@ function Logout() {
             .then((response) => {
             console.log(response.data);
             if (response.status == 200) {
-                auth.removeUser()
-                navigate('/login', { replace: true });
+                setContextToken(null);
+                navigate('/', { replace: true });
                 console.info("Logout successful.");
             }
             else {

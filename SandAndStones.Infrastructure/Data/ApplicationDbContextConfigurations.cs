@@ -1,31 +1,89 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.Logging;
+using SandAndStones.Infrastructure.Models;
+using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Data
 {
-    public class ApplicationDbContextConfigurations
+    public class ApplicationDbContextConfigurator
     {
-        public static void Configure(ModelBuilder modelBuilder)
+        private readonly ILogger<ApplicationDbContextConfigurator> _logger;
+        private readonly ApplicationDbContext _context;
+        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly RoleManager<IdentityRole> _roleManager;
+        private readonly IConfiguration _configuration;
+
+        public ApplicationDbContextConfigurator(
+            ILogger<ApplicationDbContextConfigurator> logger,
+            ApplicationDbContext context,
+            RoleManager<IdentityRole> roleManager,
+            UserManager<ApplicationUser> userManager,
+            IConfiguration configuration)
         {
-            modelBuilder.Entity<IdentityUser>().ToTable("Users");
-            modelBuilder.Entity<IdentityRole>().ToTable("Roles");
+            _roleManager = roleManager;
+            _context = context;
+            _logger = logger;
+            _userManager = userManager;
+            _configuration = configuration;
         }
 
-        public static void SeedData(ModelBuilder modelBuilder)
+        public async Task InitAsync()
         {
-            // Add any seed data here
-            //modelBuilder.Entity<Product>().HasData(
-            //    new Product { Id = 1, Code = "P001", Name = "Product 1", Price = 9.99f, IsActive = true },
-            //    new Product { Id = 2, Code = "P002", Name = "Product 2", Price = 12.00f, IsActive = true },
-            //    new Product { Id = 3, Code = "P003", Name = "Product 3", Price = 13.00f, IsActive = true },
-            //    new Product { Id = 4, Code = "P004", Name = "Product 4", Price = 14.00f, IsActive = true },
-            //    new Product { Id = 5, Code = "P005", Name = "Product 5", Price = 15.00f, IsActive = true },
-            //    new Product { Id = 6, Code = "P006", Name = "Product 6", Price = 16.00f, IsActive = true },
-            //    new Product { Id = 7, Code = "P007", Name = "Product 7", Price = 17.00f, IsActive = true },
-            //    new Product { Id = 8, Code = "P008", Name = "Product 8", Price = 18.00f, IsActive = true },
-            //    new Product { Id = 9, Code = "P009", Name = "Product 9", Price = 19.00f, IsActive = true },
-            //    new Product { Id = 10, Code = "P010", Name = "Product 10", Price = 19.99f, IsActive = true }
-            //);
+            try
+            {
+                if (_context.Database.IsSqlServer())
+                {
+                    await _context.Database.MigrateAsync();
+                }
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while initialising the database.");
+                throw;
+            }
+        }
+
+        public async Task SeedAsync()
+        {
+            try
+            {
+                await TrySeedAsync();
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred while seeding the database.");
+                throw;
+            }
+        }
+
+        public async Task TrySeedAsync()
+        {
+            var administratorRole = new IdentityRole("Administrator");
+
+            if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+            {
+                var role = await _roleManager.CreateAsync(administratorRole);
+                if (role != null)
+                {
+                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleView"));
+                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleAdd"));
+                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleEdit"));
+                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleDelete"));
+                }
+            }
+
+            var administrator = new ApplicationUser { UserName = "sandandstones@sandandstones.com", Email = "sandandstones@sandandstones.com" };
+
+            if (_userManager.Users.All(u => u.UserName != administrator.UserName))
+            {
+                await _userManager.CreateAsync(administrator, _configuration["DBAdminPass"] ?? throw new Exception("No configuration for default Admin"));
+                if (!string.IsNullOrWhiteSpace(administratorRole.Name))
+                {
+                    await _userManager.AddToRolesAsync(administrator, [administratorRole.Name]);
+                }
+            }
         }
 
     }
