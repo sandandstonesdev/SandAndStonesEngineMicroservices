@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 using SandAndStones.Infrastructure.Models;
-using static System.Formats.Asn1.AsnWriter;
 
 namespace SandAndStones.Infrastructure.Data
 {
