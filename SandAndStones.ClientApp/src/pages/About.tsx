@@ -1,5 +1,3 @@
-import Navbar from "../components/Navbar";
-
 const sectionStyle = {
     width: 400,
     height: 400
@@ -11,7 +9,6 @@ function About() {
     
     return (
         <>
-            <Navbar />
             <p>SandAndStonesEngine Screen</p>
             <div className="row">
                 <div className="logo">

@@ -1,11 +1,15 @@
 import { useEffect, useRef, useState } from "react";
 import { useNavigate } from "react-router-dom";
-import { useAuth } from "../hooks/useAuth";
 import { axiosInstance } from "../hooks/useAxios";
 import axios from "axios";
+import { useAuth } from "../context/AuthProvider";
+
+interface AuthObjectSet {
+    setContextToken: (newToken: string) => void
+}
 
 function Login() {
-    const auth = useAuth();
+    const { setContextToken } = useAuth() as AuthObjectSet;
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
 
@@ -31,16 +35,13 @@ function Login() {
             })
 
             axiosInstance.post(
-                `${import.meta.env.VITE_APP_BASE_URL}/login`,
+                `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/login`,
                 formData
             )
             .then((response) => {
                 console.log(response.data);
                 if (response.status == 200) {
-                    auth.addUser({
-                        email: emailRef.current!.value,
-                        password: passwordRef.current!.value,
-                    });
+                    setContextToken(response.data.data.accessToken);
                     setError("Successful Login.");
                     navigate('/', { replace: true });
                 }

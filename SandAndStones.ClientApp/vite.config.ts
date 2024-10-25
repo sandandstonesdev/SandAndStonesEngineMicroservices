@@ -2,6 +2,7 @@ import { defineConfig } from "vite";
 import react from "@vitejs/plugin-react";
 import mkcert from 'vite-plugin-mkcert'
 
+
 export default defineConfig({
     base: "/",
     plugins: [react(), mkcert()],
@@ -12,14 +13,11 @@ export default defineConfig({
         port: 8080,
         strictPort: true,
         host: true,
-        cors: false
+        cors: true
     },
     server: {
+        cors: true,
         proxy: {
-            '^/home': {
-                target: 'https://localhost:7232/',
-                secure: false
-            },
             '^/assetBatch': {
                 target: 'https://localhost:7232/',
                 secure: false
@@ -28,15 +26,15 @@ export default defineConfig({
                 target: 'https://localhost:7232/',
                 secure: false
             },
-            '^/register': {
+            '^/userAuthorization/register': {
                 target: 'https://localhost:7232/',
                 secure: false
             },
-            '^/login': {
+            '^/userAuthorization/login': {
                 target: 'https://localhost:7232/',
                 secure: false
             },
-            '^/logout': {
+            '^/userAuthorization/logout': {
                 target: 'https://localhost:7232/',
                 secure: false
             },

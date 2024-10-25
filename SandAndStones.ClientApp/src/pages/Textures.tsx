@@ -1,4 +1,3 @@
-import Navbar from "../components/Navbar";
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
 import { InputAssetBatch } from "../types/InputAssetBatch";
@@ -59,7 +58,6 @@ function Textures() {
 
     return (
         <>
-            <Navbar />
             {isLoading && <div>Loading...</div>}
             {!isLoading && (<CollapsedFileList items={items} header={header} />)}
         </>      

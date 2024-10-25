@@ -13,9 +13,6 @@ namespace SandAndStones.Infrastructure.Data
         protected override void OnModelCreating(ModelBuilder builder)
         {
             base.OnModelCreating(builder);
-
-            ApplicationDbContextConfigurations.Configure(builder);
-            ApplicationDbContextConfigurations.SeedData(builder);
         }
     }
 }

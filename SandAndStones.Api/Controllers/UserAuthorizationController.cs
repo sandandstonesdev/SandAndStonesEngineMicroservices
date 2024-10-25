@@ -2,140 +2,54 @@
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using SandAndStones.Api.DTO;
+using SandAndStones.Api.Services;
 using SandAndStones.Infrastructure.Models;
-using System.Security.Claims;
 
 namespace SandAndStones.Api
 {
-    [Authorize]
     [ApiController]
     [Route("[controller]")]
     public class UserAuthorizationController : ControllerBase
     {
-        private readonly SignInManager<ApplicationUser> _signInManager;
-        private readonly UserManager<ApplicationUser> _userManager;
+        private readonly IAuthService _authService;
 
-        public UserAuthorizationController(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager) : base()
+        public UserAuthorizationController(IAuthService authService) : base()
         {
-            _signInManager = signInManager;
-            _userManager = userManager;
+            _authService = authService;
         }
 
-        [AllowAnonymous]
         [HttpPost("register")]
-        public async Task<ActionResult> RegisterUser([FromBody]LoginDTO applicationUser)
+        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
         {
-
-            IdentityResult result = new();
-
-            try
-            {
-                ApplicationUser user = new()
-                {
-                    Email = applicationUser.Email,
-                    UserName = applicationUser.Email,
-                };
-
-                result = await _userManager.CreateAsync(user, user.PasswordHash);
-
-                if (!result.Succeeded)
-                {
-                    return BadRequest(result);
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest("Error while registering: " + ex.Message);
-            }
-
-            return Ok(new { message = "Registered Successfully.", result = result });
+            var success = await _authService.Register(registerRequest);
+            if (!success)
+                return BadRequest(new { message = "Register Failed." });
+            return Ok(new { message = "Register Successful." });
         }
 
-        [AllowAnonymous]
         [HttpPost("login")]
-        public async Task<ActionResult> LoginUser([FromBody]LoginDTO login)
+        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
-            try
-            {
-                ApplicationUser user = await _userManager.FindByEmailAsync(login.Email);
-                if (user != null)
-                {
-                    var result = await _signInManager.PasswordSignInAsync(user, login.Password, login.Remember, false);
-
-                    if (!result.Succeeded)
-                    {
-                        return Unauthorized(new { message = "Check your login credentials and try again" });
-                    }
-
-                    var updateResult = await _userManager.UpdateAsync(user);
-                }
-                else
-                {
-                    return BadRequest(new { message = "Please check your credentials and try again. " });
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Error while logging: " + ex.Message });
-            }
-
-            return Ok(new { message = "Login Successful." });
+            var response = await _authService.Login(loginRequest);
+            return Ok(new { message = "Login Successful.", data = response });
         }
 
+        [Authorize]
         [HttpGet("logout")]
-        public async Task<ActionResult> LogoutUser()
+        public async Task<ActionResult> Logout()
         {
-
-            try
-            {
-                await _signInManager.SignOutAsync();
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Error while logout: " + ex.Message });
-            }
-
-            return Ok(new { message = "You are logged out." });
+            var success = await _authService.Logout();
+            if (!success)
+                return BadRequest(new { message = "Logout Failed." });
+            return Ok(new { message = "Logout Successful." });
         }
 
+        [Authorize]
         [HttpGet("userInfo/{email}")]
-        public async Task<ActionResult> HomePage(string email)
+        public async Task<ActionResult> GetUserInfo([FromRoute] string email)
         {
-            ApplicationUser userInfo = await _userManager.FindByEmailAsync(email);
-            if (userInfo is null)
-            {
-                return BadRequest(new { message = "Something went wrong, please try again." });
-            }
-
-            return Ok(new { userInfo });
+            var userInfo = await _authService.GetUserInfo(email);
+            return Ok(new { message = "GetUserInfo Successful.", data = userInfo });
         }
-
-        [HttpGet("loggedStatus")]
-        public async Task<ActionResult> CheckUser()
-        {
-            ApplicationUser currentuser = new();
-
-            try
-            {
-                var user = HttpContext.User;
-                var principals = new ClaimsPrincipal(user);
-                var result = _signInManager.IsSignedIn(principals);
-                if (result)
-                {
-                    currentuser = await _signInManager.UserManager.GetUserAsync(principals);
-                }
-                else
-                {
-                    return Forbid();
-                }
-            }
-            catch (Exception ex)
-            {
-                return BadRequest(new { message = "Something went wrong please try again. " + ex.Message });
-            }
-
-            return Ok(new { message = "Logged in", user = currentuser });
-        }
-
     }
 }
