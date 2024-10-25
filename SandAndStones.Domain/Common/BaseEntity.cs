@@ -6,7 +6,7 @@ namespace SandAndStones.Domain.Common
     {
         public int Id { get; set; }
 
-        private readonly List<BaseEvent> _domainEvents = new();
+        private readonly List<BaseEvent> _domainEvents = [];
 
         [NotMapped]
         public IReadOnlyCollection<BaseEvent> DomainEvents => _domainEvents.AsReadOnly();

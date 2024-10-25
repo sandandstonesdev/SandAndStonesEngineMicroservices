@@ -3,16 +3,11 @@ using SandAndStones.Infrastructure.Data;
 
 namespace SandAndStones.Api
 {
-    public class Startup
+    public class Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
     {
-        private readonly IConfiguration _configuration;
-        private readonly IWebHostEnvironment _enviroment;
-        public Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
-        {
-            _configuration = configuration;
-            _enviroment = enviroment;
-        }
-
+        private readonly IConfiguration _configuration = configuration;
+        private readonly IWebHostEnvironment _enviroment = enviroment;
+        
         public void ConfigureServices(IServiceCollection services)
         {
             var server = _configuration["DbServer"] ?? "";

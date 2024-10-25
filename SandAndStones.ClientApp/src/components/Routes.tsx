@@ -9,6 +9,7 @@ import Logout from "./Logout";
 import { useAuth } from "../context/AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
+import UnauthotizedHome from "../pages/UnauthotizedHome";
 
 interface AuthObjectToken {
     token : string | null
@@ -20,9 +21,13 @@ const Routes = () => {
     const publicRoutes = [
         {
             path: "/",
-            element: <Login />,
+            element: <UnauthotizedHome/>,
             children:
                 [
+                    {
+                        path: '/',
+                        element: <Login />,
+                    },
                     {
                         path: '/login',
                         element: <Login />,
@@ -40,6 +45,10 @@ const Routes = () => {
             path: "/",
             element: <ProtectedRoute><Home /></ProtectedRoute>,
             children: [
+                {
+                    path: '/',
+                    element: <About />,
+                },
                 {
                     path: '/about',
                     element: <About />,

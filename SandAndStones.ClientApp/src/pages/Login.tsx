@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../hooks/useAxios";
 import axios from "axios";
 import { useAuth } from "../context/AuthProvider";
@@ -19,46 +19,45 @@ function Login() {
     
     const navigate = useNavigate();
 
-    const navigateRegister = () => {
-        navigate('/register', { replace: true });
-    }
-
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
-        if (emailRef.current!.value !== "" && passwordRef.current!.value !== "")
-        {
-            setError("");
-            
-            const formData = axios.toFormData({
-                email: emailRef.current!.value,
-                password: passwordRef.current!.value
-            })
 
-            axiosInstance.post(
-                `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/login`,
-                formData
-            )
-            .then((response) => {
-                console.log(response.data);
-                if (response.status == 200) {
-                    setContextToken(response.data.data.accessToken);
-                    setError("Successful Login.");
-                    navigate('/', { replace: true });
-                }
-                else {
-                    const email = emailRef.current!.value;
-                    const password = passwordRef.current!.value;
-                    setError("Error Logging In. " + email + " " + password + " Status: " + response.status + " " + response.statusText);
-                }
-            })
-            .catch((error) => {
-                console.error(error);
-                setError("Error Logging in.");
-            });
-        }
-        else {
+        const email = emailRef.current!.value
+        const password = passwordRef.current!.value;
+
+        if (email === "" || password === "") {
             setError("Please fill in all fields.");
+            return;
         }
+
+        setError("");
+            
+        const formData = axios.toFormData({
+            email: emailRef.current!.value,
+            password: passwordRef.current!.value
+        })
+
+        axiosInstance.post(
+            `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/login`,
+            formData
+        )
+        .then((response) => {
+            console.log(response.data);
+            if (response.status == 200) {
+                setContextToken(response.data.data.accessToken);
+                setError("Successful Login.");
+                navigate('/', { replace: true });
+            }
+            else {
+                const email = emailRef.current!.value;
+                const password = passwordRef.current!.value;
+                setError("Error Logging In. " + email + " " + password + " Status: " + response.status + " " + response.statusText);
+            }
+        })
+        .catch((error) => {
+            console.error(error);
+            setError("Error Logging in.");
+        });
     }
 
     useEffect(() => {
@@ -74,7 +73,8 @@ function Login() {
                     <div>
                     <label className="forminput" htmlFor="email">Email:</label>
                     <input type="email"
-                        id="email"
+                            id="current-email"
+                            name="current-email"
                         ref={emailRef}
                         placeholder="mail@domain.com"
                     />
@@ -83,18 +83,18 @@ function Login() {
                     <label className="password">Password:</label>
                     <input
                         type="password"
-                        id="password"
-                        name="password"
+                        id="current-password"
+                        name="current-password"
                         ref={passwordRef}
                         />
                     </div>
                     <div>
                         <button type="submit">Login</button>
                     </div>
-                    <div>
-                        <button onClick={navigateRegister}>Register</button>
-                    </div>
-            </form>
+                </form>
+                <div>
+                    <Link to="/register">Go to Register</Link>
+                </div>
             {error && <p className="submit">{error}</p>}
             </div>
         </>
