@@ -44,8 +44,10 @@ namespace SandAndStones.Api
                                       builder
                                           .WithOrigins(corsOrigin,
                                                        "https://sand-and-stones-client-app-0001-cyg9asb6eahgf6ab.canadacentral-01.azurewebsites.net")
+                                          .AllowAnyHeader()
+                                          .WithExposedHeaders("Authorization")
                                           .AllowAnyMethod()
-                                          .AllowAnyHeader();
+                                          .AllowCredentials();
                                   });
             });
         }
