@@ -105,12 +105,7 @@ namespace SandAndStones.Api
                 await dbContextConfigurator.SeedAsync();
             }
 
-            app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .WithExposedHeaders("Authorization")
-                .SetIsOriginAllowed(origin => true) 
-                .AllowCredentials());
+            app.UseCors("ApiCorsPolicy");
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
