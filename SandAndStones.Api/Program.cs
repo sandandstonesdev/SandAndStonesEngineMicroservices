@@ -105,7 +105,12 @@ namespace SandAndStones.Api
                 await dbContextConfigurator.SeedAsync();
             }
 
-            app.UseCors("ApiCorsPolicy");
+            app.UseCors(x => x
+                .AllowAnyMethod()
+                .AllowAnyHeader()
+                .WithExposedHeaders("Authorization")
+                .SetIsOriginAllowed(origin => true) 
+                .AllowCredentials());
 
             app.UseDefaultFiles();
             app.UseStaticFiles();
@@ -124,12 +129,6 @@ namespace SandAndStones.Api
             }
 
             app.UseHttpsRedirection();
-
-            app.UseCors(x => x
-                .AllowAnyMethod()
-                .AllowAnyHeader()
-                .SetIsOriginAllowed(origin => true) 
-                .AllowCredentials());
             
             app.UseAuthentication();
             app.UseAuthorization();
