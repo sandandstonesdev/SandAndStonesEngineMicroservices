@@ -1,11 +1,11 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../hooks/useAxios";
-import axios from "axios";
+import axios, { isAxiosError } from "axios";
 import { useAuth } from "../context/AuthProvider";
 
 interface AuthObjectSet {
-    setContextToken: (newToken: string) => void
+    setContextToken: (newToken: string | null) => void
 }
 
 function Login() {
@@ -19,7 +19,7 @@ function Login() {
     
     const navigate = useNavigate();
 
-    const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
+    const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
         const email = emailRef.current!.value
@@ -31,39 +31,41 @@ function Login() {
         }
 
         setError("");
-            
-        const formData = axios.toFormData({
-            email: emailRef.current!.value,
-            password: passwordRef.current!.value
-        })
 
-        axiosInstance.post(
-            `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/login`,
-            formData
-        )
-        .then((response) => {
+        try {
+            const formData = axios.toFormData({
+                email: email,
+                password: password
+            })
+
+            const response = await axiosInstance.post(
+                `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/login`,
+                formData
+            );
             console.log(response.data);
-            if (response.status == 200) {
-                setContextToken(response.data.data.accessToken);
-                setError("Successful Login.");
-                navigate('/', { replace: true });
+            setContextToken(response.data.accessToken);
+            setError("Successful Login.");
+            navigate('/', { replace: true });
+        }
+        catch (error: unknown) {
+            if (isAxiosError(error)) {
+                if (error?.response) {
+                    const email = emailRef.current!.value;
+
+                    setError(`Error Logging In: Email: ${email} Status: ${error.response.status} ${error.response.statusText}`);
+                }
+                else {
+                    setError(`Error Logging in: ${error}`);
+                    console.error(error);
+                }
             }
-            else {
-                const email = emailRef.current!.value;
-                const password = passwordRef.current!.value;
-                setError("Error Logging In. " + email + " " + password + " Status: " + response.status + " " + response.statusText);
-            }
-        })
-        .catch((error) => {
-            console.error(error);
-            setError("Error Logging in.");
-        });
+        }
     }
 
     useEffect(() => {
         emailRef.current!.focus();
         passwordRef.current!.focus();
-    });
+    }, []);
 
     return (
         <>
@@ -71,7 +73,7 @@ function Login() {
             <h3>Sign In</h3>
                 <form onSubmit={handleSubmit}>
                     <div>
-                    <label className="forminput" htmlFor="email">Email:</label>
+                        <label htmlFor="current-email">Email:</label>
                     <input type="email"
                             id="current-email"
                             name="current-email"
@@ -80,12 +82,13 @@ function Login() {
                     />
                     </div>
                     <div>
-                    <label className="password">Password:</label>
+                    <label htmlFor="current-password">Password:</label>
                     <input
                         type="password"
                         id="current-password"
                         name="current-password"
                         ref={passwordRef}
+                        placeholder="*****"
                         />
                     </div>
                     <div>

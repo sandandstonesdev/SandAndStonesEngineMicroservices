@@ -24,7 +24,7 @@ namespace SandAndStones.Api
         public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
         {
             var response = await _authService.Login(loginRequest);
-            return Ok(new { message = "Login Successful.", data = response });
+            return Ok(new { message = "Login Successful.", response.AccessToken, response.RefreshToken});
         }
 
         [Authorize]
