@@ -44,7 +44,7 @@ function Login() {
         .then((response) => {
             console.log(response.data);
             if (response.status == 200) {
-                setContextToken(response.data.data.accessToken);
+                setContextToken(response.data.accessToken);
                 setError("Successful Login.");
                 navigate('/', { replace: true });
             }
