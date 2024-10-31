@@ -1,6 +1,6 @@
 ﻿using System.Security.Claims;
 
-namespace SandAndStones.Api.Services
+namespace SandAndStones.Infrastructure.Services
 {
     public interface ITokenGenerator
     {

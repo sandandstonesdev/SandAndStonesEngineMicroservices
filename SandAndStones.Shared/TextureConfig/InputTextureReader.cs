@@ -3,23 +3,18 @@ using System.Runtime.InteropServices;
 
 namespace SandAndStones.Shared.TextureConfig
 {
-    public class InputTextureReader : IAsyncTextureReader
+    public class InputTextureReader(string fileName) : IAsyncTextureReader
     {
-        private readonly string fileName;
-
-        public InputTextureReader(string fileName)
-        {
-            this.fileName = fileName;
-        }
+        private readonly string fileName = fileName;
 
         public async Task<InputTexture> ReadTextureAsync()
         {
-            string path = GetTextureImageFilePath(fileName);
+            //string path = GetTextureImageFilePath(fileName);
             var inputTexture = GetImageBytes(fileName);
             return inputTexture;
         }
 
-        public InputTexture GetImageBytes(string fileName)
+        public static InputTexture GetImageBytes(string fileName)
         {
             var outputImagePath = GetTextureImageFilePath(fileName);
             using var image = SKImage.FromEncodedData(outputImagePath);
@@ -33,7 +28,7 @@ namespace SandAndStones.Shared.TextureConfig
             return new InputTexture(Width, Height, bitmapBytes);
         }
 
-        public string GetTextureImageFilePath(string fileName)
+        public static string GetTextureImageFilePath(string fileName)
         {
             const string textureImagesPath = "Images";
             string basePath = Path.GetFullPath(@".");

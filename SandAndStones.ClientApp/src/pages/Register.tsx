@@ -8,7 +8,6 @@ function Register() {
     const confirmedPasswordRef = useRef<HTMLInputElement>(null);
     const [error, setError] = useState("");
 
-
     const navigate = useNavigate();
     
     const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
@@ -35,8 +34,10 @@ function Register() {
 
         axiosInstance.post(`${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/register`,
             {
+                userName: email,
                 email: email,
                 password: password,
+                confirmedPassword: confirmedPassword
             }
         ).then((response) => {
             console.log(response.data);
