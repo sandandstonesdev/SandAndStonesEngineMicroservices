@@ -1,4 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using FluentValidation;
+using MediatR;
+using Microsoft.EntityFrameworkCore;
+using SandAndStones.App;
+using SandAndStones.Infrastructure;
 using SandAndStones.Infrastructure.Data;
 
 namespace SandAndStones.Api
@@ -50,6 +54,11 @@ namespace SandAndStones.Api
                                           .AllowCredentials();
                                   });
             });
+
+            services
+                .AddPresentation()
+                .AddApplication()
+                .ConfigureMediatR();
         }
     }
 }

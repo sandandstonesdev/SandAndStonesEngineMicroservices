@@ -1,48 +1,50 @@
-﻿using Microsoft.AspNetCore.Authorization;
+using MediatR;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SandAndStones.Api.DTO;
-using SandAndStones.Api.Services;
+using SandAndStones.Api.UseCases.User.GetUserInfo;
+using SandAndStones.Api.UseCases.User.LoginUser;
+using SandAndStones.Api.UseCases.User.LogoutUser;
+using SandAndStones.Api.UseCases.User.RegisterUser;
 
 namespace SandAndStones.Api
 {
     [ApiController]
     [Route("[controller]")]
-    public class UserAuthorizationController(IAuthService authService) : ControllerBase()
+    public class UserAuthorizationController(IMediator mediator) : ControllerBase()
     {
-        private readonly IAuthService _authService = authService;
-
+        private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
+        
         [HttpPost("register")]
-        public async Task<IActionResult> Register([FromBody] RegisterRequest registerRequest)
+        public async Task<IActionResult> Register([FromBody] RegisterUserRequest registerRequest)
         {
-            var success = await _authService.Register(registerRequest);
-            if (!success)
+            var result = await _mediator.Send(registerRequest);
+            if (!result.Success)
                 return BadRequest(new { message = "Register Failed." });
             return Ok(new { message = "Register Successful." });
         }
 
         [HttpPost("login")]
-        public async Task<IActionResult> Login([FromBody] LoginRequest loginRequest)
+        public async Task<IActionResult> Login([FromBody] LoginUserRequest loginRequest)
         {
-            var response = await _authService.Login(loginRequest);
-            return Ok(new { message = "Login Successful.", response.AccessToken, response.RefreshToken});
+            var result = await _mediator.Send(loginRequest);
+            return Ok(new { message = result.Message, result.AccessToken, result.RefreshToken });
         }
 
         [Authorize]
         [HttpGet("logout")]
         public async Task<ActionResult> Logout()
         {
-            var success = await _authService.Logout();
-            if (!success)
-                return BadRequest(new { message = "Logout Failed." });
-            return Ok(new { message = "Logout Successful." });
+            var result = await _mediator.Send(new LogoutUserRequest());
+
+            return result.Success ? Ok(new { message = "Logout Successful." })
+                : BadRequest(new { message = "Logout Failed." });
         }
 
         [Authorize]
         [HttpGet("userInfo/{email}")]
         public async Task<ActionResult> GetUserInfo([FromRoute] string email)
         {
-            var userInfo = await _authService.GetUserInfo(email);
-            return Ok(new { message = "GetUserInfo Successful.", data = userInfo });
+            return Ok(_mediator.Send(new GetUserInfoRequest(email)));
         }
     }
 }

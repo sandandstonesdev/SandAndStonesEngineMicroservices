@@ -4,16 +4,12 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Text;
 
-namespace SandAndStones.Api.Services
+namespace SandAndStones.Infrastructure.Services
 {
-    public class TokenGenerator : ITokenGenerator
+    public class TokenGenerator(JwtSettings jwtSettings) : ITokenGenerator
     {
-        private readonly JwtSettings _jwtSettings;
-        public TokenGenerator(JwtSettings jwtSettings) 
-        {
-            _jwtSettings = jwtSettings;
-        }
-
+        private readonly JwtSettings _jwtSettings = jwtSettings;
+        
         public string GenerateToken(string userId, string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -7,16 +7,12 @@ namespace SandAndStones.Api
 {
     [ApiController]
     [Route("[controller]")]
-    public class InputTextureController : ControllerBase
+    public class InputTextureController(
+        ILogger<InputTextureController> logger,
+        IInputTextureRepository inputTextureRepository) : ControllerBase
     {
-        private readonly ILogger<InputTextureController> _logger;
-        private readonly IInputTextureRepository _inputTextureRepository;
-
-        public InputTextureController(ILogger<InputTextureController> logger, IInputTextureRepository inputTextureRepository)
-        {
-            _logger = logger;
-            _inputTextureRepository = inputTextureRepository;
-        }
+        private readonly ILogger<InputTextureController> _logger = logger;
+        private readonly IInputTextureRepository _inputTextureRepository = inputTextureRepository;
 
         [Route("/textures")]
         [HttpGet()]
@@ -42,8 +38,8 @@ namespace SandAndStones.Api
         [HttpGet()]
         public async Task<IActionResult> GetTextureById(string name)
         {
-            IAsyncTextureReader _inputAssetReader = new InputTextureReader(name);
-            InputTexture inputTexture = _inputAssetReader.ReadTextureAsync().Result;
+            var _inputAssetReader = new InputTextureReader(name);
+            var inputTexture = _inputAssetReader.ReadTextureAsync().Result;
             if (inputTexture.Loaded)
             {
                 using var image = SKImage.FromPixelCopy(new SKImageInfo(256, 256), inputTexture.Data);
