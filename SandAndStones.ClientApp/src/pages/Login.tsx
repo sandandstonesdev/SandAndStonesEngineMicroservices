@@ -4,6 +4,7 @@ import { axiosInstance } from "../hooks/useAxios";
 import axios, { isAxiosError } from "axios";
 import { AuthData } from "../types/AuthData";
 import { useAuth } from "../context/AuthProvider";
+import pkg from 'node-forge';
 
 function Login() {
     const emailRef = useRef<HTMLInputElement>(null);
@@ -21,19 +22,24 @@ function Login() {
         e.preventDefault();
 
         const email = emailRef.current!.value
-        const password = passwordRef.current!.value;
+        const passwordToHash = passwordRef.current!.value;
 
-        if (email === "" || password === "") {
+        if (email === "" || passwordToHash === "") {
             setError("Please fill in all fields.");
             return;
         }
 
+        const salt = `${import.meta.env.VITE_TEST_SALT}`;;
+        const hashObject = pkg.md.sha512.create();
+        hashObject.update(salt + passwordToHash);
+        const hashedPassword = pkg.util.encode64(hashObject.digest().data);
+        
         setError("");
 
         try {
             const formData = axios.toFormData({
                 email: email,
-                password: password
+                password: hashedPassword
             })
 
             const response = await axiosInstance.post(

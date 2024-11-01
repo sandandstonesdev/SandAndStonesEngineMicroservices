@@ -1,6 +1,7 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using SandAndStones.App.UseCases.User.CheckCurrentTokenValidity;
 using SandAndStones.App.UseCases.User.GetUserInfo;
 using SandAndStones.App.UseCases.User.LoginUser;
 using SandAndStones.App.UseCases.User.LogoutUser;
@@ -48,6 +49,15 @@ namespace SandAndStones.Api
             var result = await _mediator.Send(new GetUserInfoRequest(email));
 
             return Ok(new { message = result.Message, result.UserName, result.Email});;
+        }
+
+        [Authorize]
+        [HttpGet("currenttokenvalid")]
+        public async Task<ActionResult> CheckCurrentTokenValidity()
+        {
+            var result = await _mediator.Send(new CheckCurrentTokenValidityRequest());
+
+            return Ok(new { result.IsValid });
         }
     }
 }

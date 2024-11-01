@@ -15,7 +15,7 @@ namespace SandAndStones.App.UseCases.User.GetUserInfo
             ArgumentException.ThrowIfNullOrWhiteSpace(request.UserEmail, nameof(request.UserEmail));
 
             var userInfo = await _authService.GetUserInfo(new UserInfoDto(request.UserEmail, request.UserEmail), _httpContextAccessor.HttpContext);
-            return new GetUserInfoResponse(userInfo.Email, userInfo.Email, "GetUserInfo Successful.");
+            return new(userInfo.Email, userInfo.Email, "GetUserInfo Successful.");
         }
     }
 }

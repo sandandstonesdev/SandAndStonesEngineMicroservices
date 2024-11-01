@@ -101,6 +101,13 @@ namespace SandAndStones.Infrastructure.Services
             return true;
         }
 
+        public async Task<bool> CheckCurrentTokenValidity(HttpContext httpContext)
+        {
+            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+            var user = await GetUserByToken(accessToken);
+            return user != null;
+        }
+
         private async Task<ApplicationUser> GetUserByToken(string token)
         {
             var principal = _tokenGenerator.GetPrincipalFromExpiredToken(token);

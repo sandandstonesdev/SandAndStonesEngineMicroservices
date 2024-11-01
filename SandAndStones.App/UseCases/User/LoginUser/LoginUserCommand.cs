@@ -17,7 +17,7 @@ namespace SandAndStones.App.UseCases.User.LoginUser
             var tokenDto = await _authService.Login(new UserDto(request.Email, request.Password));
             _authService.InjectTokensIntoCookie(tokenDto, _httpContextAccessor.HttpContext);
 
-            return new LoginUserResponse(true, "Login Successful.");
+            return new(true, "Login Successful.");
         }
     }
 }

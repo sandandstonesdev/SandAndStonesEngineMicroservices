@@ -38,6 +38,10 @@ export default defineConfig({
                 target: 'https://localhost:7232/',
                 secure: false
             },
+            '^/userAuthorization/currenttokenvalid': {
+                target: 'https://localhost:7232/',
+                secure: false
+            },
             '^/profile': {
                 target: 'https://localhost:7232/',
                 secure: false

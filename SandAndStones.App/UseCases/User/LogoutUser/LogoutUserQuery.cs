@@ -15,7 +15,7 @@ namespace SandAndStones.App.UseCases.User.LogoutUser
         {
             bool res = await _authService.Logout(_httpContextAccessor.HttpContext);
 
-            return new LogoutUserResponse(res);
+            return new(res);
         }
     }
 }
