@@ -1,7 +1,7 @@
 ﻿using MediatR;
 using SandAndStones.Infrastructure.Services;
 
-namespace SandAndStones.Api.UseCases.User.RegisterUser
+namespace SandAndStones.App.UseCases.User.RegisterUser
 {
     public class RegisterUserCommand(IAuthService authService) : IRequestHandler<RegisterUserRequest, RegisterUserResponse>
     {

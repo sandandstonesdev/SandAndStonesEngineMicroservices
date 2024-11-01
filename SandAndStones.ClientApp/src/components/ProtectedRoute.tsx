@@ -1,17 +1,14 @@
 import { Navigate } from "react-router-dom";
 import { useAuth } from "../context/AuthProvider";
 import { PropsWithChildren } from "react";
-
-interface AuthObjectToken {
-    token: string | null
-}
+import { AuthData } from "../types/AuthData";
 
 type ProtectedRouteProps = PropsWithChildren;
 
 export default function ProtectedRoute({ children }: ProtectedRouteProps) {
-    const { token } = useAuth() as AuthObjectToken;
+    const { isAuthenticated } = useAuth() as AuthData;
 
-    if (!token) {
+    if (!isAuthenticated) {
         return <Navigate to="/login" />;
     }
 

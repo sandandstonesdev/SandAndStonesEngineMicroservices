@@ -1,6 +1,4 @@
-﻿using FluentValidation;
-using Microsoft.Extensions.DependencyInjection;
-using SandAndStones.Api.UseCases.User.LoginUser;
+﻿using Microsoft.Extensions.DependencyInjection;
 using SandAndStones.Infrastructure;
 
 namespace SandAndStones.App
@@ -9,24 +7,21 @@ namespace SandAndStones.App
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
+            services.AddHttpContextAccessor();
             services.AddInfrastructure();
             return services;
         }
 
         public static IServiceCollection ConfigureMediatR(this IServiceCollection services)
         {
-            services.AddMediatR(config => config.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+            services.AddMediatR(options =>
+            {
+                options.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly);
+                //options.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
+                //options.AddOpenBehavior(typeof(ValidationBehavior<,>));
+            });
 
-
-            //services.AddMediatR(options =>
-            //{
-            //    options.RegisterServicesFromAssemblyContaining(typeof(DependencyInjection));
-
-            //options.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
-            //options.AddOpenBehavior(typeof(ValidationBehavior<,>));
-            //s});
-
-            //services.AddValidatorsFromAssemblyContaining(typeof(DependencyInjection));
+            //services.AddValidatorsFromAssembly(typeof(DependencyInjection).Assembly);
             return services;
         }
     }

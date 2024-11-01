@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SandAndStones.Api.UseCases.User.LogoutUser
+namespace SandAndStones.App.UseCases.User.LogoutUser
 {
     public class LogoutUserRequest : IRequest<LogoutUserResponse>
     {

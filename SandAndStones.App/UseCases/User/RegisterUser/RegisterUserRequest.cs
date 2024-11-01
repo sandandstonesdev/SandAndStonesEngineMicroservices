@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SandAndStones.Api.UseCases.User.RegisterUser
+namespace SandAndStones.App.UseCases.User.RegisterUser
 {
     public record RegisterUserRequest(
         string Username,

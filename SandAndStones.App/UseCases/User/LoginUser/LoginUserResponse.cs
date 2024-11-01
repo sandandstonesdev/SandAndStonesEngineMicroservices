@@ -1,9 +1,8 @@
-﻿namespace SandAndStones.Api.UseCases.User.LoginUser
+﻿namespace SandAndStones.App.UseCases.User.LoginUser
 {
     public record LoginUserResponse
     (
-        string AccessToken,
-        string RefreshToken,
+        bool Succeeded,
         string Message
     );
 }

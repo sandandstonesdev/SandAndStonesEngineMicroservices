@@ -1,11 +1,4 @@
-﻿using MediatR;
-
-namespace SandAndStones.Api.UseCases.User.GetUserInfo
+﻿namespace SandAndStones.App.UseCases.User.GetUserInfo
 {
-    public record GetUserInfoResponse
-    (
-        string UserName,
-        string Email,
-        string Message
-    ) : IRequest;
+    public record GetUserInfoResponse(string UserName, string Email, string Message);
 }

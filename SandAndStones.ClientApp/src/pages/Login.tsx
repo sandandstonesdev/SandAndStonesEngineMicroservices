@@ -2,16 +2,14 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../hooks/useAxios";
 import axios, { isAxiosError } from "axios";
+import { AuthData } from "../types/AuthData";
 import { useAuth } from "../context/AuthProvider";
 
-interface AuthObjectSet {
-    setContextToken: (newToken: string | null) => void
-}
-
 function Login() {
-    const { setContextToken } = useAuth() as AuthObjectSet;
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
+    const { logUserIn } = useAuth() as AuthData;
+
 
     console.log("Environment mode:" + import.meta.env.MODE);
 
@@ -43,20 +41,20 @@ function Login() {
                 formData
             );
             console.log(response.data);
-            setContextToken(response.data.accessToken);
             setError("Successful Login.");
+            logUserIn();
             navigate('/', { replace: true });
         }
-        catch (error: unknown) {
-            if (isAxiosError(error)) {
-                if (error?.response) {
+        catch (err: unknown) {
+            if (isAxiosError(err)) {
+                if (err?.response) {
                     const email = emailRef.current!.value;
 
-                    setError(`Error Logging In: Email: ${email} Status: ${error.response.status} ${error.response.statusText}`);
+                    setError(`Error Logging In: Email: ${email} Status: ${err.response.status} ${err.response.statusText}`);
                 }
                 else {
-                    setError(`Error Logging in: ${error}`);
-                    console.error(error);
+                    setError(`Error Logging in: ${err}`);
+                    console.error(err);
                 }
             }
         }

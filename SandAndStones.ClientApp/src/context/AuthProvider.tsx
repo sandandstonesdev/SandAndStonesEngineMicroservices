@@ -1,40 +1,26 @@
-import { createContext, useState, PropsWithChildren, useMemo, useEffect, useContext } from "react";
-import { axiosInstance } from "../hooks/useAxios";
+import { createContext, PropsWithChildren, useContext, useState } from "react";
+import { AuthData } from "../types/AuthData";
 
-interface AuthObject {
-    token: string | null;
-    setContextToken: (newToken: string) => void
-}
-
-const AuthContext = createContext<AuthObject | null>(null);
+const AuthContext = createContext<AuthData>(
+{
+    isAuthenticated: false,
+    logUserIn: () => { },
+    logUserOut: () => { }
+});
 
 const AuthProvider = (props: PropsWithChildren) => {
-    const [token, setToken] = useState(localStorage.getItem("token"));
-
-    const setContextToken = (newToken : string) => {
-        setToken(newToken);
+    const [isAuthenticated, setIsAuthenticated] = useState<boolean>(false);
+    
+    const logUserIn = () => {
+        setIsAuthenticated(true);
     };
 
-    useEffect(() => {
-        if (token) {
-            axiosInstance.defaults.headers.common["Authorization"] = "Bearer " + token;
-            localStorage.setItem('token', token);
-        } else {
-            delete axiosInstance.defaults.headers.common["Authorization"];
-            localStorage.removeItem('token')
-        }
-    }, [token]);
-    
-    const contextValue = useMemo(
-        () => ({
-            token,
-            setContextToken,
-        }),
-        [token]
-    );
+    const logUserOut = () => {
+        setIsAuthenticated(false);
+    };
 
     return (
-        <AuthContext.Provider value={contextValue}>
+        <AuthContext.Provider value={{ isAuthenticated, logUserIn, logUserOut }}>
             {props.children}
         </AuthContext.Provider>
     )

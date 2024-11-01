@@ -1,9 +1,12 @@
-﻿using Azure.Identity;
+﻿using Azure.Core;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SandAndStones.Api.DTO;
+using SandAndStones.Domain.Constants;
 using SandAndStones.Domain.DTO;
-using SandAndStones.Infrastructure.Data;
 using SandAndStones.Infrastructure.Models;
+using System.Net.Http;
+using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Services
 {
@@ -13,12 +16,11 @@ namespace SandAndStones.Infrastructure.Services
         ITokenGenerator tokenGenerator,
         JwtSettings jwtSettings) : IAuthService
     {
-        private const string RefreshTokenName = "RefreshToken";
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
         private readonly JwtSettings _jwtSettings = jwtSettings;
-        
+
         public async Task<bool> Register(UserDto userDto)
         {
             try
@@ -46,7 +48,7 @@ namespace SandAndStones.Infrastructure.Services
 
                 ApplicationUser user = await _userManager.FindByEmailAsync(userDto.Email);
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
-                
+
                 var result = await _signInManager.CheckPasswordSignInAsync(user, userDto.Password, false);
 
                 if (!result.Succeeded)
@@ -54,11 +56,9 @@ namespace SandAndStones.Infrastructure.Services
                     throw new ArgumentException("Invalid password.");
                 }
 
-                await _userManager.RemoveAuthenticationTokenAsync(user, _jwtSettings.RefreshTokenProviderName, RefreshTokenName);
-                var refreshToken = await _userManager.GenerateUserTokenAsync(user, _jwtSettings.RefreshTokenProviderName, RefreshTokenName);
-                await _userManager.SetAuthenticationTokenAsync(user, _jwtSettings.RefreshTokenProviderName, RefreshTokenName, refreshToken);
-
                 var token = _tokenGenerator.GenerateToken(user.Id, user.Email);
+                var refreshToken = _tokenGenerator.GenerateToken(user.Id, user.Email);
+
                 return new TokenDto(token, refreshToken);
             }
             catch (Exception ex)
@@ -67,11 +67,31 @@ namespace SandAndStones.Infrastructure.Services
             }
         }
 
-        public async Task<bool> Logout()
+        public async Task<bool> Logout(HttpContext httpContext)
         {
             try
             {
                 await _signInManager.SignOutAsync();
+
+                httpContext.Response.Cookies.Delete(
+                    JwtTokenConstants.AccessTokenName,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddDays(-1),
+                        HttpOnly = true,
+                        IsEssential = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.None
+                    });
+                httpContext.Response.Cookies.Delete(JwtTokenConstants.RefreshTokenName,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddDays(-1),
+                        HttpOnly = true,
+                        IsEssential = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.None
+                    });
             }
             catch (Exception ex)
             {
@@ -81,42 +101,92 @@ namespace SandAndStones.Infrastructure.Services
             return true;
         }
 
-        public async Task<TokenDto> UserRefreshTokenAsync(TokenDto request)
+        private async Task<ApplicationUser> GetUserByToken(string token)
+        {
+            var principal = _tokenGenerator.GetPrincipalFromExpiredToken(token);
+            ArgumentNullException.ThrowIfNull(principal, nameof(principal));
+
+            var email = principal.FindFirst(ClaimTypes.Email)?.Value;
+            ArgumentException.ThrowIfNullOrWhiteSpace(email, "email.Value");
+
+            var user = await _userManager.FindByEmailAsync(email);
+            ArgumentNullException.ThrowIfNull(user, nameof(user));
+            ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
+
+            return user;
+        }
+
+        public async Task<bool> RefreshUserTokenAsync(HttpContext httpContext)
         {
             try
             {
-                var principal = _tokenGenerator.GetPrincipalFromExpiredToken(request.AccessToken);
-                ArgumentNullException.ThrowIfNull(principal, nameof(principal));
-                ArgumentNullException.ThrowIfNull(principal.FindFirst("UserName")?.Value, "UserName.Value");
+                httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+                httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.RefreshTokenName, out var refreshToken);
 
-                var user = await _userManager.FindByNameAsync(principal.FindFirst("UserName")?.Value ?? "");
+                var user = await GetUserByToken(accessToken);
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
-                ArgumentNullException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
+                ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
 
-                var result = await _userManager.VerifyUserTokenAsync(user, _jwtSettings.RefreshTokenProviderName, RefreshTokenName, request.RefreshToken);
-
-                if (!result) throw new Exception("Refresh token is not valid.");
+                var newAccessToken = _tokenGenerator.GenerateToken(user.Id, user.Email);
+                var tokenDto = new TokenDto(accessToken, refreshToken);
                 
-                var accessToken = _tokenGenerator.GenerateToken(user.Id, user.Email);
+                InjectTokensIntoCookie(tokenDto, httpContext);
 
-                return new TokenDto(accessToken, request.RefreshToken);
+                return true;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 throw new Exception("Error while refreshing token: " + ex.Message);
             }
         }
 
-        public async Task<UserDto> GetUserInfo(UserInfoDto userDto)
+        public async Task<UserInfoDto> GetUserInfo(UserInfoDto userDto, HttpContext httpContext)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(userDto.Email, nameof(userDto.Email));
 
-            ApplicationUser userInfo = await _userManager.FindByEmailAsync(userDto.Email);
+            var userInfo = await _userManager.FindByEmailAsync(userDto.Email);
             ArgumentNullException.ThrowIfNull(userInfo, nameof(userInfo));
             ArgumentException.ThrowIfNullOrWhiteSpace(userInfo.UserName, nameof(userInfo.UserName));
             ArgumentException.ThrowIfNullOrWhiteSpace(userInfo.Email, nameof(userInfo.Email));
 
-            return new UserDto(userInfo.UserName, userInfo.Email);
+            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.RefreshTokenName, out var refreshToken);
+
+            var user = await GetUserByToken(accessToken);
+            ArgumentNullException.ThrowIfNull(user, nameof(user));
+            ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
+
+            return new UserInfoDto(userInfo.UserName, userInfo.Email, true);
+        }
+
+        public bool InjectTokensIntoCookie(TokenDto tokenDto, HttpContext context)
+        {
+            try
+            {
+                context.Response.Cookies.Append(JwtTokenConstants.AccessTokenName, tokenDto.AccessToken,
+                new CookieOptions
+                {
+                    Expires = DateTimeOffset.UtcNow.AddMinutes(15),
+                    HttpOnly = true,
+                    IsEssential = true,
+                    Secure = true,
+                    SameSite = SameSiteMode.None
+                });
+                context.Response.Cookies.Append(JwtTokenConstants.RefreshTokenName, tokenDto.RefreshToken,
+                    new CookieOptions
+                    {
+                        Expires = DateTimeOffset.UtcNow.AddDays(15),
+                        HttpOnly = true,
+                        IsEssential = true,
+                        Secure = true,
+                        SameSite = SameSiteMode.None
+                    });
+                return true;
+            }
+            catch
+            {
+                throw;
+            }
         }
     }
 }
