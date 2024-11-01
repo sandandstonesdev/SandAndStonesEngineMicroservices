@@ -1,8 +1,5 @@
-﻿using FluentValidation;
-using MediatR;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using SandAndStones.App;
-using SandAndStones.Infrastructure;
 using SandAndStones.Infrastructure.Data;
 
 namespace SandAndStones.Api
@@ -57,7 +54,7 @@ namespace SandAndStones.Api
 
             services
                 .AddPresentation()
-                .AddApplication()
+                .AddApplication(_configuration)
                 .ConfigureMediatR();
         }
     }

@@ -13,7 +13,9 @@ import UnauthotizedHome from "../pages/UnauthotizedHome";
 import { AuthData } from "../types/AuthData";
 
 const Routes = () => {
-    const { isAuthenticated } = useAuth() as AuthData;
+    const { isAuthenticated, checkTokenValidity } = useAuth() as AuthData;
+
+    checkTokenValidity();
 
     const publicRoutes = [
         {

@@ -1,14 +1,15 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using SandAndStones.Infrastructure;
 
 namespace SandAndStones.App
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddApplication(this IServiceCollection services)
+        public static IServiceCollection AddApplication(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddHttpContextAccessor();
-            services.AddInfrastructure();
+            services.AddInfrastructure(configuration);
             return services;
         }
 

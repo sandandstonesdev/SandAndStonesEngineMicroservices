@@ -13,7 +13,7 @@ namespace SandAndStones.App.UseCases.User.RegisterUser
             ArgumentException.ThrowIfNullOrWhiteSpace(registerUserRequest.Password);
 
             bool result = await _authService.Register(new Domain.DTO.UserDto(registerUserRequest.Email, registerUserRequest.Password));
-            return new RegisterUserResponse(result);
+            return new(result);
         }
     }
 }

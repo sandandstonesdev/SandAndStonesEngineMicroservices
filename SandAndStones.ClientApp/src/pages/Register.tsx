@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../hooks/useAxios";
 import axios, { isAxiosError } from "axios";
+import pkg from 'node-forge';
 
 function Register() {
     const emailRef = useRef<HTMLInputElement>(null);
@@ -31,15 +32,23 @@ function Register() {
             return;
         }
 
+        const salt = `${import.meta.env.VITE_TEST_SALT}`;
+        const hashObject = pkg.md.sha512.create();
+
+        hashObject.update(salt + password);
+        const hashedPassword = pkg.util.encode64(hashObject.digest().data);
+
+        hashObject.update(salt + confirmedPassword);
+        const hashedConfirmedPassword = pkg.util.encode64(hashObject.digest().data);
+        
         setError("");
 
         try {
-
             const formData = axios.toFormData({
                 userName: email,
                 email: email,
-                password: password,
-                confirmedPassword: confirmedPassword
+                password: hashedPassword,
+                confirmedPassword: hashedConfirmedPassword
             })
 
             await axiosInstance.post(
