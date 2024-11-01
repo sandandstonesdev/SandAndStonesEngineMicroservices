@@ -1,10 +1,10 @@
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using SandAndStones.Api.UseCases.User.GetUserInfo;
-using SandAndStones.Api.UseCases.User.LoginUser;
-using SandAndStones.Api.UseCases.User.LogoutUser;
-using SandAndStones.Api.UseCases.User.RegisterUser;
+using SandAndStones.App.UseCases.User.GetUserInfo;
+using SandAndStones.App.UseCases.User.LoginUser;
+using SandAndStones.App.UseCases.User.LogoutUser;
+using SandAndStones.App.UseCases.User.RegisterUser;
 
 namespace SandAndStones.Api
 {
@@ -27,7 +27,8 @@ namespace SandAndStones.Api
         public async Task<IActionResult> Login([FromBody] LoginUserRequest loginRequest)
         {
             var result = await _mediator.Send(loginRequest);
-            return Ok(new { message = result.Message, result.AccessToken, result.RefreshToken });
+
+            return Ok(new { message = result.Message, result.Succeeded });
         }
 
         [Authorize]
@@ -44,7 +45,9 @@ namespace SandAndStones.Api
         [HttpGet("userInfo/{email}")]
         public async Task<ActionResult> GetUserInfo([FromRoute] string email)
         {
-            return Ok(_mediator.Send(new GetUserInfoRequest(email)));
+            var result = await _mediator.Send(new GetUserInfoRequest(email));
+
+            return Ok(new { message = result.Message, result.UserName, result.Email});;
         }
     }
 }

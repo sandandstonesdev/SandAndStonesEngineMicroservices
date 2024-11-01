@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.IdentityModel.Tokens;
 using SandAndStones.Api.DTO;
+using SandAndStones.Domain.Constants;
 using SandAndStones.Infrastructure.Data;
 using SandAndStones.Infrastructure.Models;
 using System.Text;
@@ -39,6 +40,16 @@ namespace SandAndStones.Api
                     ValidAudience = jwtSettings.Audience,
                     IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
                     ClockSkew = TimeSpan.FromSeconds(0)
+                };
+                options.Events = new JwtBearerEvents
+                {
+                    OnMessageReceived = ctx =>
+                    {
+                        ctx.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+                        if (!string.IsNullOrEmpty(accessToken))
+                            ctx.Token = accessToken;
+                        return Task.CompletedTask;
+                    }
                 };
             });
 

@@ -10,13 +10,10 @@ import { useAuth } from "../context/AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
 import UnauthotizedHome from "../pages/UnauthotizedHome";
-
-interface AuthObjectToken {
-    token : string | null
-}
+import { AuthData } from "../types/AuthData";
 
 const Routes = () => {
-    const { token } = useAuth() as AuthObjectToken;
+    const { isAuthenticated } = useAuth() as AuthData;
 
     const publicRoutes = [
         {
@@ -74,7 +71,7 @@ const Routes = () => {
     ];
 
     const router = createBrowserRouter([
-        ...(token ? authRoutes : publicRoutes)
+        ...(isAuthenticated ? authRoutes : publicRoutes)
     ]);
 
     return <RouterProvider router={router} />;

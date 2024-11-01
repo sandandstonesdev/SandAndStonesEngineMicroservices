@@ -1,6 +1,6 @@
 ﻿using MediatR;
 
-namespace SandAndStones.Api.UseCases.User.LoginUser
+namespace SandAndStones.App.UseCases.User.LoginUser
 {
     public class LoginUserRequest : IRequest<LoginUserResponse>
     {
