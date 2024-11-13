@@ -15,6 +15,7 @@
 <img alt="Login Screen" src="https://github.com/user-attachments/assets/c59e9080-9e38-46f7-b0eb-31a339820a4e" width="40%" height="40%">
 <img alt="Register Screen" src="https://github.com/user-attachments/assets/8db2543f-1697-4306-9b51-4ed92fbcf076" width="40%" height="40%">
 </p>
+
 * Content Screens:
 <p>
 <img alt="About Screen" src="https://github.com/user-attachments/assets/f6f40ffe-74c1-40a1-b99f-306582125720" width="40%" height="40%">
