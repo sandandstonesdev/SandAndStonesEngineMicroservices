@@ -108,9 +108,9 @@ namespace SandAndStones.Infrastructure.Services
             return user != null;
         }
 
-        private async Task<ApplicationUser> GetUserByToken(string token)
+        internal async Task<ApplicationUser> GetUserByToken(string token)
         {
-            var principal = _tokenGenerator.GetPrincipalFromExpiredToken(token);
+            var principal = _tokenGenerator.GetPrincipalFromToken(token);
             ArgumentNullException.ThrowIfNull(principal, nameof(principal));
 
             var email = principal.FindFirst(ClaimTypes.Email)?.Value;
@@ -157,8 +157,7 @@ namespace SandAndStones.Infrastructure.Services
             ArgumentException.ThrowIfNullOrWhiteSpace(userInfo.Email, nameof(userInfo.Email));
 
             httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
-            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.RefreshTokenName, out var refreshToken);
-
+            
             var user = await GetUserByToken(accessToken);
             ArgumentNullException.ThrowIfNull(user, nameof(user));
             ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));

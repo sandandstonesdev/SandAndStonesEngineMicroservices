@@ -37,7 +37,7 @@ namespace SandAndStones.Infrastructure.Services
             return tokenHandler.WriteToken(token);
         }
 
-        public ClaimsPrincipal GetPrincipalFromExpiredToken(string token)
+        public ClaimsPrincipal GetPrincipalFromToken(string token)
         {
             var tokenValidationParameters = new TokenValidationParameters
             {

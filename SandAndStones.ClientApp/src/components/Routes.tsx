@@ -2,7 +2,6 @@ import { RouterProvider, createBrowserRouter } from "react-router-dom";
 import Login from "../pages/Login";
 import About from "../pages/About";
 import Register from "../pages/Register";
-import Profile from "./Profile";
 import Assets from "../pages/Assets";
 import Textures from "../pages/Textures";
 import Logout from "./Logout";
@@ -11,6 +10,7 @@ import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
 import UnauthotizedHome from "../pages/UnauthotizedHome";
 import { AuthData } from "../types/AuthData";
+import Profile from "../pages/Profile";
 
 const Routes = () => {
     const { isAuthenticated, checkTokenValidity } = useAuth() as AuthData;
