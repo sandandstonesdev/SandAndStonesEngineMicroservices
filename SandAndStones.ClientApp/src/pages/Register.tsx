@@ -2,7 +2,23 @@ import { useEffect, useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../hooks/useAxios";
 import axios, { isAxiosError } from "axios";
+import { z, ZodError } from "zod"
 import pkg from 'node-forge';
+import { formatZodIssue } from "../hooks/useZodFormatIssue";
+
+const registerUserSchema = z.object({
+        email: z.string().email(),
+    password: z.string().min(8).regex(
+        new RegExp(/^(?=.*[0-9])(?=.*[!@#$%^&*])[a-zA-Z0-9!@#$%^&*]{6,16}$/), {
+                message: 'Your password is not valid',
+            }),
+    confirmedPassword: z.string().min(8)
+    }).refine((data) => data.password === data.confirmedPassword, {
+            message: "Passwords don't match",
+            path: ["confirmedPassword"]
+    });
+
+type IRegisterUserSchema = z.infer<typeof registerUserSchema>;
 
 function Register() {
     const emailRef = useRef<HTMLInputElement>(null);
@@ -15,38 +31,27 @@ function Register() {
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
 
-        const email = emailRef.current!.value;
-        const password = passwordRef.current!.value;
-        const confirmedPassword = confirmedPasswordRef.current!.value;
-
-        if (email === "" || password === "" || confirmedPassword === "") {
-            setError("Please fill in all fields.");
-            return;
-        }
-        if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
-            setError("Please enter a valid email address.");
-            return;
-        }
-        if (password !== confirmedPassword) {
-            setError("Passwords do not match.");
-            return;
-        }
-
-        const salt = `${import.meta.env.VITE_TEST_SALT}`;
-        const hashObject = pkg.md.sha512.create();
-
-        hashObject.update(salt + password);
-        const hashedPassword = pkg.util.encode64(hashObject.digest().data);
-
-        hashObject.update(salt + confirmedPassword);
-        const hashedConfirmedPassword = pkg.util.encode64(hashObject.digest().data);
-        
-        setError("");
-
         try {
+            const registerUserCredentials = await registerUserSchema.parseAsync({
+                email: emailRef.current!.value,
+                password: passwordRef.current!.value,
+                confirmedPassword: confirmedPasswordRef.current!.value
+            } as IRegisterUserSchema);
+
+            const salt = `${import.meta.env.VITE_TEST_SALT}`;
+            const hashObject = pkg.md.sha512.create();
+
+            hashObject.update(salt + registerUserCredentials.password);
+            const hashedPassword = pkg.util.encode64(hashObject.digest().data);
+
+            hashObject.update(salt + registerUserCredentials.confirmedPassword);
+            const hashedConfirmedPassword = pkg.util.encode64(hashObject.digest().data);
+
+            setError("");
+
             const formData = axios.toFormData({
-                userName: email,
-                email: email,
+                userName: registerUserCredentials.email,
+                email: registerUserCredentials.email,
                 password: hashedPassword,
                 confirmedPassword: hashedConfirmedPassword
             })
@@ -59,15 +64,25 @@ function Register() {
             setError("Successful register.");
             navigate('/', { replace: true });
         }
-        catch (error: unknown) {
-            if (isAxiosError(error)) {
-                if (error?.response) {
+        catch (err: unknown) {
+            if (isAxiosError(err)) {
+                if (err.response) {
                     const email = emailRef.current!.value;
-                    setError(`Error Logging In: Email: ${email} Status: ${error.response.status} ${error.response.statusText}`);
+                    setError(`Error while Registering: Email: ${email} Status: ${err.response.status} ${err.response.statusText}`);
                 }
                 else {
-                    setError(`Error Logging in: ${error}`);
-                    console.error(error);
+                    setError(`Error while Registering: ${err.message}`);
+                    console.error(err);
+                }
+            }
+            else if (err instanceof ZodError)
+            {
+                if (err.issues.length) {
+                    const currentIssue = err.issues[0]
+
+                    const errorIssue = formatZodIssue(currentIssue)
+                    setError(`Validation Error while Registering: ${errorIssue}`);
+                    console.error(err);
                 }
             }
         }
