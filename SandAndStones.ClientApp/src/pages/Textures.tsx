@@ -54,7 +54,7 @@ function Textures() {
         };
 
         fetchAssetsInfo();
-    }, [isLoading, items]);
+    }, [items]);
 
     return (
         <>

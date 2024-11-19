@@ -42,6 +42,10 @@ export default defineConfig({
                 target: 'https://localhost:7232/',
                 secure: false
             },
+            '^/userProfile/profile': {
+                target: 'https://localhost:7232/',
+                secure: false
+            },
             '^/profile': {
                 target: 'https://localhost:7232/',
                 secure: false

@@ -41,7 +41,7 @@ function Assets() {
         };
 
         fetchAssetsInfo();
-    }, [isLoading, items]);
+    }, [items]);
 
 
     return (

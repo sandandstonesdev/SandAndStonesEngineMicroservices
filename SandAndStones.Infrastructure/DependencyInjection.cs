@@ -11,6 +11,7 @@ namespace SandAndStones.Infrastructure
         public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddTransient<IAuthService, AuthService>();
+            services.AddTransient<IUserProfileService, UserProfileService>();
             services.AddSingleton<ITokenGenerator, TokenGenerator>();
             var salt = configuration["HasherModule:TestSalt"] ?? throw new ArgumentException("HasherModule:TestSalt config missing");
 
