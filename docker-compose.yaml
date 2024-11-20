@@ -7,6 +7,16 @@ volumes:
     app-db-data:
             
 services:
+    gatewayservice:
+        image: gatewayservice
+        build:
+            context: .
+            dockerfile: ./SandAndStones.Gateway.Api/Dockerfile
+        ports: 
+           - "5000:5000"
+        networks:
+            - appnetwork
+    
     assetinfoservice:
         image: assetservice
         build: 
