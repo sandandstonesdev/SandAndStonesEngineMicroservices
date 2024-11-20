@@ -19,35 +19,35 @@ export default defineConfig({
         cors: true,
         proxy: {
             '^/assetBatch': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/textureFile': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/userAuthorization/register': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/userAuthorization/login': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/userAuthorization/logout': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/userAuthorization/currenttokenvalid': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/userProfile/profile': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             },
             '^/profile': {
-                target: 'https://localhost:7232/',
+                target: 'https://localhost:5000/',
                 secure: false
             }
         },
