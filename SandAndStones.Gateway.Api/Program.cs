@@ -9,6 +9,8 @@ builder.Services.AddSwaggerGen(config =>
     config.CustomSchemaIds(type => type.FullName);
 });
 
+builder.Services.AddControllers();
+
 builder.Services.AddProblemDetails();
 
 builder.Services.AddReverseProxy()
