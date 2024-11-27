@@ -3,7 +3,6 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using SandAndStones.Domain.Constants;
 using SandAndStones.Infrastructure.Models;
-using System.Net;
 using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Services

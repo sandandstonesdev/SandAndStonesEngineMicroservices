@@ -1,17 +1,13 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace SandAndStones.Api
+namespace SandAndStones.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InputAssetBatchController : ControllerBase
+    public class InputAssetBatchController(IInputAssetBatchRepository repository) : ControllerBase
     {
-        private readonly IInputAssetBatchRepository _repository;
-        public InputAssetBatchController(IInputAssetBatchRepository repository) 
-        {
-            _repository = repository;
-        }
-
+        private readonly IInputAssetBatchRepository _repository = repository;
+        
         [Route("/assetBatch/{id}")]
         [HttpGet()]
         public async Task<IActionResult> GetInputAssetBatchById(int id)

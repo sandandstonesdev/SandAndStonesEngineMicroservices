@@ -3,15 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using SkiaSharp;
 using System.Runtime.InteropServices;
 
-namespace SandAndStones.Api
+namespace SandAndStones.Api.Controllers
 {
     [ApiController]
     [Route("[controller]")]
-    public class InputTextureController(
-        ILogger<InputTextureController> logger,
-        IInputTextureRepository inputTextureRepository) : ControllerBase
+    public class InputTextureController(IInputTextureRepository inputTextureRepository) : ControllerBase
     {
-        private readonly ILogger<InputTextureController> _logger = logger;
         private readonly IInputTextureRepository _inputTextureRepository = inputTextureRepository;
 
         [Route("/textures")]

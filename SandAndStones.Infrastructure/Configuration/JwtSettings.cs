@@ -1,4 +1,4 @@
-﻿namespace SandAndStones.Api.DTO
+﻿namespace SandAndStones.Infrastructure.Configuration
 {
     public class JwtSettings
     {
