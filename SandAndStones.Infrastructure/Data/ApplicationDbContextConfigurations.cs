@@ -12,13 +12,15 @@ namespace SandAndStones.Infrastructure.Data
             ApplicationDbContext context,
             RoleManager<IdentityRole> roleManager,
             UserManager<ApplicationUser> userManager,
-            IConfiguration configuration)
+            IConfiguration configuration,
+            IPasswordHasher<ApplicationUser> passwordHasher)
     {
         private readonly ILogger<ApplicationDbContextConfigurator> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly RoleManager<IdentityRole> _roleManager = roleManager;
         private readonly IConfiguration _configuration = configuration;
+        private readonly IPasswordHasher<ApplicationUser> _passwordHasher = passwordHasher;
 
         public async Task InitAsync()
         {
@@ -69,7 +71,15 @@ namespace SandAndStones.Infrastructure.Data
 
             if (_userManager.Users.All(u => u.UserName != administrator.UserName))
             {
-                await _userManager.CreateAsync(administrator, _configuration["DBAdminPass"] ?? throw new Exception("No configuration for default Admin"));
+                var pass = _configuration["DBAdminPass"];
+                if (string.IsNullOrWhiteSpace(pass))
+                {
+                    return;
+                }
+
+                var hashedPass = _passwordHasher.HashPassword(administrator, pass);
+
+                await _userManager.CreateAsync(administrator, hashedPass);
                 if (!string.IsNullOrWhiteSpace(administratorRole.Name))
                 {
                     await _userManager.AddToRolesAsync(administrator, [administratorRole.Name]);
