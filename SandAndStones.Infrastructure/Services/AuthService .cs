@@ -1,11 +1,8 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
-using SandAndStones.Api.DTO;
 using SandAndStones.Domain.Constants;
 using SandAndStones.Domain.DTO;
 using SandAndStones.Infrastructure.Models;
-using System.Net.Http;
 using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Services
@@ -13,14 +10,13 @@ namespace SandAndStones.Infrastructure.Services
     public class AuthService(
         UserManager<ApplicationUser> userManager,
         SignInManager<ApplicationUser> signInManager,
-        ITokenGenerator tokenGenerator,
-        JwtSettings jwtSettings) : IAuthService
+        ITokenGenerator tokenGenerator
+    ) : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
         private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
-        private readonly JwtSettings _jwtSettings = jwtSettings;
-
+        
         public async Task<bool> Register(UserDto userDto)
         {
             try
@@ -56,8 +52,8 @@ namespace SandAndStones.Infrastructure.Services
                     throw new ArgumentException("Invalid password.");
                 }
 
-                var token = _tokenGenerator.GenerateToken(user.Id, user.Email);
-                var refreshToken = _tokenGenerator.GenerateToken(user.Id, user.Email);
+                var token = _tokenGenerator.GenerateToken(user.Id, user.Email!);
+                var refreshToken = _tokenGenerator.GenerateToken(user.Id, user.Email!);
 
                 return new TokenDto(token, refreshToken);
             }
