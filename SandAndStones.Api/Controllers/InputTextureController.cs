@@ -6,13 +6,12 @@ using System.Runtime.InteropServices;
 namespace SandAndStones.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class InputTextureController(IInputTextureRepository inputTextureRepository) : ControllerBase
     {
         private readonly IInputTextureRepository _inputTextureRepository = inputTextureRepository;
 
-        [Route("/textures")]
-        [HttpGet()]
+        [HttpGet("textures")]
         public async Task<IActionResult> GetTextureDescriptionList()
         {
             var textureDescriptionList = _inputTextureRepository.GetTextureDescriptionList();
@@ -21,8 +20,7 @@ namespace SandAndStones.Api.Controllers
             return Ok(textureDescriptionList);
         }
 
-        [Route("/textures/{id}")]
-        [HttpGet()]
+        [HttpGet("textures/{id}")]
         public async Task<IActionResult> GetTextureById(int id)
         {
             var texture = await _inputTextureRepository.GetById(id);
@@ -31,8 +29,7 @@ namespace SandAndStones.Api.Controllers
             return Ok(texture);
         }
 
-        [Route("/textureFile/{name}")]
-        [HttpGet()]
+        [HttpGet("textureFile/{name}")]
         public async Task<IActionResult> GetTextureById(string name)
         {
             var _inputAssetReader = new InputTextureReader(name);

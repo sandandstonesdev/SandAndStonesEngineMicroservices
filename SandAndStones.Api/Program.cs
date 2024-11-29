@@ -1,6 +1,3 @@
-using SandAndStones.Infrastructure.Data;
-using SandAndStones.Infrastructure.Models;
-
 namespace SandAndStones.Api
 {
     public class Program
@@ -24,20 +21,11 @@ namespace SandAndStones.Api
                 app.UseSwagger();
                 app.UseSwaggerUI();
             }
-            else
-            {
-                //app.UseExceptionHandler("/Error");
-                app.UseHsts();
-            }
 
             app.UseHttpsRedirection();
-            
             app.UseAuthentication();
             app.UseAuthorization();
-
             app.MapControllers();
-
-            app.MapFallbackToFile("/index.html");
 
             app.Run();
         }

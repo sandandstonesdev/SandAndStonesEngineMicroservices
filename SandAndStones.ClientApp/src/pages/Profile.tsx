@@ -16,7 +16,7 @@ function Profile() {
                 setIsLoading(true);
 
                 const response = await axiosInstance.get(
-                    `${import.meta.env.VITE_APP_BASE_URL}/userProfile/profile`,
+                    `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/userProfile/profile`,
                 );
 
                 const userProfileInfo = response.data as UserProfile;

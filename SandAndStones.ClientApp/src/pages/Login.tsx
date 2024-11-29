@@ -48,7 +48,7 @@ function Login() {
             })
 
             const response = await axiosInstance.post(
-                `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/login`,
+                `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/userAuthorization/login`,
                 formData
             );
             console.log(response.data);
