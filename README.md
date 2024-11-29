@@ -1,8 +1,8 @@
 # SandAndStonesEngineMicroservices
 
 ## What is this project:
-* Simple Asset/Texture Viewer and Project Info test Website.
-* Basic Fullstack WebApp developed with ASP.NET 8 and React.
+* Simple Asset/Texture Viewer and Project Info Website.
+* Basic Fullstack WebApp developed with ASP.NET 9 and React 18 (Service+Gateway+Frontend).
 
 ## What is purpose of this project and where it goes:
 * It's beginning stage of FullStack WebApp and its purposes are educational. 
