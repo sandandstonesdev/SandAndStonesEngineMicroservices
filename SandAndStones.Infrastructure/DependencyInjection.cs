@@ -12,7 +12,7 @@ namespace SandAndStones.Infrastructure
         {
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserProfileService, UserProfileService>();
-            services.AddSingleton<ITokenGenerator, TokenGenerator>();
+            services.AddScoped<ITokenGenerator, TokenGenerator>();
             var salt = configuration["HasherModule:TestSalt"] ?? throw new ArgumentException("HasherModule:TestSalt config missing");
 
             var passwordHasher = new SimplePasswordHasher(salt);

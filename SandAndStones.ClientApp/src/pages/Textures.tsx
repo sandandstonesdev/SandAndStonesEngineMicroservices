@@ -22,25 +22,32 @@ function Textures() {
             setIsLoading(true);
 
             try {
-                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/assetBatch/0`);
+                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/api/inputAssetBatch/assetBatch/0`);
                 const inputAssetBatch = response.data as InputAssetBatch;
-                const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles }) => {
+                const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles, text }) => {
                     return {
                         name: name,
                         textureNames: animationTextureFiles,
                         content: JSON.stringify(animationTextureFiles),
-                        textures: 0
+                        textures: 0,
+                        isDynamic: !(text.trim() == '')
                     }
                 });
 
-                const mappedItemsWithImages = mappedItems.map(({ name, textureNames }) => {
-                    const imageUrl = `${import.meta.env.VITE_APP_BASE_URL}/textureFile/${textureNames[0]}`;
+                const mappedItemsWithImages = mappedItems.map(({ name, textureNames, isDynamic }) => {
+                    const imageUrl = `${import.meta.env.VITE_APP_BASE_URL}/api/inputTexture/textureFile/${textureNames[0]}`;
                     return {
                         name: name,
                         content: <>
-                            <div>
+                            {!isDynamic ?
+                                <div>
                                 <img src={imageUrl} alt={textureNames[0]} />
-                            </div >
+                                </div>
+                                :
+                                <div>
+                                    <p>This is dynamic (procedural) texture in game. You cannot get it!</p>
+                                </div >
+                            }
                         </>
                     }
                 });

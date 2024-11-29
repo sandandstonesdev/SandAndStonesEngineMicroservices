@@ -3,18 +3,19 @@ using Microsoft.AspNetCore.Identity;
 using SandAndStones.Domain.Constants;
 using SandAndStones.Domain.DTO;
 using SandAndStones.Infrastructure.Models;
+using System.Data;
 using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Services
 {
     public class AuthService(
         UserManager<ApplicationUser> userManager,
-        SignInManager<ApplicationUser> signInManager,
+        RoleManager<IdentityRole> roleManager,
         ITokenGenerator tokenGenerator
     ) : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly SignInManager<ApplicationUser> _signInManager = signInManager;
+        private readonly RoleManager<IdentityRole> roleManager = roleManager;
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
         
         public async Task<bool> Register(UserDto userDto)
@@ -24,10 +25,18 @@ namespace SandAndStones.Infrastructure.Services
                 ApplicationUser user = new()
                 {
                     UserName = userDto.Email,
-                    Email = userDto.Email
+                    Email = userDto.Email,
                 };
 
                 var result = await _userManager.CreateAsync(user, userDto.Password);
+                if (!result.Succeeded)
+                {
+                    throw new Exception($"Cannot create user: {userDto.Email} ");
+                }
+
+                await userManager.AddToRoleAsync(user, UserRoles.AdminRole);
+                await userManager.AddToRoleAsync(user, UserRoles.UserRole);
+                
                 return result.Succeeded;
             }
             catch (Exception ex)
@@ -40,20 +49,21 @@ namespace SandAndStones.Infrastructure.Services
         {
             try
             {
-                ArgumentException.ThrowIfNullOrWhiteSpace(userDto.Email);
+                ArgumentException.ThrowIfNullOrWhiteSpace(userDto.Email, nameof(userDto.Email));
 
                 ApplicationUser user = await _userManager.FindByEmailAsync(userDto.Email);
+                
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
 
-                var result = await _signInManager.CheckPasswordSignInAsync(user, userDto.Password, false);
+                var result = await _userManager.CheckPasswordAsync(user, userDto.Password);
 
-                if (!result.Succeeded)
+                if (!result)
                 {
                     throw new ArgumentException("Invalid password.");
                 }
 
-                var token = _tokenGenerator.GenerateToken(user.Id, user.Email!);
-                var refreshToken = _tokenGenerator.GenerateToken(user.Id, user.Email!);
+                var token = await _tokenGenerator.GenerateToken(user, user.Email!);
+                var refreshToken = await _tokenGenerator.GenerateToken(user, user.Email!);
 
                 return new TokenDto(token, refreshToken);
             }
@@ -67,8 +77,6 @@ namespace SandAndStones.Infrastructure.Services
         {
             try
             {
-                await _signInManager.SignOutAsync();
-
                 httpContext.Response.Cookies.Delete(
                     JwtTokenConstants.AccessTokenName,
                     new CookieOptions
@@ -130,7 +138,7 @@ namespace SandAndStones.Infrastructure.Services
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
                 ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
 
-                var newAccessToken = _tokenGenerator.GenerateToken(user.Id, user.Email);
+                var newAccessToken = _tokenGenerator.GenerateToken(user, user.Email);
                 var tokenDto = new TokenDto(accessToken, refreshToken);
                 
                 InjectTokensIntoCookie(tokenDto, httpContext);

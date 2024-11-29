@@ -23,8 +23,17 @@ namespace SandAndStones.Infrastructure.Services
             var email = principal.FindFirst(ClaimTypes.Email)?.Value;
             ArgumentException.ThrowIfNullOrWhiteSpace(email, "email.Value");
 
+            var claims = principal.Claims
+                .Where(c => c.Type == ClaimTypes.Role)
+                .Select(c => c.Value)
+                .ToArray();
+
+            var privileges = string.Join(", ", claims);
+
             var user = await _userManager.FindByEmailAsync(email);
             ArgumentNullException.ThrowIfNull(user, nameof(user));
+            ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
+            ArgumentException.ThrowIfNullOrWhiteSpace(user.UserName, nameof(user.UserName));
 
             var remoteIpAddress = httpContext.Connection.RemoteIpAddress.ToString();
 
@@ -33,7 +42,7 @@ namespace SandAndStones.Infrastructure.Services
                 user.UserName,
                 "123456789",
                 string.Empty,
-                "Level",
+                privileges,
                 DateTime.Now,
                 DateTime.Now,
                 remoteIpAddress,

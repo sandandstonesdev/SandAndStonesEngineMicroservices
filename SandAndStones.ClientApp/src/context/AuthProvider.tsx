@@ -1,6 +1,7 @@
 import { createContext, PropsWithChildren, useContext, useState } from "react";
 import { AuthData } from "../types/AuthData";
 import { axiosInstance } from "../hooks/useAxios";
+import { isAxiosError } from "axios";
 
 const AuthContext = createContext<AuthData>(
 {
@@ -20,16 +21,30 @@ const AuthProvider = (props: PropsWithChildren) => {
     const logUserOut = () => {
         setIsAuthenticated(false);
     };
-    
-    const checkTokenValidity = async () => {
-        if(isAuthenticated) {
-            const response = await axiosInstance.get(
-                `${import.meta.env.VITE_APP_BASE_URL}/userAuthorization/currenttokenvalid`
-            );
 
-            if (response.data.isValid !== true)
-                setIsAuthenticated(false);
-            setIsAuthenticated(response.data.isValid)
+    const checkTokenValidity = async () => {
+        try {
+            if (isAuthenticated) {
+                const response = await axiosInstance.get(
+                    `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/userAuthorization/currenttokenvalid`
+                );
+
+                if (response.data.isValid !== true) {
+                    setIsAuthenticated(false);
+                }
+
+                setIsAuthenticated(response.data.isValid);
+            }
+        }
+        catch (err: unknown) {
+            if (isAxiosError(err)) {
+                if (err.response) {
+                    console.error(`Error while Current Token Validation Status: ${err.response.status} ${err.response.data}`);
+                }
+                else {
+                    console.error(`Error while Current Token Validation: ${err}`);
+                }
+            }
         }
     }
 

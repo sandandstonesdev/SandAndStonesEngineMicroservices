@@ -6,11 +6,12 @@ using SandAndStones.Gateway.Api.User.GetUserInfo;
 using SandAndStones.Gateway.Api.User.LoginUser;
 using SandAndStones.Gateway.Api.User.LogoutUser;
 using SandAndStones.Gateway.Api.User.RegisterUser;
+using SandAndStones.Infrastructure.Models;
 
 namespace SandAndStones.Gateway.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("gateway-api/[controller]")]
     public class UserAuthorizationController(IMediator mediator) : ControllerBase()
     {
         private readonly IMediator _mediator = mediator ?? throw new ArgumentNullException(nameof(mediator));
@@ -32,7 +33,7 @@ namespace SandAndStones.Gateway.Api.Controllers
             return Ok(new { message = result.Message, result.Succeeded });
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.UserRole)]
         [HttpGet("logout")]
         public async Task<ActionResult> Logout()
         {
@@ -42,7 +43,7 @@ namespace SandAndStones.Gateway.Api.Controllers
                 : BadRequest(new { message = "Logout Failed." });
         }
 
-        [Authorize]
+        [Authorize(Roles = UserRoles.UserRole)]
         [HttpGet("userInfo/{email}")]
         public async Task<ActionResult> GetUserInfo([FromRoute] string email)
         {
@@ -51,7 +52,6 @@ namespace SandAndStones.Gateway.Api.Controllers
             return Ok(new { message = result.Message, result.UserName, result.Email }); ;
         }
 
-        [Authorize]
         [HttpGet("currenttokenvalid")]
         public async Task<ActionResult> CheckCurrentTokenValidity()
         {

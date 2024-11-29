@@ -17,40 +17,21 @@ export default defineConfig({
     },
     server: {
         cors: true,
-        proxy: {
-            '^/assetBatch': {
-                target: 'https://localhost:5000/',
-                secure: false
+            proxy: {
+                '/api': {
+                    target: 'https://localhost:5000',
+                    changeOrigin: true,
+                    secure: false,
+                    ws: true,
+                },
+                '/gateway-api': {
+                    target: 'https://localhost:5000',
+                    changeOrigin: true,
+                    secure: false,
+                    ws: true,
+                }
             },
-            '^/textureFile': {
-                target: 'https://localhost:5000/',
-                secure: false
-            },
-            '^/userAuthorization/register': {
-                target: 'https://localhost:5000/',
-                secure: false
-            },
-            '^/userAuthorization/login': {
-                target: 'https://localhost:5000/',
-                secure: false
-            },
-            '^/userAuthorization/logout': {
-                target: 'https://localhost:5000/',
-                secure: false
-            },
-            '^/userAuthorization/currenttokenvalid': {
-                target: 'https://localhost:5000/',
-                secure: false
-            },
-            '^/userProfile/profile': {
-                target: 'https://localhost:5000/',
-                secure: false
-            },
-            '^/profile': {
-                target: 'https://localhost:5000/',
-                secure: false
-            }
-        },
-        port: 5173
+            port: 5173    
+        }
     }
-});
+);

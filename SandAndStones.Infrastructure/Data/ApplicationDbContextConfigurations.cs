@@ -18,7 +18,6 @@ namespace SandAndStones.Infrastructure.Data
         private readonly ILogger<ApplicationDbContextConfigurator> _logger = logger;
         private readonly ApplicationDbContext _context = context;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly RoleManager<IdentityRole> _roleManager = roleManager;
         private readonly IConfiguration _configuration = configuration;
         private readonly IPasswordHasher<ApplicationUser> _passwordHasher = passwordHasher;
 
@@ -53,18 +52,14 @@ namespace SandAndStones.Infrastructure.Data
 
         public async Task TrySeedAsync()
         {
-            var administratorRole = new IdentityRole("Administrator");
-
-            if (_roleManager.Roles.All(r => r.Name != administratorRole.Name))
+            if (!await roleManager.RoleExistsAsync(UserRoles.AdminRole))
             {
-                var role = await _roleManager.CreateAsync(administratorRole);
-                if (role != null)
-                {
-                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleView"));
-                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleAdd"));
-                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleEdit"));
-                    await _roleManager.AddClaimAsync(administratorRole, new Claim("RoleClaim", "HasRoleDelete"));
-                }
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.AdminRole));
+            }
+
+            if (!await roleManager.RoleExistsAsync(UserRoles.UserRole))
+            {
+                await roleManager.CreateAsync(new IdentityRole(UserRoles.UserRole));
             }
 
             var administrator = new ApplicationUser { UserName = "sandandstones@sandandstones.com", Email = "sandandstones@sandandstones.com" };
@@ -78,11 +73,12 @@ namespace SandAndStones.Infrastructure.Data
                 }
 
                 var hashedPass = _passwordHasher.HashPassword(administrator, pass);
-
-                await _userManager.CreateAsync(administrator, hashedPass);
-                if (!string.IsNullOrWhiteSpace(administratorRole.Name))
+                
+                var result = await _userManager.CreateAsync(administrator, hashedPass);
+                if (result.Succeeded)
                 {
-                    await _userManager.AddToRolesAsync(administrator, [administratorRole.Name]);
+                    await _userManager.AddToRoleAsync(administrator, UserRoles.UserRole);
+                    await _userManager.AddToRoleAsync(administrator, UserRoles.AdminRole);
                 }
             }
         }

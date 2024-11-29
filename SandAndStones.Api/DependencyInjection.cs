@@ -7,7 +7,6 @@ namespace SandAndStones.Api
         public static IServiceCollection AddPresentation(this IServiceCollection services)
         {
             services.AddControllers();
-            services.AddEndpointsApiExplorer();
             services.AddSwaggerGen(config =>
             {
                 config.SwaggerDoc("v1", new OpenApiInfo() { Title = "App Api", Version = "v1" });

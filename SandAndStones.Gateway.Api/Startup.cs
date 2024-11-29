@@ -1,6 +1,5 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using SandAndStones.App;
-using SandAndStones.Gateway.Api.User.LoginUser;
 using SandAndStones.Gateway.Api.User.Profile;
 using SandAndStones.Infrastructure.Data;
 using System.Reflection;
@@ -36,7 +35,7 @@ namespace SandAndStones.Gateway.Api
 
             services.AddCors(options =>
             {
-                options.AddPolicy(name: "ApiCorsPolicy",
+                options.AddPolicy(name: "GatewayApiCorsPolicy",
                                   builder =>
                                   {
                                       var corsOrigin = _configuration["JwtSettings:Issuer"] ?? "https://localhost:5173";

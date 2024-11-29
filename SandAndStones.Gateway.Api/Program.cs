@@ -1,12 +1,18 @@
+using Azure.Core;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SandAndStones.Domain.Constants;
 using SandAndStones.Gateway.Api;
 using SandAndStones.Infrastructure.Configuration;
 using SandAndStones.Infrastructure.Data;
 using SandAndStones.Infrastructure.Models;
+using System.Net.Http.Headers;
+using System.Security.Claims;
 using System.Text;
+using Yarp.ReverseProxy.Transforms;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +22,27 @@ startup.ConfigureServices(builder.Services);
 var jwtSettings = builder.Configuration.GetSection("JwtSettings").Get<JwtSettings>() ?? default!;
 builder.Services.AddSingleton(jwtSettings);
 
-builder.Services.AddAuthorization();
-builder.Services.AddAuthentication(options =>
+builder.Services.AddIdentity<ApplicationUser, IdentityRole>()
+    .AddRoles<IdentityRole>()
+    .AddEntityFrameworkStores<ApplicationDbContext>()
+    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(jwtSettings.RefreshTokenProviderName);
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
 {
+    options.TokenLifespan = TimeSpan.FromSeconds(jwtSettings.RefreshTokenExpireSeconds);
+});
+
+builder.Services.AddAuthorizationBuilder()
+    .AddPolicy("RequireAuthenticatedUserPolicy",
+        policy => policy.RequireAuthenticatedUser()
+                    .RequireClaim(ClaimTypes.Role, UserRoles.UserRole)
+);
+
+builder.Services.AddAuthentication(options => {
+    options.DefaultScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
     options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
-}).AddJwtBearer(options =>
+}).AddJwtBearer(JwtBearerDefaults.AuthenticationScheme, options =>
 {
     options.RequireHttpsMetadata = false;
     options.TokenValidationParameters = new TokenValidationParameters
@@ -34,7 +55,7 @@ builder.Services.AddAuthentication(options =>
         ValidIssuer = jwtSettings.Issuer,
         ValidAudience = jwtSettings.Audience,
         IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.SecretKey)),
-        ClockSkew = TimeSpan.FromSeconds(0)
+        ClockSkew = TimeSpan.Zero
     };
     options.Events = new JwtBearerEvents
     {
@@ -48,31 +69,25 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-
-builder.Services.AddIdentityApiEndpoints<ApplicationUser>()
-    .AddRoles<IdentityRole>()
-    .AddEntityFrameworkStores<ApplicationDbContext>();
-
-builder.Services.AddIdentityCore<ApplicationUser>()
-    .AddSignInManager()
-    .AddEntityFrameworkStores<ApplicationDbContext>()
-    .AddTokenProvider<DataProtectorTokenProvider<ApplicationUser>>(jwtSettings.RefreshTokenProviderName);
-
-builder.Services.Configure<DataProtectionTokenProviderOptions>(options =>
-{
-    options.TokenLifespan = TimeSpan.FromSeconds(jwtSettings.RefreshTokenExpireSeconds);
-});
-
 builder.Services.AddScoped<ApplicationDbContextConfigurator>();
 
-builder.Services.AddEndpointsApiExplorer();
-
 builder.Services.AddControllers();
-
 builder.Services.AddProblemDetails();
 
+var reverseProxyConfig = builder.Configuration.GetSection("ReverseProxy");
 builder.Services.AddReverseProxy()
-    .LoadFromConfig(builder.Configuration.GetSection("ReverseProxy"));
+    .LoadFromConfig(reverseProxyConfig)
+    .AddTransforms(builderContext =>
+    {
+        builderContext.AddRequestTransform(async transformContext =>
+        {
+            var accessToken = await transformContext.HttpContext.GetTokenAsync(JwtTokenConstants.AccessTokenName);
+            if (accessToken != null)
+            {
+                transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
+            }
+        });
+    });
 
 var app = builder.Build();
 
@@ -84,12 +99,10 @@ using (var serviceScope = app.Services.CreateScope())
     await dbContextConfigurator.SeedAsync();
 }
 
-app.UseCors("ApiCorsPolicy");
+app.UseCors("GatewayApiCorsPolicy");
 
 app.UseDefaultFiles();
 app.UseStaticFiles();
-
-app.MapIdentityApi<ApplicationUser>();
 
 if (app.Environment.IsDevelopment())
 {
@@ -98,10 +111,8 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
 app.UseAuthentication();
 app.UseAuthorization();
-
 app.MapControllers();
 
 app.MapReverseProxy(proxyPipeline =>
@@ -113,7 +124,6 @@ app.MapReverseProxy(proxyPipeline =>
         app.Logger.LogInformation("Gateway called for path {path}", path);
         await next();
     });
-}
-);
+}).RequireAuthorization("RequireAuthenticatedUserPolicy");
 
 app.Run();
