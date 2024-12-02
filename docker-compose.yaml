@@ -5,43 +5,69 @@ networks:
 
 volumes:
     app-db-data:
-            
+         
+secrets:
+  DEVPASS:
+    environment: "DEVPASS"
+
 services:
     gatewayservice:
         image: gatewayservice
         build:
             context: .
             dockerfile: ./SandAndStones.Gateway.Api/Dockerfile
+            secrets:
+              - DEVPASS
+        environment:
+            ASPNETCORE_ENVIRONMENT: Local
+            ASPNETCORE_URLS: https://+:5000;http://+:5098
+            ASPNETCORE_HTTP_PORTS: 5098 
+            ASPNETCORE_HTTPS_PORTS: 5000
+            ASPNETCORE_Kestrel__Certificates__Default__Password: ${DEVPASS}
+            ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
         ports: 
            - "5000:5000"
+           - "5098:5098"
+        depends_on:
+           - mssql-server
         networks:
             - appnetwork
+        volumes:
+        - ./SandAndStones.Gateway.Api/aspnetapp.pfx:/https/aspnetapp.pfx:ro
     
     assetinfoservice:
         image: assetservice
         build: 
             context: .
             dockerfile: ./SandAndStones.Api/Dockerfile
+            secrets:
+              - DEVPASS
         environment:
-            DbServer: "mssql-server"
-            DbPort: "1433"
-            DbUser: "sa"
-            DbPass: "Docker1234!"
-            DbName: "SandAndStones.Database"
+            ASPNETCORE_ENVIRONMENT: Local
+            ASPNETCORE_URLS: https://+:7232;http://+:5295
+            ASPNETCORE_HTTP_PORTS: 5295
+            ASPNETCORE_HTTPS_PORTS: 7232
+            ASPNETCORE_Kestrel__Certificates__Default__Password: ${DEVPASS}
+            ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
         ports: 
-           - "42000:8080"
+           - "7232:7232"
+           - "5295:5295"
         depends_on:
            - mssql-server
         networks:
             - appnetwork
+        volumes:
+        - ./SandAndStones.Api/aspnetapp.pfx:/https/aspnetapp.pfx:ro
     
     mssql-server:
         container_name: sqldb
-        image: mcr.microsoft.com/mssql/server:latest
+        image: mcr.microsoft.com/mssql/server:2019-latest
         environment:
-          - ACCEPT_EULA=Y
-          - MSSQL_SA_PASSWORD=Docker1234!
-          - MSSQL_PID=Express
+          ACCEPT_EULA: Y
+          MSSQL_SA_PASSWORD: ${DEVPASS}
+          MSSQL_PID: Developer
+        secrets:
+          - DEVPASS
         volumes:
         - type: volume
           source: app-db-data

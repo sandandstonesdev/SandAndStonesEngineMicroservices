@@ -41,6 +41,7 @@ namespace SandAndStones.Gateway.Api
                                       var corsOrigin = _configuration["JwtSettings:Issuer"] ?? "https://localhost:5173";
                                       builder
                                           .WithOrigins(corsOrigin,
+                                                       "https://localhost:5000",
                                                        "https://sand-and-stones-client-app-0001-cyg9asb6eahgf6ab.canadacentral-01.azurewebsites.net")
                                           .AllowAnyHeader()
                                           .AllowAnyMethod()

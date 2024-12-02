@@ -1,10 +1,14 @@
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS base
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
 WORKDIR /app
 
-FROM mcr.microsoft.com/dotnet/sdk:8.0 AS build
+ENV ASPNETCORE_ENVIRONMENT Local
+
+FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
 COPY ["SandAndStones.Infrastructure/SandAndStones.Infrastructure.csproj", "SandAndStones.Infrastructure/"]
+COPY ["SandAndStones.Domain/SandAndStones.Domain.csproj", "SandAndStones.Domain/"]
 COPY ["SandAndStones.Shared/SandAndStones.Shared.csproj", "SandAndStones.Shared/"]
+COPY ["SandAndStones.App/SandAndStones.App.csproj", "SandAndStones.App/"]
 COPY ["SandAndStones.Api/SandAndStones.Api.csproj", "SandAndStones.Api/"]
 RUN dotnet restore "SandAndStones.Api/SandAndStones.Api.csproj"
 COPY . .
