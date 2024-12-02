@@ -24,7 +24,6 @@ namespace SandAndStones.Api
                                             "https://localhost:5000",
                                             "https://sand-and-stones-gateway-0001.azurewebsites.net")
                                            .AllowAnyHeader()
-                                           .WithExposedHeaders("Content-Disposition")
                                            .AllowAnyMethod()
                                            .AllowCredentials();
                                   });

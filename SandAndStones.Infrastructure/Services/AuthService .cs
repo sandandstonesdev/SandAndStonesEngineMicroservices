@@ -34,9 +34,9 @@ namespace SandAndStones.Infrastructure.Services
                     throw new Exception($"Cannot create user: {userDto.Email} ");
                 }
 
-                await userManager.AddToRoleAsync(user, UserRoles.AdminRole);
                 await userManager.AddToRoleAsync(user, UserRoles.UserRole);
-                
+                await userManager.AddToRoleAsync(user, UserRoles.AdminRole);
+
                 return result.Succeeded;
             }
             catch (Exception ex)
