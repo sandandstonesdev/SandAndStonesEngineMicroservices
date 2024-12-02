@@ -81,7 +81,8 @@ builder.Services.AddReverseProxy()
     {
         builderContext.AddRequestTransform(async transformContext =>
         {
-            var accessToken = await transformContext.HttpContext.GetTokenAsync(JwtTokenConstants.AccessTokenName);
+            transformContext.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+    
             if (accessToken != null)
             {
                 transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
