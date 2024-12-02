@@ -52,6 +52,7 @@ namespace SandAndStones.Gateway.Api.Controllers
             return Ok(new { message = result.Message, result.UserName, result.Email }); ;
         }
 
+        [Authorize(Roles = UserRoles.UserRole)]
         [HttpGet("currenttokenvalid")]
         public async Task<ActionResult> CheckCurrentTokenValidity()
         {
