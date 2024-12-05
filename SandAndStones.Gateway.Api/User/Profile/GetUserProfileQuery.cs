@@ -10,7 +10,7 @@ namespace SandAndStones.Gateway.Api.User.Profile
         private readonly IUserProfileService _userProfileService = userProfileService;
         public async Task<GetUserProfileResponse> Handle(GetUserProfileRequest request, CancellationToken cancellationToken)
         {
-            var userProfile = await _userProfileService.GetUserProfile(httpContextAccessor.HttpContext);
+            var userProfile = await _userProfileService.GetUserProfile(httpContextAccessor.HttpContext!);
             return new GetUserProfileResponse(
                 userProfile.Email,
                 userProfile.UserName,

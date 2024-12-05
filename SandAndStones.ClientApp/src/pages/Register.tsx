@@ -108,6 +108,7 @@ function Register() {
                         name="new-email"
                         ref={emailRef}
                         placeholder="mail@domain.com"
+                        autoFocus
                     />
                 </div>
                 <div>
@@ -118,6 +119,7 @@ function Register() {
                         name="new-password"
                         ref={passwordRef}
                         placeholder="*****"
+                        autoFocus
                     />
                 </div>
                 <div>
@@ -128,6 +130,7 @@ function Register() {
                         name="confirm-new-password"
                         ref={confirmedPasswordRef}
                         placeholder="*****"
+                        autoFocus
                     />
                 </div>
                 <div>

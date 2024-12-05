@@ -5,18 +5,15 @@ import Register from "../pages/Register";
 import Assets from "../pages/Assets";
 import Textures from "../pages/Textures";
 import Logout from "./Logout";
-import { useAuth } from "../context/AuthProvider";
 import ProtectedRoute from "./ProtectedRoute";
 import Home from "../pages/Home";
-import UnauthotizedHome from "../pages/UnauthotizedHome";
-import { AuthData } from "../types/AuthData";
+import UnauthotizedHome from "../pages/UnauthorizedHome";
 import Profile from "../pages/Profile";
+import { useAppSelector } from "../redux/store/Store";
 
 const Routes = () => {
-    const { isAuthenticated, checkTokenValidity } = useAuth() as AuthData;
-
-    checkTokenValidity();
-
+    const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
+    
     const publicRoutes = [
         {
             path: "/",
