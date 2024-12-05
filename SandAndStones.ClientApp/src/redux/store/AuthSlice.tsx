@@ -25,7 +25,7 @@ export const checkTokenValidity = createAsyncThunk(
             }
         }
 
-        return thunkApi.rejectWithValue({ error: err });
+        return thunkApi.rejectWithValue({ error: `Error while Current Token Validation: ${err}` });
     }
 });
 
@@ -39,12 +39,10 @@ const authSlice = createSlice({
     initialState: initialState,
     reducers: {
         setAuthenticated: (state) => {
-            //const { payload } = param;
             state.isAuthenticated = true;
         },
         setUnauthenticated: (state) => {
-            //const { payload } = param;
-            state.isAuthenticated = true;
+            state.isAuthenticated = false;
         }
 
     },
@@ -61,7 +59,6 @@ const authSlice = createSlice({
     }
 });
 
-//export const authActions = { ...authSlice.actions, checkTokenValidity }
 export const { setAuthenticated, setUnauthenticated } = authSlice.actions;
 export const authReducer = authSlice.reducer;
 export const isAuthenticatedFlag = (state: AuthState) => state.isAuthenticated;
