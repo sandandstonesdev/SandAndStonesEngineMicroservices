@@ -10,12 +10,10 @@ namespace SandAndStones.Infrastructure.Services
 {
     public class AuthService(
         UserManager<ApplicationUser> userManager,
-        RoleManager<IdentityRole> roleManager,
         ITokenGenerator tokenGenerator
     ) : IAuthService
     {
         private readonly UserManager<ApplicationUser> _userManager = userManager;
-        private readonly RoleManager<IdentityRole> roleManager = roleManager;
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
         
         public async Task<bool> Register(UserDto userDto)

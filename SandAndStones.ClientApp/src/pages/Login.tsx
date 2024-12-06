@@ -1,12 +1,12 @@
-import { useEffect, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { axiosInstance } from "../hooks/useAxios";
 import { formatZodIssue } from "../hooks/useZodFormatIssue";
 import axios, { isAxiosError } from "axios";
-import { AuthData } from "../types/AuthData";
-import { useAuth } from "../context/AuthProvider";
 import { z, ZodError } from "zod"
 import pkg from 'node-forge';
+import { useDispatch } from "react-redux";
+import { setAuthenticated } from "../redux/store/AuthSlice"
 
 const loginUserSchema = z.object({
     email: z.string().email(),
@@ -16,9 +16,10 @@ const loginUserSchema = z.object({
 type ILoginUserCredentials = z.infer<typeof loginUserSchema>;
 
 function Login() {
+    const dispatch = useDispatch();
+    
     const emailRef = useRef<HTMLInputElement>(null);
     const passwordRef = useRef<HTMLInputElement>(null);
-    const { logUserIn } = useAuth() as AuthData;
     
     console.log("Environment mode:" + import.meta.env.MODE);
 
@@ -53,7 +54,7 @@ function Login() {
             );
             console.log(response.data);
             setError("Successful Login.");
-            logUserIn();
+            dispatch(setAuthenticated());
             navigate('/', { replace: true });
         }
         catch (err: unknown) {
@@ -80,11 +81,7 @@ function Login() {
         }
     }
 
-    useEffect(() => {
-        emailRef.current!.focus();
-        passwordRef.current!.focus();
-    }, []);
-
+    
     return (
         <>
         <div className="containerbox">
@@ -95,7 +92,8 @@ function Login() {
                     <input type="email"
                             id="current-email"
                             name="current-email"
-                        ref={emailRef}
+                            ref={emailRef}
+                            autoFocus
                         placeholder="mail@domain.com"
                     />
                     </div>
@@ -106,6 +104,7 @@ function Login() {
                         id="current-password"
                         name="current-password"
                         ref={passwordRef}
+                        autoFocus
                         placeholder="*****"
                         />
                     </div>

@@ -9,7 +9,4 @@
     <BuildOutputFolder>$(MSBuildProjectDirectory)\public</BuildOutputFolder>
     <PackageJsonDirectory>$(MSBuildProjectDirectory)</PackageJsonDirectory>
   </PropertyGroup>
-  <ItemGroup>
-    <Folder Include="src\context\" />
-  </ItemGroup>
 </Project>
