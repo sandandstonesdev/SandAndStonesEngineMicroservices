@@ -16,11 +16,23 @@ jobs:
         with:
           dotnet-version: '9.x'
 
-      - name: Build with dotnet
-        run: dotnet build --configuration Debug
+      - name: Build Asset.Api with dotnet
+        run: dotnet build ./SandAndStones.Asset.Api/SandAndStones.Asset.Api.csproj --configuration Debug
 
-      - name: dotnet publish
-        run: dotnet publish -c Debug -o ${{env.DOTNET_ROOT}}/myapp
+      - name: dotnet publish Asset.Api
+        run: dotnet publish ./SandAndStones.Asset.Api/SandAndStones.Asset.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/asset-api"
+
+      - name: Build Texture.Api with dotnet
+        run: dotnet build ./SandAndStones.Texture.Api/SandAndStones.Texture.Api.csproj --configuration Debug
+
+      - name: dotnet publish Texture.Api
+        run: dotnet publish ./SandAndStones.Texture.Api/SandAndStones.Texture.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/texture-api"
+
+      - name: Build Gateway.Api with dotnet
+        run: dotnet build ./SandAndStones.Gateway.Api/SandAndStones.Gateway.Api.csproj --configuration Debug
+
+      - name: dotnet publish Gateway.Api
+        run: dotnet publish ./SandAndStones.Gateway.Api/SandAndStones.Gateway.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/gateway-api"
 
   build_frontend:
     runs-on: ubuntu-latest
