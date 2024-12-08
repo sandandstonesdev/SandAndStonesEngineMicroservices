@@ -18,7 +18,13 @@ export default defineConfig({
     server: {
         cors: true,
             proxy: {
-                '/api': {
+                '/asset-api': {
+                    target: 'https://localhost:5000',
+                    changeOrigin: true,
+                    secure: false,
+                    ws: true,
+                },
+                '/texture-api': {
                     target: 'https://localhost:5000',
                     changeOrigin: true,
                     secure: false,

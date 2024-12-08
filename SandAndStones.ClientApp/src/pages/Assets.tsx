@@ -22,8 +22,8 @@ function Assets() {
             setIsLoading(true);
 
             try {
-                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/api/inputAssetBatch/assetBatch/0`);
-                const inputAssetBatch = response.data as InputAssetBatch;
+                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/asset-api/assetBatch/0`);
+                const inputAssetBatch = await response.data as InputAssetBatch;
 
                 const mappedItems = inputAssetBatch.assets.map(({ name, ...rest }) => {
                     return {

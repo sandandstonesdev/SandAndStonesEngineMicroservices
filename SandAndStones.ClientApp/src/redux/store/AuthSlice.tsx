@@ -10,7 +10,7 @@ export const checkTokenValidity = createAsyncThunk(
     async (_, thunkApi ) => {
     try {
         const response = await axiosInstance.get(
-            `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/userAuthorization/currenttokenvalid`
+            `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/currenttokenvalid`
         );
 
         return thunkApi.fulfillWithValue({ isAuthenticated: response.data.isValid });

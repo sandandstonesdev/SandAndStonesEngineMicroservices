@@ -25,7 +25,7 @@ function CollapsedFileList({ items, header }: CollapsedProps) {
             <h2>{header}</h2>
             <div className="accordion">
                 {items.map((item, i) => (
-                    <div className="item">
+                    <div key={item.name} className="item">
                         <div className="title" onClick={() => toggle(i)}>
                             <h3>{item.name}</h3>
                             <span>{selected === i ? '-' : '+'}</span>

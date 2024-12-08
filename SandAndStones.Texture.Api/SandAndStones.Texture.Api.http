@@ -1,0 +1,6 @@
+@SandAndStones.Texture.Api_HostAddress = http://localhost:5018
+
+GET {{SandAndStones.Texture.Api_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###

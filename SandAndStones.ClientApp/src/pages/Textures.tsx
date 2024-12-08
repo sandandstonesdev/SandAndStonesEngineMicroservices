@@ -22,7 +22,7 @@ function Textures() {
             setIsLoading(true);
 
             try {
-                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/api/inputAssetBatch/assetBatch/0`);
+                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/asset-api/assetBatch/0`);
                 const inputAssetBatch = response.data as InputAssetBatch;
                 const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles, text }) => {
                     return {
@@ -35,7 +35,7 @@ function Textures() {
                 });
 
                 const mappedItemsWithImages = mappedItems.map(({ name, textureNames, isDynamic }) => {
-                    const imageUrl = `${import.meta.env.VITE_APP_BASE_URL}/api/inputTexture/textureFile/${textureNames[0]}`;
+                    const imageUrl = `${import.meta.env.VITE_APP_BASE_URL}/texture-api/textureFile/${textureNames[0]}`;
                     return {
                         name: name,
                         content: <>

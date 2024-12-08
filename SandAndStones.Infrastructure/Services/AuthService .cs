@@ -2,8 +2,8 @@
 using Microsoft.AspNetCore.Identity;
 using SandAndStones.Domain.Constants;
 using SandAndStones.Domain.DTO;
+using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
-using System.Data;
 using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Services
@@ -60,8 +60,10 @@ namespace SandAndStones.Infrastructure.Services
                     throw new ArgumentException("Invalid password.");
                 }
 
-                var token = await _tokenGenerator.GenerateToken(user, user.Email!);
-                var refreshToken = await _tokenGenerator.GenerateToken(user, user.Email!);
+                var userRoles = await userManager.GetRolesAsync(user);
+
+                var token = _tokenGenerator.GenerateToken(user.Id, userRoles, user.Email!);
+                var refreshToken = _tokenGenerator.GenerateToken(user.Id, userRoles, user.Email!);
 
                 return new TokenDto(token, refreshToken);
             }
@@ -71,11 +73,11 @@ namespace SandAndStones.Infrastructure.Services
             }
         }
 
-        public async Task<bool> Logout(HttpContext httpContext)
+        public async Task<bool> Logout(IHttpContextAccessor contextAccessor)
         {
             try
             {
-                httpContext.Response.Cookies.Delete(
+                contextAccessor.HttpContext.Response.Cookies.Delete(
                     JwtTokenConstants.AccessTokenName,
                     new CookieOptions
                     {
@@ -85,7 +87,7 @@ namespace SandAndStones.Infrastructure.Services
                         Secure = true,
                         SameSite = SameSiteMode.None
                     });
-                httpContext.Response.Cookies.Delete(JwtTokenConstants.RefreshTokenName,
+                contextAccessor.HttpContext.Response.Cookies.Delete(JwtTokenConstants.RefreshTokenName,
                     new CookieOptions
                     {
                         Expires = DateTimeOffset.UtcNow.AddDays(-1),
@@ -103,9 +105,9 @@ namespace SandAndStones.Infrastructure.Services
             return true;
         }
 
-        public async Task<bool> CheckCurrentTokenValidity(HttpContext httpContext)
+        public async Task<bool> CheckCurrentTokenValidity(IHttpContextAccessor contextAccessor)
         {
-            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+            contextAccessor.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
             var user = await GetUserByToken(accessToken);
             return user != null;
         }
@@ -125,21 +127,23 @@ namespace SandAndStones.Infrastructure.Services
             return user;
         }
 
-        public async Task<bool> RefreshUserTokenAsync(HttpContext httpContext)
+        public async Task<bool> RefreshUserTokenAsync(IHttpContextAccessor contextAccessor)
         {
             try
             {
-                httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
-                httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.RefreshTokenName, out var refreshToken);
+                contextAccessor.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+                contextAccessor.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.RefreshTokenName, out var refreshToken);
 
                 var user = await GetUserByToken(accessToken);
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
                 ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
 
-                var newAccessToken = _tokenGenerator.GenerateToken(user, user.Email);
+                var userRoles = await userManager.GetRolesAsync(user);
+
+                var newAccessToken = _tokenGenerator.GenerateToken(user.Id, userRoles, user.Email);
                 var tokenDto = new TokenDto(accessToken, refreshToken);
                 
-                InjectTokensIntoCookie(tokenDto, httpContext);
+                InjectTokensIntoCookie(tokenDto, contextAccessor);
 
                 return true;
             }
@@ -149,7 +153,7 @@ namespace SandAndStones.Infrastructure.Services
             }
         }
 
-        public async Task<UserInfoDto> GetUserInfo(UserInfoDto userDto, HttpContext httpContext)
+        public async Task<UserInfoDto> GetUserInfo(UserInfoDto userDto, IHttpContextAccessor contextAccessor)
         {
             ArgumentException.ThrowIfNullOrWhiteSpace(userDto.Email, nameof(userDto.Email));
 
@@ -158,7 +162,7 @@ namespace SandAndStones.Infrastructure.Services
             ArgumentException.ThrowIfNullOrWhiteSpace(userInfo.UserName, nameof(userInfo.UserName));
             ArgumentException.ThrowIfNullOrWhiteSpace(userInfo.Email, nameof(userInfo.Email));
 
-            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+            contextAccessor.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
             
             var user = await GetUserByToken(accessToken);
             ArgumentNullException.ThrowIfNull(user, nameof(user));
@@ -167,11 +171,11 @@ namespace SandAndStones.Infrastructure.Services
             return new UserInfoDto(userInfo.UserName, userInfo.Email, true);
         }
 
-        public bool InjectTokensIntoCookie(TokenDto tokenDto, HttpContext context)
+        public bool InjectTokensIntoCookie(TokenDto tokenDto, IHttpContextAccessor contextAccessor)
         {
             try
             {
-                context.Response.Cookies.Append(JwtTokenConstants.AccessTokenName, tokenDto.AccessToken,
+                contextAccessor.HttpContext.Response.Cookies.Append(JwtTokenConstants.AccessTokenName, tokenDto.AccessToken,
                 new CookieOptions
                 {
                     Expires = DateTimeOffset.UtcNow.AddMinutes(15),
@@ -180,7 +184,7 @@ namespace SandAndStones.Infrastructure.Services
                     Secure = true,
                     SameSite = SameSiteMode.None
                 });
-                context.Response.Cookies.Append(JwtTokenConstants.RefreshTokenName, tokenDto.RefreshToken,
+                contextAccessor.HttpContext.Response.Cookies.Append(JwtTokenConstants.RefreshTokenName, tokenDto.RefreshToken,
                     new CookieOptions
                     {
                         Expires = DateTimeOffset.UtcNow.AddDays(15),

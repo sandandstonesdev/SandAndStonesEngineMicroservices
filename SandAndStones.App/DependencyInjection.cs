@@ -1,30 +1,17 @@
-﻿using MediatR;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using SandAndStones.Infrastructure;
+﻿using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
 namespace SandAndStones.App
 {
     public static class DependencyInjection
     {
-        public static IServiceCollection AddGatewayDependencies(this IServiceCollection services, IConfiguration configuration)
+        public static IServiceCollection ConfigureMediatR(this IServiceCollection services, List<Assembly>? commandAssemblies=default)
         {
-            services.AddAuthInfrastructure(configuration);
-            return services;
-        }
+            commandAssemblies ??= [];
 
-        public static IServiceCollection ConfigureMediatR(this IServiceCollection services)
-        {
-            return ConfigureMediatR(services, [Assembly.GetExecutingAssembly()]);
-        }
-        public static IServiceCollection ConfigureMediatR(this IServiceCollection services, Assembly[] commandAssemblies)
-        {
             services.AddMediatR(options =>
             {
-                options.RegisterServicesFromAssemblies(commandAssemblies);
-                
-                //services.AddMediatR(cf => cf.RegisterServicesFromAssembly(typeof(DependencyInjection).Assembly));
+                options.RegisterServicesFromAssemblies([Assembly.GetExecutingAssembly(),.. commandAssemblies]);
                 
                 //options.AddOpenBehavior(typeof(AuthorizationBehavior<,>));
                 //options.AddOpenBehavior(typeof(ValidationBehavior<,>));
