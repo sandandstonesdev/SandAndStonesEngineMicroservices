@@ -1,8 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
-using SandAndStones.App;
-using SandAndStones.Gateway.Api.User.Profile;
+﻿using MediatR;
+using Microsoft.EntityFrameworkCore;
+using SandAndStones.App.Contracts.Repository;
+using SandAndStones.App.UseCases.Profile.GetUserProfile;
+using SandAndStones.App.UseCases.User.CheckCurrentTokenValidity;
+using SandAndStones.App.UseCases.User.GetUserInfo;
+using SandAndStones.App.UseCases.User.LoginUser;
+using SandAndStones.App.UseCases.User.LogoutUser;
+using SandAndStones.App.UseCases.User.RegisterUser;
 using SandAndStones.Infrastructure.Data;
-using System.Reflection;
+using SandAndStones.Infrastructure.Handlers.UseCases.Profile;
+using SandAndStones.Infrastructure.Handlers.UseCases.User;
+using SandAndStones.Infrastructure.Repositories;
 
 namespace SandAndStones.Gateway.Api
 {
@@ -49,12 +57,21 @@ namespace SandAndStones.Gateway.Api
                                   });
             });
 
-            Assembly[] commandAssemblies = [Assembly.GetExecutingAssembly(), typeof(GetUserProfileQuery).Assembly];
+            services.AddAuthDependencies(_configuration);
+
+            services.AddScoped<IMediator, Mediator>();
+
+            services.AddScoped<IRequestHandler<LoginUserQuery, LoginUserQueryResponse>, LoginUserQueryHandler>();
+            services.AddScoped<IRequestHandler<RegisterUserCommand, RegisterUserCommandResponse>, RegisterUserCommandHandler>();
+            services.AddScoped<IRequestHandler<LogoutUserQuery, LogoutUserQueryResponse>, LogoutUserQueryHandler>();
+            services.AddScoped<IRequestHandler<LogoutUserQuery, LogoutUserQueryResponse>, LogoutUserQueryHandler>();
+            services.AddScoped<IRequestHandler<CheckCurrentTokenValidityQuery, CheckCurrentTokenValidityQueryResponse>, CheckCurrentTokenValidityQueryHandler>();
+            services.AddScoped<IRequestHandler<GetUserInfoQuery, GetUserInfoQueryResponse>, GetUserInfoQueryHandler>();
+            services.AddScoped<IRequestHandler<GetUserProfileQuery, GetUserProfileQueryResponse>, GetUserProfileQueryHandler>();
+
             services
                 .AddPresentation()
-                .AddHttpContextAccessor()
-                .AddGatewayDependencies(_configuration)
-                .ConfigureMediatR(commandAssemblies);
+                .AddHttpContextAccessor();
         }
     }
 }

@@ -1,6 +1,8 @@
 ﻿using Microsoft.AspNetCore.Identity;
+using Microsoft.EntityFrameworkCore.Update.Internal;
 using Microsoft.IdentityModel.Tokens;
 using SandAndStones.Infrastructure.Configuration;
+using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
@@ -8,21 +10,20 @@ using System.Text;
 
 namespace SandAndStones.Infrastructure.Services
 {
-    public class TokenGenerator(JwtSettings jwtSettings, UserManager<ApplicationUser> userManager) : ITokenGenerator
+    public class TokenGenerator(JwtSettings jwtSettings) : ITokenGenerator
     {
         private readonly JwtSettings _jwtSettings = jwtSettings;
 
-        public async Task<string> GenerateToken(ApplicationUser user, string email)
+        public string GenerateToken(string userId, IList<string> userRoles, string email)
         {
             var tokenHandler = new JwtSecurityTokenHandler();
             var claims = new List<Claim>
             {
               new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),
-              new(JwtRegisteredClaimNames.Sub, user.Id),
+              new(JwtRegisteredClaimNames.Sub, userId),
               new(JwtRegisteredClaimNames.Email, email),
             };
 
-            var userRoles = await userManager.GetRolesAsync(user);
             foreach (var userRole in userRoles)
             {
                 claims.Add(new Claim(ClaimTypes.Role, userRole));
@@ -46,6 +47,8 @@ namespace SandAndStones.Infrastructure.Services
 
         public ClaimsPrincipal GetPrincipalFromToken(string token)
         {
+            ArgumentException.ThrowIfNullOrWhiteSpace(token);
+
             var tokenValidationParameters = new TokenValidationParameters
             {
                 ValidateIssuer = true,

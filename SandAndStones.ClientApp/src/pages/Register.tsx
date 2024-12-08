@@ -57,7 +57,7 @@ function Register() {
             })
 
             await axiosInstance.post(
-                `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/userAuthorization/register`,
+                `${import.meta.env.VITE_APP_BASE_URL}/gateway-api/register`,
                 formData
             );
             

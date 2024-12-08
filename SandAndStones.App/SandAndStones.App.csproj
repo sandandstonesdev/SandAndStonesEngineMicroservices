@@ -8,27 +8,25 @@
 
   <ItemGroup>
     <Folder Include="Behaviuors\" />
-    <Folder Include="Contracts\" />
     <Folder Include="Constants\" />
     <Folder Include="Assets\" />
     <Folder Include="Textures\" />
     <Folder Include="Services\" />
     <Folder Include="Repositories\" />
-    <Folder Include="UseCases\AssetBatch\" />
-    <Folder Include="UseCases\Texture\" />
   </ItemGroup>
 
   <ItemGroup>
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />
     <PackageReference Include="MediatR" Version="12.4.1" />
+    <PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.2.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" Version="9.0.0" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="9.0.0" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\SandAndStones.Domain\SandAndStones.Domain.csproj" />
-    <ProjectReference Include="..\SandAndStones.Infrastructure\SandAndStones.Infrastructure.csproj" />
+    <ProjectReference Include="..\SandAndStones.Shared\SandAndStones.Shared.csproj" />
   </ItemGroup>
 
 </Project>

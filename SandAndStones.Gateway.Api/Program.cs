@@ -1,8 +1,5 @@
-using Azure.Core;
-using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 using Microsoft.IdentityModel.Tokens;
 using SandAndStones.Domain.Constants;
 using SandAndStones.Gateway.Api;
@@ -72,7 +69,6 @@ builder.Services.AddAuthentication(options => {
 builder.Services.AddScoped<ApplicationDbContextConfigurator>();
 
 builder.Services.AddControllers();
-builder.Services.AddProblemDetails();
 
 var reverseProxyConfig = builder.Configuration.GetSection("ReverseProxy");
 builder.Services.AddReverseProxy()
