@@ -12,7 +12,7 @@ function Logout() {
     useEffect(() => {
         const handleLogout = async () => {
             try {
-                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/gateway-api/userAuthorization/logout`);
+                const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/gateway-api/logout`);
                 console.log(response.data);
                 dispatch(setUnauthenticated());
                 navigate('/', { replace: true });

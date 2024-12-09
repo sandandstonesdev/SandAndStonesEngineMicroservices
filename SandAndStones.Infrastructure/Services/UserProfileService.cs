@@ -1,7 +1,9 @@
-﻿using Azure.Core;
-using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
+using SandAndStones.App.Contracts.Services;
 using SandAndStones.Domain.Constants;
+using SandAndStones.Domain.Entities;
+using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Security.Claims;
 
@@ -14,9 +16,9 @@ namespace SandAndStones.Infrastructure.Services
         private readonly ITokenGenerator _tokenGenerator = tokenGenerator;
         private readonly UserManager<ApplicationUser> _userManager = userManager;
 
-        public async Task<UserProfile> GetUserProfile(HttpContext httpContext)
+        public async Task<UserProfile> GetUserProfile(IHttpContextAccessor contextAccessor)
         {
-            httpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
+            contextAccessor.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
 
             var principal = _tokenGenerator.GetPrincipalFromToken(accessToken);
             ArgumentNullException.ThrowIfNull(principal, nameof(principal));
@@ -35,7 +37,7 @@ namespace SandAndStones.Infrastructure.Services
             ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
             ArgumentException.ThrowIfNullOrWhiteSpace(user.UserName, nameof(user.UserName));
 
-            var remoteIpAddress = httpContext.Connection.RemoteIpAddress.ToString();
+            var remoteIpAddress = contextAccessor.HttpContext.Connection.RemoteIpAddress.ToString();
 
             return new UserProfile(
                 user.Email,

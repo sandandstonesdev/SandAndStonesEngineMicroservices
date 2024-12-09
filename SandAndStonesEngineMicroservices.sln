@@ -21,7 +21,7 @@ Project("{54A90642-561A-4BB1-A94E-469ADEE60C69}") = "sandandstones.clientapp", "
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Api", "SandAndStones.Api", "{A3DACF92-5E99-4C6E-A028-4394D35C31A7}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Api", "SandAndStones.Api\SandAndStones.Api.csproj", "{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "SandAndStones.Asset.Api", "SandAndStones.Asset.Api\SandAndStones.Asset.Api.csproj", "{B118A265-ACD4-4E56-AB88-F1DC40CA2CAA}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.Domain", "SandAndStones.Domain", "{5DD7A80E-F4CF-4C31-B352-B9B2C349A4DF}"
 EndProject
@@ -42,6 +42,8 @@ EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "SandAndStones.ClientApp", "SandAndStones.ClientApp", "{62F32800-2F3A-4F4D-B0C1-BDF01E84A3E8}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandAndStones.Gateway.Api", "SandAndStones.Gateway.Api\SandAndStones.Gateway.Api.csproj", "{2DF3750B-ACCB-400A-9F3A-70CCEA73ADE0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandAndStones.Texture.Api", "SandAndStones.Texture.Api\SandAndStones.Texture.Api.csproj", "{54CFACAF-ECA2-4823-BB70-36862EA5DC8D}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -83,6 +85,10 @@ Global
 		{2DF3750B-ACCB-400A-9F3A-70CCEA73ADE0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{2DF3750B-ACCB-400A-9F3A-70CCEA73ADE0}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{2DF3750B-ACCB-400A-9F3A-70CCEA73ADE0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{54CFACAF-ECA2-4823-BB70-36862EA5DC8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{54CFACAF-ECA2-4823-BB70-36862EA5DC8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{54CFACAF-ECA2-4823-BB70-36862EA5DC8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{54CFACAF-ECA2-4823-BB70-36862EA5DC8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -96,6 +102,7 @@ Global
 		{1797F7E4-65BF-43D9-85AC-F46C8D15B66B} = {8530272A-427A-49E8-AA7B-4CAE5BEE6423}
 		{F4A175CE-F545-45B9-82E2-C4DE8C55A787} = {81A2C0AF-2EBD-4CD0-967F-3F855D290570}
 		{2DF3750B-ACCB-400A-9F3A-70CCEA73ADE0} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}
+		{54CFACAF-ECA2-4823-BB70-36862EA5DC8D} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B47B0CA-2F85-418E-AF19-DD93D4EC431A}
