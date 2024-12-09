@@ -6,7 +6,7 @@ name: Build and deploy ASP.Net Core app to Azure Web App - sand-and-stones-textu
 on:
   push:
     branches:
-      - refactoring_mediatr_cleanarchitecture
+      - master
   workflow_dispatch:
 
 jobs:
