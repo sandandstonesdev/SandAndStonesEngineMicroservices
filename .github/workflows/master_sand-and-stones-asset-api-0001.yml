@@ -22,16 +22,16 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Debug
 
-      - name: dotnet publish
-        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
+      - name: dotnet publish Asset.Api
+        run: dotnet publish ./SandAndStones.Asset.Api/SandAndStones.Asset.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/asset-api"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/myapp
+          path: ${{env.DOTNET_ROOT}}/asset-api
 
   deploy:
     runs-on: windows-latest
