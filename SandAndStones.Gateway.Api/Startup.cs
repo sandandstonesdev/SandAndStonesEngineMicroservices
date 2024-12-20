@@ -1,6 +1,5 @@
 ﻿using MediatR;
 using Microsoft.EntityFrameworkCore;
-using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.UseCases.Profile.GetUserProfile;
 using SandAndStones.App.UseCases.User.CheckCurrentTokenValidity;
 using SandAndStones.App.UseCases.User.GetUserInfo;
@@ -10,7 +9,6 @@ using SandAndStones.App.UseCases.User.RegisterUser;
 using SandAndStones.Infrastructure.Data;
 using SandAndStones.Infrastructure.Handlers.UseCases.Profile;
 using SandAndStones.Infrastructure.Handlers.UseCases.User;
-using SandAndStones.Infrastructure.Repositories;
 
 namespace SandAndStones.Gateway.Api
 {

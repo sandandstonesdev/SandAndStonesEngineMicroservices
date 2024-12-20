@@ -71,18 +71,20 @@ builder.Services.AddScoped<ApplicationDbContextConfigurator>();
 builder.Services.AddControllers();
 
 var reverseProxyConfig = builder.Configuration.GetSection("ReverseProxy");
+
 builder.Services.AddReverseProxy()
     .LoadFromConfig(reverseProxyConfig)
     .AddTransforms(builderContext =>
     {
-        builderContext.AddRequestTransform(async transformContext =>
+        builderContext.AddRequestTransform(transformContext =>
         {
             transformContext.HttpContext.Request.Cookies.TryGetValue(JwtTokenConstants.AccessTokenName, out var accessToken);
-    
+
             if (accessToken != null)
             {
                 transformContext.ProxyRequest.Headers.Authorization = new AuthenticationHeaderValue("Bearer", accessToken);
             }
+            return ValueTask.CompletedTask;
         });
     });
 

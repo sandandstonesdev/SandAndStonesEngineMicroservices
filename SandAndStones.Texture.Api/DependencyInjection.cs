@@ -13,7 +13,6 @@ namespace SandAndStones.Texture.Api
             });
 
             services.AddProblemDetails();
-
             return services;
         }
     }

@@ -4,7 +4,7 @@ interface CollapsedItem {
     name: string; content: any
 }
 
-export type CollapsedProps = {
+type CollapsedProps = {
     header: string
     items: Array<CollapsedItem>;
 }

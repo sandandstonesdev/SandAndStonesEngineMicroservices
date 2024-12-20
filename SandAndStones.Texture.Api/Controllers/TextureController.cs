@@ -1,8 +1,12 @@
+using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SandAndStones.App.UseCases.Texture.DownloadTextureByName;
 using SandAndStones.App.UseCases.Texture.GetTextureById;
 using SandAndStones.App.UseCases.Texture.GetTexturesDecriptions;
+using SandAndStones.App.UseCases.Texture.UploadTexture;
+using SandAndStones.Texture.Api.DTO;
+using System.IO;
 
 namespace SandAndStones.Texture.Api.Controllers
 {
@@ -37,6 +41,25 @@ namespace SandAndStones.Texture.Api.Controllers
             if (result is null || !result.Loaded)
                 return NotFound();
             return File(result.FileData, result.ContentType, result.FileName);
+        }
+
+        [HttpPost("upload")]
+        public async Task<IActionResult> UploadTexture([FromBody]UploadTextureFileDTO file)
+        {
+            var fileData = Convert.FromBase64String(file.Base64Data);
+
+
+            var result = await _mediator.Send(new UploadTextureCommand(
+                file.Name,
+                256,
+                256,
+                fileData
+            ));
+
+            if (!result.Uploaded)
+                return BadRequest();
+
+            return Ok();
         }
     }
 }
