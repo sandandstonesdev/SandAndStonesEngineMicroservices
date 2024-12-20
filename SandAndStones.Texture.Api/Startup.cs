@@ -4,7 +4,10 @@ using SandAndStones.App.UseCases.Texture.DownloadTextureByName;
 using SandAndStones.App.UseCases.Texture.GetTextureById;
 using SandAndStones.App.UseCases.Texture.GetTexturesDecriptions;
 using SandAndStones.Infrastructure.Handlers.UseCases.Texture;
+using SandAndStones.Infrastructure;
 using SandAndStones.Infrastructure.Repositories;
+using System;
+using SandAndStones.App.UseCases.Texture.UploadTexture;
 
 namespace SandAndStones.Texture.Api
 {
@@ -14,11 +17,7 @@ namespace SandAndStones.Texture.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var textureRepository = new InputTextureRepository();
-            textureRepository.Init();
-            services.AddSingleton<IInputTextureRepository>(textureRepository);
-
-            Console.WriteLine(_enviroment.IsDevelopment() ? "Development" : "Production");
+            Console.WriteLine(_enviroment.EnvironmentName);
 
             services.AddCors(options =>
             {
@@ -39,10 +38,21 @@ namespace SandAndStones.Texture.Api
             services.AddScoped<IRequestHandler<GetTextureByIdQuery, GetTextureByIdQueryResponse>, GetTextureByIdQueryHandler>();
             services.AddScoped<IRequestHandler<DownloadTextureByNameQuery, DownloadTextureByNameQueryResponse>, DownloadTextureByNameQueryHandler>();
             services.AddScoped<IRequestHandler<GetTexturesDescriptionsQuery, GetTexturesDescriptionsQueryResponse>, GetTexturesDescriptionsQueryHandler>();
+            services.AddScoped<IRequestHandler<UploadTextureCommand, UploadTextureCommandResponse>, UploadTextureCommandHandler>();
 
             services
+                .AddAzureBlobStorageInfrastructure(configuration)
                 .AddPresentation()
                 .AddHttpContextAccessor();
+
+            services.AddSingleton<IInputTextureRepository, InputTextureRepository>();
+        }
+
+        public void SeedTextureDataBlob(IServiceProvider serviceProvider)
+        {
+            var textureRepository = serviceProvider.GetRequiredService<IInputTextureRepository>();
+            var initializeTask = textureRepository.SeedTextures();
+            initializeTask.GetAwaiter().GetResult();
         }
     }
 }

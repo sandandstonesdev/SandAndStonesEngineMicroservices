@@ -45,3 +45,15 @@
     overflow: hidden;
     max-height: 0;
 }
+
+.loaded-image {
+    width: 100px;
+    height: 100px;
+    margin: 0;
+    padding: 0;
+    margin: auto;
+}
+
+.texture-form {
+    justify-content: center;
+}

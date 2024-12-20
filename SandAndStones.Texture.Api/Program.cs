@@ -11,6 +11,11 @@ builder.Services.AddAuthentication();
 builder.Services.AddAuthorization();
 
 var app = builder.Build();
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    startup.SeedTextureDataBlob(services);
+}
 
 app.UseCors("TextureApiCorsPolicy");
 

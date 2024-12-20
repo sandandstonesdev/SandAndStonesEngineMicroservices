@@ -100,3 +100,12 @@ services:
           - 5433:1433
         networks:
             - appnetwork
+
+    sandandstones-texture-blob-storage:
+      image: mcr.microsoft.com/azure-storage/azurite:latest
+      container_name: sandandstones.texture.blob-storage
+      volumes:
+      - ./.container/blob_storage/data:/data
+      ports:
+      - "10000:10000"
+      command: "azurite-blob --blobhost 0.0.0.0 -l /data"

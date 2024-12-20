@@ -25,7 +25,7 @@ namespace SandAndStones.Shared.TextureConfig
             var span = pixmap.GetPixelSpan();
             byte[] bitmapBytes = MemoryMarshal.AsBytes(span).ToArray();
 
-            return new InputTexture(Width, Height, bitmapBytes);
+            return new InputTexture(fileName, Width, Height, bitmapBytes);
         }
 
         public static string GetTextureImageFilePath(string fileName)

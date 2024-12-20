@@ -2,6 +2,7 @@ import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
 import { InputAssetBatch } from "../types/InputAssetBatch";
 import { axiosInstance } from "../hooks/useAxios";
+import UploadTexture from "../components/UploadTexture";
 
 interface ImageItemInfo {
     name: string;
@@ -9,7 +10,8 @@ interface ImageItemInfo {
 }
 
 function Textures() {
-    const header: string = "Available textures";
+    const uploadTextureHeader: string = "Upload Texture";
+    const availableTexturesHeader: string = "Available Textures";
 
     const [isLoading, setIsLoading] = useState(false);
     const [items, setItems] = useState<ImageItemInfo[]>([]);
@@ -65,8 +67,9 @@ function Textures() {
 
     return (
         <>
+            <UploadTexture header={uploadTextureHeader}></UploadTexture>
             {isLoading && <div>Loading...</div>}
-            {!isLoading && (<CollapsedFileList items={items} header={header} />)}
+            {!isLoading && (<CollapsedFileList items={items} header={availableTexturesHeader} />)}
         </>      
     );
 }
