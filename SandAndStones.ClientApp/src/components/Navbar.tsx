@@ -7,6 +7,7 @@ function Navbar() {
             <NavLink to="/assets">Assets</NavLink>
             <NavLink to="/textures">Textures</NavLink>
             <NavLink to="/profile">Profile</NavLink>
+            <NavLink to="/events">Events</NavLink>
         </nav>
   );
 }

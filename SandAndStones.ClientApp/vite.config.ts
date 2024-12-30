@@ -30,6 +30,12 @@ export default defineConfig({
                     secure: false,
                     ws: true,
                 },
+                '/eventlog-api': {
+                    target: 'https://localhost:5000',
+                    changeOrigin: true,
+                    secure: false,
+                    ws: true,
+                },
                 '/gateway-api': {
                     target: 'https://localhost:5000',
                     changeOrigin: true,

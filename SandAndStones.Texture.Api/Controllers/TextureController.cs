@@ -1,4 +1,3 @@
-using Azure.Core;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 using SandAndStones.App.UseCases.Texture.DownloadTextureByName;
@@ -6,7 +5,6 @@ using SandAndStones.App.UseCases.Texture.GetTextureById;
 using SandAndStones.App.UseCases.Texture.GetTexturesDecriptions;
 using SandAndStones.App.UseCases.Texture.UploadTexture;
 using SandAndStones.Texture.Api.DTO;
-using System.IO;
 
 namespace SandAndStones.Texture.Api.Controllers
 {

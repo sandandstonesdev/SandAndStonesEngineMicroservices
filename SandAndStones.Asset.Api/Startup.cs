@@ -1,8 +1,11 @@
 ﻿using MediatR;
 using SandAndStones.App.Contracts.Repository;
+using SandAndStones.App.Contracts.Services;
 using SandAndStones.App.UseCases.AssetBatch.GetInputAssetBatchById;
+using SandAndStones.Infrastructure;
 using SandAndStones.Infrastructure.Handlers.UseCases.AssetBatch;
 using SandAndStones.Infrastructure.Repositories;
+using SandAndStones.Infrastructure.Services;
 
 namespace SandAndStones.Asset.Api
 {
@@ -12,6 +15,7 @@ namespace SandAndStones.Asset.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<ITokenReaderService, TokenReaderService>();
             services.AddTransient<IInputAssetBatchRepository, InputAssetBatchRepository>();
             
             Console.WriteLine(_enviroment.IsDevelopment() ? "Development" : "Production");
@@ -36,7 +40,8 @@ namespace SandAndStones.Asset.Api
 
             services
                 .AddPresentation()
-                .AddHttpContextAccessor();
+                .AddHttpContextAccessor()
+                .AddKafkaInfrastructure(configuration);
         }
     }
 }
