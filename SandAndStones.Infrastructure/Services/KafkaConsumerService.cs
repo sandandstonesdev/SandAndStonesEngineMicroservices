@@ -67,6 +67,7 @@ namespace SandAndStones.Infrastructure.Services
             {
                 if (!string.IsNullOrWhiteSpace(message))
                 {
+                    var message = consumeResult.Message.Value;
                     _logger.LogInformation($"Received message: {message}");
 
                     var logEntry = JsonSerializer.Deserialize<EventItem>(message);
