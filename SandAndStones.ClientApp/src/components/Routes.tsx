@@ -10,6 +10,7 @@ import Home from "../pages/Home";
 import UnauthotizedHome from "../pages/UnauthorizedHome";
 import Profile from "../pages/Profile";
 import { useAppSelector } from "../redux/store/Store";
+import Events from "../pages/Events";
 
 const Routes = () => {
     const isAuthenticated = useAppSelector(state => state.auth.isAuthenticated);
@@ -60,6 +61,10 @@ const Routes = () => {
                 {
                     path: '/textures',
                     element: <Textures />,
+                },
+                {
+                    path: '/events',
+                    element: <Events />,
                 },
                 {
                     path: '/logout',

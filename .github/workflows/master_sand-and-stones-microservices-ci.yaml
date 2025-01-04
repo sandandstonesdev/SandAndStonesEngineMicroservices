@@ -34,6 +34,9 @@ jobs:
       - name: dotnet publish Gateway.Api
         run: dotnet publish ./SandAndStones.Gateway.Api/SandAndStones.Gateway.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/gateway-api"
 
+      - name: dotnet publish EventLog.Api
+        run: dotnet publish ./SandAndStones.EventLog.Api/SandAndStones.EventLog.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/eventlog-api"
+
   build_frontend:
     runs-on: ubuntu-latest
 

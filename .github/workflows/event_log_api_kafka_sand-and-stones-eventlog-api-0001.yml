@@ -1,0 +1,62 @@
+name: Build and deploy ASP.Net Core app to Azure Web App - sand-and-stones-eventlog-api-0001
+
+on:
+  push:
+    branches:
+      - master
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: windows-latest
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up .NET Core
+        uses: actions/setup-dotnet@v4
+        with:
+          dotnet-version: '9.x'
+
+      - name: Build with dotnet
+        run: dotnet build --configuration Debug
+
+      - name: dotnet publish EventLog.Api
+        run: dotnet publish ./SandAndStones.EventLog.Api/SandAndStones.EventLog.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/eventlog-api"
+
+      - name: Upload artifact for deployment job
+        uses: actions/upload-artifact@v4
+        with:
+          name: .net-app
+          path: ${{env.DOTNET_ROOT}}/eventlog-api
+
+  deploy:
+    runs-on: windows-latest
+    needs: build
+    environment:
+      name: 'Production'
+      url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
+    permissions:
+      id-token: write #This is required for requesting the JWT
+
+    steps:
+      - name: Download artifact from build job
+        uses: actions/download-artifact@v4
+        with:
+          name: .net-app
+      
+      - name: Login to Azure
+        uses: azure/login@v2
+        with:
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_0134E1665B5548F5B9E7A3BF621EC982 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_48A9178CD0994F8B88D5E8121BEDFB64 }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_D6978C594C4546D98AAEED8AFBC612AA }}
+
+      - name: Deploy to Azure Web App
+        id: deploy-to-webapp
+        uses: azure/webapps-deploy@v3
+        with:
+          app-name: 'sand-and-stones-eventlog-api-0001'
+          slot-name: 'Production'
+          package: .
+          
