@@ -16,6 +16,7 @@
   </ItemGroup>
 
   <ItemGroup>
+	<PackageReference Include="Azure.Messaging.EventGrid" Version="4.28.0" />
     <PackageReference Include="Confluent.Kafka" Version="2.6.1" />
     <PackageReference Include="FluentValidation" Version="11.11.0" />
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" Version="11.11.0" />

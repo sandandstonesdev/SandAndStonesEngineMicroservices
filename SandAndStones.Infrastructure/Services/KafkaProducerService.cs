@@ -31,7 +31,7 @@ namespace SandAndStones.Infrastructure.Services
             _producer = new ProducerBuilder<Null, string>(producerconfig).Build();
         }
 
-        public async Task ProduceAsync(string message)
+        public async Task PublishMessageAsync(string message)
         {
             var kafkaMessage = new Message<Null, string> 
             {

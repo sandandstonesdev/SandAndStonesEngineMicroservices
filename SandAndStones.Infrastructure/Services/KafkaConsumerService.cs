@@ -8,7 +8,7 @@ using System.Text.Json;
 
 namespace SandAndStones.Infrastructure.Services
 {
-    public class KafkaConsumerService : BackgroundService, IConsumerService 
+    public class KafkaConsumerService : BackgroundService, IHostedService, IConsumerService 
     {
 
         private readonly IMongoDbEventLogService _mongoService;
@@ -50,7 +50,8 @@ namespace SandAndStones.Infrastructure.Services
                 
                 while (!stoppingToken.IsCancellationRequested)
                 {
-                    ProcessKafkaMessage(stoppingToken);
+                    var consumeResult = _consumer.Consume(stoppingToken);
+                    ProcessMessage(consumeResult.Message.Value);
                     await Task.Delay(1000, stoppingToken);
                 }
             }
@@ -60,14 +61,12 @@ namespace SandAndStones.Infrastructure.Services
                 _consumer.Dispose();
             }
         }
-        public void ProcessKafkaMessage(CancellationToken stoppingToken)
+        public void ProcessMessage(string message)
         {
             try
             {
-                var consumeResult = _consumer.Consume(stoppingToken);
-                if (consumeResult is not null)
+                if (!string.IsNullOrWhiteSpace(message))
                 {
-                    var message = consumeResult.Message.Value;
                     _logger.LogInformation($"Received message: {message}");
 
                     var logEntry = JsonSerializer.Deserialize<EventItem>(message);

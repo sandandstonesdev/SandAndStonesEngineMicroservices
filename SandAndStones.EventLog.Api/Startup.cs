@@ -31,7 +31,7 @@ namespace SandAndStones.EventLog.Api
             services
                 .AddPresentation()
                 .AddHttpContextAccessor()
-                .AddKafkaConsumerInfrastructure(configuration);
+                .AddConsumerInfrastructure(configuration);
         }
     }
 }

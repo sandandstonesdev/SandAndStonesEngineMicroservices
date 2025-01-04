@@ -48,6 +48,14 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandAndStones.Texture.Api",
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "SandAndStones.EventLog.Api", "SandAndStones.EventLog.Api\SandAndStones.EventLog.Api.csproj", "{7ECE7FBC-40C0-40BB-8954-F7F8CCE94788}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Kafka", "Kafka", "{7E3B0BB6-8FDB-4211-9817-1281947A30D0}"
+	ProjectSection(SolutionItems) = preProject
+		kafka-deployment.yaml = kafka-deployment.yaml
+		kafka-ui-deployment.yaml = kafka-ui-deployment.yaml
+		persistent-volume-claims.yaml = persistent-volume-claims.yaml
+		zookeeper-deployment.yaml = zookeeper-deployment.yaml
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +119,7 @@ Global
 		{2DF3750B-ACCB-400A-9F3A-70CCEA73ADE0} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}
 		{54CFACAF-ECA2-4823-BB70-36862EA5DC8D} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}
 		{7ECE7FBC-40C0-40BB-8954-F7F8CCE94788} = {A3DACF92-5E99-4C6E-A028-4394D35C31A7}
+		{7E3B0BB6-8FDB-4211-9817-1281947A30D0} = {15D9A501-4D68-4AA4-B4B7-AB2B6CB68FF5}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {6B47B0CA-2F85-418E-AF19-DD93D4EC431A}

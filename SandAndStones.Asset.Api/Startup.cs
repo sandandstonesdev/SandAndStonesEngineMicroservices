@@ -41,7 +41,7 @@ namespace SandAndStones.Asset.Api
             services
                 .AddPresentation()
                 .AddHttpContextAccessor()
-                .AddKafkaInfrastructure(configuration);
+                .AddProducerInfrastructure(configuration);
         }
     }
 }

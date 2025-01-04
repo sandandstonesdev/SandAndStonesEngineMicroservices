@@ -74,7 +74,7 @@ namespace SandAndStones.Infrastructure
             return services;
         }
 
-        public static IServiceCollection AddKafkaInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddKafkaProducerInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddSingleton<IProducerService>(resolver =>
             {
@@ -90,7 +90,7 @@ namespace SandAndStones.Infrastructure
             return services;
         }
 
-        public static IServiceCollection AddKafkaConsumerInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        private static IServiceCollection AddKafkaConsumerInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
             services.AddMongoDbInfrastructure(configuration);
 
@@ -109,8 +109,74 @@ namespace SandAndStones.Infrastructure
 
             services.AddHostedService(serviceProvider =>
             {
-                return serviceProvider.GetRequiredService<IConsumerService>();
+                var kafkaConsumerService = serviceProvider.GetRequiredService<IConsumerService>() as KafkaConsumerService;
+                return kafkaConsumerService is null
+                    ? throw new InvalidOperationException("Kafka consumer service is not registered")
+                    : kafkaConsumerService;
             });
+
+            return services;
+        }
+
+        private static IServiceCollection AddEventGridProducerInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddSingleton<IProducerService>(resolver =>
+            {
+                var logger = resolver.GetRequiredService<ILogger<EventGridProducerService>>();
+
+                var producerSettings = new EventGridSettings();
+                var producerConfig = configuration.GetSection(nameof(EventGridSettings));
+                producerConfig.Bind(producerSettings);
+
+                return new EventGridProducerService(producerSettings, logger);
+            });
+
+            return services;
+        }
+
+        private static IServiceCollection AddEventGridConsumerInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            services.AddMongoDbInfrastructure(configuration);
+
+            services.AddSingleton<IConsumerService>(resolver =>
+            {
+                var logger = resolver.GetRequiredService<ILogger<EventGridConsumerService>>();
+                var mongoDbEventLogService = resolver.GetRequiredService<IMongoDbEventLogService>();
+
+                return new EventGridConsumerService(mongoDbEventLogService, logger);
+            });
+
+            return services;
+        }
+
+        public static IServiceCollection AddProducerInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            var messagingService = configuration["MessagingService"];
+
+            if (messagingService == "Kafka")
+            {
+                services.AddKafkaProducerInfrastructure(configuration);
+            }
+            else if (messagingService == "EventGrid")
+            {
+                services.AddEventGridProducerInfrastructure(configuration);
+            }
+
+            return services;
+        }
+
+        public static IServiceCollection AddConsumerInfrastructure(this IServiceCollection services, IConfiguration configuration)
+        {
+            var messagingService = configuration["MessagingService"];
+
+            if (messagingService == "Kafka")
+            {
+                services.AddKafkaConsumerInfrastructure(configuration);
+            }
+            else if (messagingService == "EventGrid")
+            {
+                services.AddEventGridConsumerInfrastructure(configuration);
+            }
 
             return services;
         }

@@ -2,6 +2,6 @@
 {
     public interface IProducerService
     {
-        Task ProduceAsync(string message);
+        Task PublishMessageAsync(string message);
     }
 }

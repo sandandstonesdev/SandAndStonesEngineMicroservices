@@ -28,7 +28,7 @@ public class GetInputAssetBatchByIdQueryHandler(
 
         var message = new EventItem { ResourceId = assetBatch.Id, ResourceName = "Asset", CurrentUserId = currentUserEmail, DateTime = DateTime.UtcNow };
         
-        await _producerService.ProduceAsync(JsonSerializer.Serialize(message));
+        await _producerService.PublishMessageAsync(JsonSerializer.Serialize(message));
         return new GetInputAssetBatchByIdQueryResponse(assetBatch);
     }
 }

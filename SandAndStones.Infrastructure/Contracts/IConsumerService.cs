@@ -2,8 +2,8 @@
 
 namespace SandAndStones.Infrastructure.Contracts
 {
-    public interface IConsumerService : IHostedService
+    public interface IConsumerService
     {
-        void ProcessKafkaMessage(CancellationToken stoppingToken);
+        void ProcessMessage(string message);
     }
 }
