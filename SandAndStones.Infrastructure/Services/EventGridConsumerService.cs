@@ -21,7 +21,9 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    using (JsonDocument document = JsonDocument.Parse(message))
+                    string unescapedMessage = Regex.Unescape(message);
+
+                    using (JsonDocument document = JsonDocument.Parse(unescapedMessage))
                     {
                         JsonElement root = document.RootElement;
                         JsonElement messageElement = root.GetProperty("Message");
