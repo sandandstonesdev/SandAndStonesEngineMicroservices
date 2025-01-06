@@ -23,7 +23,7 @@ namespace SandAndStones.Infrastructure.Services
                     var options = new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
-                        PropertyNamingPolicy = null // Use null to keep property names as-is
+                        PropertyNamingPolicy = null
                     };
 
                     var logEntry = JsonSerializer.Deserialize<EventItem>(message, options);
