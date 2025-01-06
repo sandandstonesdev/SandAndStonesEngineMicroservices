@@ -36,7 +36,11 @@ namespace SandAndStones.Gateway.Api
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
-                options.UseSqlServer(connectionString, x => x.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName));
+                options.UseSqlServer(connectionString,
+                    options => {
+                        options.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
+                        options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(7), null);
+                    });
             });
 
             services.AddCors(options =>
