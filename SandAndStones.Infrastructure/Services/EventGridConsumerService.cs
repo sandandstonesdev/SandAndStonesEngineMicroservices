@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Azure.Messaging;
+using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Text.Json;
@@ -21,12 +22,12 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    string unescapedMessage = Regex.Unescape(message);
-
-                    using (JsonDocument document = JsonDocument.Parse(unescapedMessage))
+                    using (JsonDocument document = JsonDocument.Parse(message))
                     {
                         JsonElement root = document.RootElement;
-                        JsonElement messageElement = root.GetProperty("Message");
+                        string messageContent = root.GetProperty("Message").GetString();
+
+                        string unescapedMessage = Regex.Unescape(messageContent);
 
                         var options = new JsonSerializerOptions
                         {
@@ -34,7 +35,7 @@ namespace SandAndStones.Infrastructure.Services
                             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                         };
 
-                        var logEntry = JsonSerializer.Deserialize<EventItem>(messageElement, options);
+                        var logEntry = JsonSerializer.Deserialize<EventItem>(unescapedMessage, options);
                         if (logEntry != null)
                         {
                             _mongoService.LogAsync(logEntry);
