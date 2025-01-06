@@ -21,15 +21,10 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    string cleanedMessage = message.Replace("\\n", "").Replace("\\r", "");
-                    string unescapedMessage = Regex.Unescape(cleanedMessage);
-
-                    using (JsonDocument document = JsonDocument.Parse(unescapedMessage))
+                    using (JsonDocument document = JsonDocument.Parse(message))
                     {
-                        // Extract the "Message" node
                         JsonElement root = document.RootElement;
                         JsonElement messageElement = root.GetProperty("Message");
-
 
                         var options = new JsonSerializerOptions
                         {
