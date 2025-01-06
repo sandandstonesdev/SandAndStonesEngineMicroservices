@@ -1,11 +1,13 @@
 ﻿using Azure.Core;
 using MediatR;
+using MongoDB.Bson.Serialization.Conventions;
 using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.Contracts.Services;
 using SandAndStones.App.UseCases.AssetBatch.GetInputAssetBatchById;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Text.Json;
+using System.Text.Json.Serialization;
 
 namespace SandAndStones.Infrastructure.Handlers.UseCases.AssetBatch;
 
@@ -27,8 +29,15 @@ public class GetInputAssetBatchByIdQueryHandler(
         string currentUserEmail = _tokenReader.GetUserEmailFromToken();
 
         var message = new EventItem { ResourceId = assetBatch.Id, ResourceName = "Asset", CurrentUserId = currentUserEmail, DateTime = DateTime.UtcNow };
-        
-        await _producerService.PublishMessageAsync(JsonSerializer.Serialize(message));
+
+        JsonSerializerOptions jsonSerializerOptions = new JsonSerializerOptions {
+            WriteIndented = true,
+            PropertyNameCaseInsensitive = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+        };
+
+        await _producerService.PublishMessageAsync(JsonSerializer.Serialize(message, jsonSerializerOptions));
         return new GetInputAssetBatchByIdQueryResponse(assetBatch);
     }
 }

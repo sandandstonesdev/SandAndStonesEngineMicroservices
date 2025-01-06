@@ -1,7 +1,9 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using Azure.Messaging;
+using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace SandAndStones.Infrastructure.Services
 {
@@ -20,20 +22,28 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    var options = new JsonSerializerOptions
+                    using (JsonDocument document = JsonDocument.Parse(message))
                     {
-                        PropertyNameCaseInsensitive = true,
-                        PropertyNamingPolicy = null
-                    };
+                        JsonElement root = document.RootElement;
+                        string messageContent = root.GetProperty("Message").GetString();
 
-                    var logEntry = JsonSerializer.Deserialize<EventItem>(message, options);
-                    if (logEntry != null)
-                    {
-                        _mongoService.LogAsync(logEntry);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Deserialized log entry is null.");
+                        string unescapedMessage = Regex.Unescape(messageContent);
+
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true,
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                        };
+
+                        var logEntry = JsonSerializer.Deserialize<EventItem>(unescapedMessage, options);
+                        if (logEntry != null)
+                        {
+                            _mongoService.LogAsync(logEntry);
+                        }
+                        else
+                        {
+                            _logger.LogWarning("Deserialized log entry is null.");
+                        }
                     }
                 }
             }
