@@ -2,6 +2,7 @@
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Text.Json;
+using System.Text.RegularExpressions;
 
 namespace SandAndStones.Infrastructure.Services
 {
@@ -20,13 +21,15 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
+                    string unescapedMessage = Regex.Unescape(message);
+
                     var options = new JsonSerializerOptions
                     {
                         PropertyNameCaseInsensitive = true,
                         PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                     };
 
-                    var logEntry = JsonSerializer.Deserialize<EventItem>(message, options);
+                    var logEntry = JsonSerializer.Deserialize<EventItem>(unescapedMessage, options);
                     if (logEntry != null)
                     {
                         _mongoService.LogAsync(logEntry);
