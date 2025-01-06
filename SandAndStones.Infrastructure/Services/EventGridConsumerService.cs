@@ -1,8 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
-using Microsoft.Extensions.Logging;
+﻿using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
-using System.Net;
 using System.Text.Json;
 
 namespace SandAndStones.Infrastructure.Services
@@ -22,12 +20,26 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    var logEntry = JsonSerializer.Deserialize<EventItem>(message);
+                    var options = new JsonSerializerOptions
+                    {
+                        PropertyNameCaseInsensitive = true,
+                        PropertyNamingPolicy = null
+                    };
+
+                    var logEntry = JsonSerializer.Deserialize<EventItem>(message, options);
                     if (logEntry != null)
                     {
                         _mongoService.LogAsync(logEntry);
                     }
+                    else
+                    {
+                        _logger.LogWarning("Deserialized log entry is null.");
+                    }
                 }
+            }
+            catch (JsonException jsonEx)
+            {
+                _logger.LogError(jsonEx, $"JSON deserialization error: {jsonEx.Message}");
             }
             catch (Exception ex)
             {

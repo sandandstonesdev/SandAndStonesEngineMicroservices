@@ -1,7 +1,6 @@
 using Azure.Messaging.EventGrid;
 using Azure.Messaging.EventGrid.SystemEvents;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Text.Json;
