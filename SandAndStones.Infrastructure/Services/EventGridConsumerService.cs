@@ -21,7 +21,8 @@ namespace SandAndStones.Infrastructure.Services
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    string unescapedMessage = Regex.Unescape(message);
+                    string cleanedMessage = message.Replace("\\n", "").Replace("\\r", "");
+                    string unescapedMessage = Regex.Unescape(cleanedMessage);
 
                     var options = new JsonSerializerOptions
                     {
