@@ -1,8 +1,10 @@
 using Azure.Messaging.EventGrid;
+using Azure.Messaging.EventGrid.SystemEvents;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
+using System.Text.Json;
 
 namespace SandAndStones.EventLog.Api.Controllers
 {
@@ -20,9 +22,23 @@ namespace SandAndStones.EventLog.Api.Controllers
         {
             foreach (var eventGridEvent in events)
             {
-                var message = eventGridEvent.Data.ToString();
-                _consumerService.ProcessMessage(message);
+                if (eventGridEvent.EventType == "Microsoft.EventGrid.SubscriptionValidationEvent")
+                {
+                    var validationEventData = JsonSerializer.Deserialize<SubscriptionValidationEventData>(eventGridEvent.Data.ToString());
+                    var responseData = new SubscriptionValidationResponse
+                    {
+                        ValidationResponse = validationEventData?.ValidationCode
+                    };
+                    return Ok(responseData);
+                }
+                else
+                {
+                    var message = eventGridEvent.Data.ToString();
+                    _consumerService.ProcessMessage(message);
+                    return Ok(message);
+                }
             }
+
             return Ok();
         }
 
