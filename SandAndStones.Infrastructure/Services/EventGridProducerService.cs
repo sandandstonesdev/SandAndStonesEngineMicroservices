@@ -26,7 +26,7 @@ namespace SandAndStones.Infrastructure.Services
                     subject: "KafkaProducer",
                     eventType: "KafkaProducer.EventLog",
                     dataVersion: "1.0",
-                    data: new { Message = message })
+                    data: message )
             };
 
             await client.SendEventsAsync(events);
