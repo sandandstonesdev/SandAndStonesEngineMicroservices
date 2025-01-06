@@ -24,20 +24,28 @@ namespace SandAndStones.Infrastructure.Services
                     string cleanedMessage = message.Replace("\\n", "").Replace("\\r", "");
                     string unescapedMessage = Regex.Unescape(cleanedMessage);
 
-                    var options = new JsonSerializerOptions
+                    using (JsonDocument document = JsonDocument.Parse(unescapedMessage))
                     {
-                        PropertyNameCaseInsensitive = true,
-                        PropertyNamingPolicy = JsonNamingPolicy.CamelCase
-                    };
+                        // Extract the "Message" node
+                        JsonElement root = document.RootElement;
+                        JsonElement messageElement = root.GetProperty("Message");
 
-                    var logEntry = JsonSerializer.Deserialize<EventItem>(unescapedMessage, options);
-                    if (logEntry != null)
-                    {
-                        _mongoService.LogAsync(logEntry);
-                    }
-                    else
-                    {
-                        _logger.LogWarning("Deserialized log entry is null.");
+
+                        var options = new JsonSerializerOptions
+                        {
+                            PropertyNameCaseInsensitive = true,
+                            PropertyNamingPolicy = JsonNamingPolicy.CamelCase
+                        };
+
+                        var logEntry = JsonSerializer.Deserialize<EventItem>(messageElement.GetRawText(), options);
+                        if (logEntry != null)
+                        {
+                            _mongoService.LogAsync(logEntry);
+                        }
+                        else
+                        {
+                            _logger.LogWarning("Deserialized log entry is null.");
+                        }
                     }
                 }
             }
