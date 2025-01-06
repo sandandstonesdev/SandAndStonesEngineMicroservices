@@ -32,7 +32,7 @@ namespace SandAndStones.Infrastructure.Services
                             PropertyNamingPolicy = JsonNamingPolicy.CamelCase
                         };
 
-                        var logEntry = JsonSerializer.Deserialize<EventItem>(messageElement.GetRawText(), options);
+                        var logEntry = JsonSerializer.Deserialize<EventItem>(messageElement, options);
                         if (logEntry != null)
                         {
                             _mongoService.LogAsync(logEntry);
