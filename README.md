@@ -1,12 +1,14 @@
 # SandAndStonesEngineMicroservices
 
 ## What is this project:
-* Simple Asset/Texture Viewer and Project Info Website.
-* Basic Fullstack WebApp developed with ASP.NET 9 and React 18 (Service+Gateway+Frontend).
+* Fullstack Microservices App - SandAndStonesEngine Project Info Website
+* Assets and Textures Viewer/Uploader
+* User Profiles Manager (Authorization/Authentication using JWT Token/HttpsOnly)
+* using ASP.NET 9, React 18, Redux, YARP, Kafka Topics (locally), AzureEventGrid Topics (Cloud), AzureBlob, MongoDb Cluster), MediatR
+* Consists of Frontend, Gateway, AssetService, TextureService, EventLogService using Clean Architecture, CQRS
 
 ## What is purpose of this project and where it goes:
-* It's beginning stage of FullStack WebApp and its purposes are educational. 
-* Its way to achieve microservices architecture is go through below steps: Monolith => Distrubuted Monolith => Microservices
+* It's FullStack Microservices App with many things to fix/improve for educational purposes
 
 ## How it looks like now:
 
@@ -18,8 +20,9 @@
 
 * Content Screens:
 <p>
-<img alt="About Screen" src="https://github.com/user-attachments/assets/f6f40ffe-74c1-40a1-b99f-306582125720" width="40%" height="40%">
-<img alt="Assets Screen" src="https://github.com/user-attachments/assets/a45c3c1a-7f80-490c-a15d-867ef0c4b8ae" width="40%" height="40%">
-<img alt="Textures" src="https://github.com/user-attachments/assets/0ad0074c-7022-4467-bfe4-59fb00673a63" width="40%" height="40%">
-<img alt="Profile" src="https://github.com/user-attachments/assets/8a1aa1a8-a845-43ec-8c21-22deb49e3414" width="40%" height="40%">
+<img alt="About Screen" src="https://github.com/user-attachments/assets/d157fddc-b4cf-45bd-8601-077d131d4874" width="40%" height="40%">
+<img alt="Assets Screen" src="https://github.com/user-attachments/assets/d2e45542-b6b0-4fe2-8874-e15a763ed4a3" width="40%" height="40%">
+<img alt="Textures Screen" src="https://github.com/user-attachments/assets/9a341ea9-3080-4e8c-8d8e-9663f6525a46" width="40%" height="40%">
+<img alt="Profile Screen" src="https://github.com/user-attachments/assets/b0add9cf-9bbb-4372-8c7b-da0fc05a9aff" width="40%" height="40%">
+<img alt="EventsLog Screen" src="https://github.com/user-attachments/assets/cbd77dcf-afd9-472c-bfbe-04e88f83f2ac" width="40%" height="40%">
 </p>
