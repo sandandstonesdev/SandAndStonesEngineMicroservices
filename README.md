@@ -4,7 +4,7 @@
 * Fullstack Microservices App - SandAndStonesEngine Project Info Website
 * Assets and Textures Viewer/Uploader
 * User Profiles Manager (Authorization/Authentication using JWT Token/HttpsOnly)
-* using ASP.NET 9, React 18, Redux, Kafka Topics (locally), AzureEventGrid Topics (Cloud), AzureBlob, MongoDb Cluster), MediatR
+* using ASP.NET 9, React 18, Redux, YARP, Kafka Topics (locally), AzureEventGrid Topics (Cloud), AzureBlob, MongoDb Cluster), MediatR
 * Consists of Frontend, Gateway, AssetService, TextureService, EventLogService using Clean Architecture, CQRS
 
 ## What is purpose of this project and where it goes:
