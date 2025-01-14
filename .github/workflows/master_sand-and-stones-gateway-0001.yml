@@ -22,16 +22,16 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Debug
+        run: dotnet build --configuration Release
 
       - name: dotnet publish
-        run: dotnet publish ./SandAndStones.Gateway.Api/SandAndStones.Gateway.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/gateway"
+        run: dotnet publish -c Release -o "${{env.DOTNET_ROOT}}/myapp"
 
       - name: Upload artifact for deployment job
         uses: actions/upload-artifact@v4
         with:
           name: .net-app
-          path: ${{env.DOTNET_ROOT}}/gateway
+          path: ${{env.DOTNET_ROOT}}/myapp
 
   deploy:
     runs-on: windows-latest
@@ -51,9 +51,9 @@ jobs:
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_830EC257AC0A441F9BED3303975D05E1 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_0435B3133D174747A313C5C9A89BF7E3 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_7BA4672FF6AC4636BC99A1BE83F9B2C4 }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_078023ED812E4D4C8B66B8D2BA355F64 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_657E457273644CBAA85B4D7A743580AD }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_F6EEB1DB211D423BA36CAFE2AFC3666F }}
 
       - name: Deploy to Azure Web App
         id: deploy-to-webapp
