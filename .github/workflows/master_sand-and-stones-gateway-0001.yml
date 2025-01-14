@@ -22,7 +22,7 @@ jobs:
           dotnet-version: '9.x'
 
       - name: Build with dotnet
-        run: dotnet build --configuration Release
+        run: dotnet build --configuration Debug
 
       - name: dotnet publish
         run: dotnet publish ./SandAndStones.Gateway.Api/SandAndStones.Gateway.Api.csproj -c Debug -o "${{env.DOTNET_ROOT}}/gateway"
