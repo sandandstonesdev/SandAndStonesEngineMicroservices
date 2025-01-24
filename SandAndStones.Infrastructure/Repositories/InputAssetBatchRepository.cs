@@ -1,5 +1,6 @@
-﻿using SandAndStones.App.Contracts.Repository;
-using SandAndStones.Shared.AssetConfig;
+﻿using SandAndStones.App.Assets;
+using SandAndStones.App.Contracts.Repository;
+using SandAndStones.Infrastructure.Services.Asset;
 
 namespace SandAndStones.Infrastructure.Repositories
 {

@@ -5,7 +5,7 @@ using SandAndStones.App.UseCases.AssetBatch.GetInputAssetBatchById;
 using SandAndStones.Infrastructure;
 using SandAndStones.Infrastructure.Handlers.UseCases.AssetBatch;
 using SandAndStones.Infrastructure.Repositories;
-using SandAndStones.Infrastructure.Services;
+using SandAndStones.Infrastructure.Services.Auth;
 
 namespace SandAndStones.Asset.Api
 {

@@ -1,13 +1,11 @@
 ﻿using MediatR;
 using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.UseCases.Texture.DownloadTextureByName;
-using SandAndStones.App.UseCases.Texture.GetTextureById;
-using SandAndStones.App.UseCases.Texture.GetTexturesDecriptions;
 using SandAndStones.Infrastructure.Handlers.UseCases.Texture;
 using SandAndStones.Infrastructure;
 using SandAndStones.Infrastructure.Repositories;
-using System;
 using SandAndStones.App.UseCases.Texture.UploadTexture;
+using SandAndStones.Infrastructure.Services.Textures;
 
 namespace SandAndStones.Texture.Api
 {
@@ -35,9 +33,7 @@ namespace SandAndStones.Texture.Api
 
             services.AddScoped<IMediator, Mediator>();
 
-            services.AddScoped<IRequestHandler<GetTextureByIdQuery, GetTextureByIdQueryResponse>, GetTextureByIdQueryHandler>();
             services.AddScoped<IRequestHandler<DownloadTextureByNameQuery, DownloadTextureByNameQueryResponse>, DownloadTextureByNameQueryHandler>();
-            services.AddScoped<IRequestHandler<GetTexturesDescriptionsQuery, GetTexturesDescriptionsQueryResponse>, GetTexturesDescriptionsQueryHandler>();
             services.AddScoped<IRequestHandler<UploadTextureCommand, UploadTextureCommandResponse>, UploadTextureCommandHandler>();
 
             services
@@ -45,14 +41,8 @@ namespace SandAndStones.Texture.Api
                 .AddPresentation()
                 .AddHttpContextAccessor();
 
-            services.AddSingleton<IInputTextureRepository, InputTextureRepository>();
-        }
-
-        public void SeedTextureDataBlob(IServiceProvider serviceProvider)
-        {
-            var textureRepository = serviceProvider.GetRequiredService<IInputTextureRepository>();
-            var initializeTask = textureRepository.SeedTextures();
-            initializeTask.GetAwaiter().GetResult();
+            services.AddSingleton<ITextureRepository, TextureRepository>();
+            services.AddHostedService<TextureSeeder>();
         }
     }
 }
