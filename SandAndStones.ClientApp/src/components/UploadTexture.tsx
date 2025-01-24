@@ -29,7 +29,7 @@ function UploadTexture({ header }: UploadedTextureProps) {
         const reader = new FileReader();
         reader.readAsDataURL(file!);
         reader.onloadend = async () => {
-            const base64data = reader.result?.toString().split(',')[1]; // Get base64 string without the prefix
+            const base64data = reader.result?.toString().split(',')[1];
 
             const payload = {
                 name: file!.name,

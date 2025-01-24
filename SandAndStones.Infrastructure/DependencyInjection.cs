@@ -9,7 +9,14 @@ using SandAndStones.App.Contracts.Services;
 using SandAndStones.Infrastructure.Configuration;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
-using SandAndStones.Infrastructure.Services;
+using SandAndStones.Infrastructure.Services.Auth;
+using SandAndStones.Infrastructure.Services.Bitmaps;
+using SandAndStones.Infrastructure.Services.Blob;
+using SandAndStones.Infrastructure.Services.EventGrid;
+using SandAndStones.Infrastructure.Services.Kafka;
+using SandAndStones.Infrastructure.Services.Mongo;
+using SandAndStones.Infrastructure.Services.Profile;
+using System.IO.Abstractions;
 
 namespace SandAndStones.Infrastructure
 {
@@ -48,29 +55,43 @@ namespace SandAndStones.Infrastructure
             this IServiceCollection services,
             IConfiguration configuration)
         {
+            services.AddSingleton<IAppContextWrapper, AppContextWrapper>();
+            services.AddSingleton<IFileSystem, FileSystem>();
+            services.AddSingleton<ISkiaWrapper, SkiaWrapper>();
+
+            services.AddSingleton<IBitmapService, BitmapService>();
+
             var settings = new AzureBlobServiceSettings();
             var config = configuration.GetSection(nameof(AzureBlobServiceSettings));
             config.Bind(settings);
-
-            services.AddSingleton(resolver =>
+            if (settings.Enabled)
             {
-                var env = resolver.GetRequiredService<IHostEnvironment>();
-                
-                if (env.IsDevelopment())
+                services.AddSingleton(resolver =>
                 {
-                    return new BlobServiceClient(settings.BlobConnectionString);
-                }
-                else if (env.IsEnvironment("Local"))
-                {
-                    return new BlobServiceClient(settings.BlobConnectionString);
-                }
-                else
-                {
-                    return new BlobServiceClient(settings.BlobConnectionString);
-                }
-            });
+                    var env = resolver.GetRequiredService<IHostEnvironment>();
 
-            services.AddSingleton<IAzureBlobService, AzureBlobService>();
+                    if (env.IsDevelopment())
+                    {
+                        return new BlobServiceClient(settings.BlobConnectionString);
+                    }
+                    else if (env.IsEnvironment("Local"))
+                    {
+                        return new BlobServiceClient(settings.BlobConnectionString);
+                    }
+                    else
+                    {
+                        return new BlobServiceClient(settings.BlobConnectionString);
+                    }
+                });
+
+                services.AddSingleton<ITextureFileService, AzureBlobService>();
+            }
+            else
+            {
+                services.AddSingleton<ITextureFileService, FileTextureService>();
+            }
+            
+            
             return services;
         }
 
@@ -109,8 +130,7 @@ namespace SandAndStones.Infrastructure
 
             services.AddHostedService(serviceProvider =>
             {
-                var kafkaConsumerService = serviceProvider.GetRequiredService<IConsumerService>() as KafkaConsumerService;
-                return kafkaConsumerService is null
+                return serviceProvider.GetRequiredService<IConsumerService>() is not KafkaConsumerService kafkaConsumerService
                     ? throw new InvalidOperationException("Kafka consumer service is not registered")
                     : kafkaConsumerService;
             });

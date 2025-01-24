@@ -1,6 +1,4 @@
-﻿using Azure.Core;
-using MediatR;
-using MongoDB.Bson.Serialization.Conventions;
+﻿using MediatR;
 using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.Contracts.Services;
 using SandAndStones.App.UseCases.AssetBatch.GetInputAssetBatchById;
@@ -8,6 +6,7 @@ using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Text.Json;
 using System.Text.Json.Serialization;
+using SandAndStones.Infrastructure.Services.Asset;
 
 namespace SandAndStones.Infrastructure.Handlers.UseCases.AssetBatch;
 

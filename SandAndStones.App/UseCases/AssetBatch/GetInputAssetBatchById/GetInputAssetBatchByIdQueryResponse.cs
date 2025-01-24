@@ -1,4 +1,4 @@
-﻿using SandAndStones.Shared.AssetConfig;
+﻿using SandAndStones.App.Assets;
 
 namespace SandAndStones.App.UseCases.AssetBatch.GetInputAssetBatchById
 {
