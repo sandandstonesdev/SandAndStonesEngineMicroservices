@@ -42,7 +42,7 @@ namespace SandAndStones.Texture.Api
                 .AddHttpContextAccessor();
 
             services.AddSingleton<ITextureRepository, TextureRepository>();
-            services.AddHostedService<TextureSeeder>();
+            //services.AddHostedService<TextureSeeder>();
         }
     }
 }
