@@ -1,7 +1,7 @@
 ﻿using Moq;
-using SandAndStones.Infrastructure.Services.Blob;
 using SandAndStones.Infrastructure.Models;
 using SandAndStones.Infrastructure.Services.Bitmaps;
+using SandAndStones.Infrastructure.Services.Textures;
 
 namespace SandAndStones.Infrastructure.Tests.UnitTests.Services
 {

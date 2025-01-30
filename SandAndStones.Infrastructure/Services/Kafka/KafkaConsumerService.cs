@@ -4,7 +4,7 @@ using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Configuration;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
-using System.Text.Json;
+using SandAndStones.Infrastructure.Services.JsonSerialization;
 
 namespace SandAndStones.Infrastructure.Services.Kafka
 {
@@ -14,6 +14,7 @@ namespace SandAndStones.Infrastructure.Services.Kafka
         private readonly IMongoDbEventLogService _mongoService;
 
         private readonly IConsumer<Ignore, string> _consumer;
+        private readonly IJsonSerializerService<EventItem> _jsonSerializerService;
         private readonly ILogger<KafkaConsumerService> _logger;
 
         private readonly string _bootstrapServers;
@@ -21,9 +22,16 @@ namespace SandAndStones.Infrastructure.Services.Kafka
         private readonly string _groupId;
         private readonly string _clientId;
 
-        public KafkaConsumerService(IMongoDbEventLogService mongoService, KafkaConsumerSettings config, ILogger<KafkaConsumerService> logger)
+        public KafkaConsumerService
+        (
+        IMongoDbEventLogService mongoService,
+        IJsonSerializerService<EventItem> jsonSerializerService,
+        KafkaConsumerSettings config,
+        ILogger<KafkaConsumerService> logger
+        )
         {
             _mongoService = mongoService;
+            _jsonSerializerService = jsonSerializerService;
             _logger = logger;
             _bootstrapServers = config.BootstrapServers;
             _groupId = config.GroupId;
@@ -69,7 +77,7 @@ namespace SandAndStones.Infrastructure.Services.Kafka
                 {
                     _logger.LogInformation($"Received message: {message}");
 
-                    var logEntry = JsonSerializer.Deserialize<EventItem>(message);
+                    var logEntry = _jsonSerializerService.Deserialize(message);
                     if (logEntry is not null)
                     {
                         _mongoService.LogAsync(logEntry);
@@ -78,7 +86,8 @@ namespace SandAndStones.Infrastructure.Services.Kafka
             }
             catch (Exception ex)
             {
-                _logger.LogError($"Error processing Kafka message: {ex.Message}");
+                string message1 = $"Error processing Kafka message: {ex.Message}";
+                _logger.LogError(message1);
             }
         }
     }

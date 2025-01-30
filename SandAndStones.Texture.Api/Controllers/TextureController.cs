@@ -26,7 +26,6 @@ namespace SandAndStones.Texture.Api.Controllers
         {
             var fileData = Convert.FromBase64String(file.Base64Data);
 
-
             var result = await _mediator.Send(new UploadTextureCommand(
                 file.Name,
                 256,

@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.Contracts.Services;
-using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.UserProfile;
 
 namespace SandAndStones.Infrastructure.Repositories
 {

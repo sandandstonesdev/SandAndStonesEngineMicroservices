@@ -1,7 +1,6 @@
 ﻿using SandAndStones.Domain.Constants;
-using System.Net.Mime;
 
-namespace SandAndStones.Domain.Entities
+namespace SandAndStones.Domain.Entities.Texture
 {
     public class Texture
     {
@@ -14,7 +13,7 @@ namespace SandAndStones.Domain.Entities
 
         public Texture(string name, int width, int height, byte[] data, string contentType = MediaType.ImagePng)
         {
-            ArgumentNullException.ThrowIfNullOrWhiteSpace(name, nameof(name));
+            ArgumentException.ThrowIfNullOrWhiteSpace(name, nameof(name));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(width, nameof(width));
             ArgumentOutOfRangeException.ThrowIfNegativeOrZero(height, nameof(height));
             ArgumentNullException.ThrowIfNull(data, nameof(data));

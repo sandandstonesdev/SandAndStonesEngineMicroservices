@@ -1,4 +1,7 @@
-﻿using SandAndStones.Infrastructure;
+﻿using Azure.Messaging.EventGrid.SystemEvents;
+using SandAndStones.Infrastructure;
+using SandAndStones.Infrastructure.Models;
+using SandAndStones.Infrastructure.Services.JsonSerialization;
 
 namespace SandAndStones.EventLog.Api
 {
@@ -23,6 +26,11 @@ namespace SandAndStones.EventLog.Api
                                            .AllowCredentials();
                                   });
             });
+
+            services.AddScoped(
+                x => JsonSerializerService<SubscriptionValidationEventData>.Create(JsonSerializerServiceOptions.GeneralOptions));
+            services.AddScoped(
+                x => JsonSerializerService<EventItem>.Create(JsonSerializerServiceOptions.EventItemOptions));
 
             //services.AddScoped<IMediator, Mediator>();
 

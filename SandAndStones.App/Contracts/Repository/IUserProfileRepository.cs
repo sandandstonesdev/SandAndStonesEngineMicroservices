@@ -1,5 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
-using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.UserProfile;
 
 namespace SandAndStones.App.Contracts.Repository
 {

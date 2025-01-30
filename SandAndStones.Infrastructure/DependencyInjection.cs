@@ -13,9 +13,11 @@ using SandAndStones.Infrastructure.Services.Auth;
 using SandAndStones.Infrastructure.Services.Bitmaps;
 using SandAndStones.Infrastructure.Services.Blob;
 using SandAndStones.Infrastructure.Services.EventGrid;
+using SandAndStones.Infrastructure.Services.JsonSerialization;
 using SandAndStones.Infrastructure.Services.Kafka;
 using SandAndStones.Infrastructure.Services.Mongo;
 using SandAndStones.Infrastructure.Services.Profile;
+using SandAndStones.Infrastructure.Services.Textures;
 using System.IO.Abstractions;
 
 namespace SandAndStones.Infrastructure
@@ -43,6 +45,7 @@ namespace SandAndStones.Infrastructure
         {
             services.AddTransient<IAuthService, AuthService>();
             services.AddTransient<IUserProfileService, UserProfileService>();
+            services.AddTransient<IJwtFactory, JwtFactory>();
             services.AddScoped<ITokenGenerator, TokenGenerator>();
             var salt = configuration["HasherModule:TestSalt"] ?? "1234";
 
@@ -125,7 +128,9 @@ namespace SandAndStones.Infrastructure
 
                 var mongoDbEventLogService = resolver.GetRequiredService<IMongoDbEventLogService>();
 
-                return new KafkaConsumerService(mongoDbEventLogService, consumerSettings, logger);
+                IJsonSerializerService<EventItem> jsonSerializerService = JsonSerializerService<EventItem>.Create(JsonSerializerServiceOptions.EventItemOptions);
+
+                return new KafkaConsumerService(mongoDbEventLogService, jsonSerializerService, consumerSettings, logger);
             });
 
             services.AddHostedService(serviceProvider =>

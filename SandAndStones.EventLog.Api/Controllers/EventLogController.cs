@@ -3,7 +3,7 @@ using Azure.Messaging.EventGrid.SystemEvents;
 using Microsoft.AspNetCore.Mvc;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
-using System.Text.Json;
+using SandAndStones.Infrastructure.Services.JsonSerialization;
 
 namespace SandAndStones.EventLog.Api.Controllers
 {
@@ -11,10 +11,12 @@ namespace SandAndStones.EventLog.Api.Controllers
     [Route("eventlog-api")]
     public class EventLogController(
         IMongoDbEventLogService mongoService,
-        IConsumerService consumerService) : ControllerBase
+        IConsumerService consumerService,
+        IJsonSerializerService<SubscriptionValidationEventData> jsonSerializerService) : ControllerBase
     {
         private readonly IMongoDbEventLogService _mongoService = mongoService;
         private readonly IConsumerService _consumerService = consumerService;
+        private readonly IJsonSerializerService<SubscriptionValidationEventData> _jsonSerializerService = jsonSerializerService;
 
         [HttpPost("events")]
         public async Task<IActionResult> ReceiveEvents([FromBody] EventGridEvent[] events)
@@ -23,18 +25,18 @@ namespace SandAndStones.EventLog.Api.Controllers
             {
                 if (eventGridEvent.EventType == "Microsoft.EventGrid.SubscriptionValidationEvent")
                 {
-                    var validationEventData = JsonSerializer.Deserialize<SubscriptionValidationEventData>(eventGridEvent.Data.ToString());
+                    var validationEventData = _jsonSerializerService.Deserialize(eventGridEvent.Data.ToStream());
                     var responseData = new SubscriptionValidationResponse
                     {
                         ValidationResponse = validationEventData?.ValidationCode
                     };
-                    return Ok(responseData);
+                    return await Task.FromResult(Ok(responseData));
                 }
                 else
                 {
                     var message = eventGridEvent.Data.ToString();
                     _consumerService.ProcessMessage(message);
-                    return Ok(message);
+                    return await Task.FromResult(Ok(message));
                 }
             }
 

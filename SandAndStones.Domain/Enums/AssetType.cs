@@ -1,4 +1,4 @@
-﻿namespace SandAndStones.App.Assets
+﻿namespace SandAndStones.Domain.Enums
 {
     public enum AssetType : uint
     {

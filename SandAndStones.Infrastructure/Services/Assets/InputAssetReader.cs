@@ -1,23 +1,23 @@
-﻿using SandAndStones.App.Assets;
-using System.Text.Json;
+﻿using SandAndStones.Domain.Enums;
+using SandAndStones.Infrastructure.Configuration;
+using SandAndStones.Infrastructure.Models.Assets;
+using SandAndStones.Infrastructure.Services.JsonSerialization;
 
-namespace SandAndStones.Infrastructure.Services.Asset
+namespace SandAndStones.Infrastructure.Services.Assets
 {
-    public class InputAssetReader(string fileName) : IAsyncAssetReader
+    public class InputAssetReader(
+        BatchReaderConfig batchReaderConfig,
+        IJsonSerializerService<InputAssetBatch> jsonSerializerService) : IAsyncAssetReader
     {
-        private readonly string fileName = fileName;
-
-        public async Task<InputAssetBatch> ReadBatchAsync()
+        private readonly IJsonSerializerService<InputAssetBatch> _jsonSerializerService = jsonSerializerService;
+        
+        public async Task<InputAssetBatch> ReadBatchAsync(AssetBatchType assetBatchType)
         {
-            using FileStream openStream = File.OpenRead(fileName);
-            var inputAssetBatch =
-                await JsonSerializer.DeserializeAsync<InputAssetBatch>(openStream,
-                new JsonSerializerOptions
-                {
-                    PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
-                });
+            using FileStream openStream = File.OpenRead(
+                batchReaderConfig.AssetPaths[assetBatchType]);
+            var inputAssetBatch = _jsonSerializerService.Deserialize(openStream);
 
-            return inputAssetBatch;
+            return await Task.FromResult(inputAssetBatch);
         }
     }
 }

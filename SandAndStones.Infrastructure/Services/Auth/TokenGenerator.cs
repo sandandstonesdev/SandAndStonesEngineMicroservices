@@ -7,13 +7,14 @@ using System.Text;
 
 namespace SandAndStones.Infrastructure.Services.Auth
 {
-    public class TokenGenerator(JwtSettings jwtSettings) : ITokenGenerator
+    public class TokenGenerator(IJwtFactory jwtFactory, JwtSettings jwtSettings) : ITokenGenerator
     {
         private readonly JwtSettings _jwtSettings = jwtSettings;
+        private readonly IJwtFactory _jwtFactory = jwtFactory;
 
         public string GenerateToken(string userId, IList<string> userRoles, string email)
         {
-            var tokenHandler = new JwtSecurityTokenHandler();
+            var tokenHandler = _jwtFactory.CreateJwtSecurityTokenHandler();
             var claims = new List<Claim>
             {
               new(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString()),

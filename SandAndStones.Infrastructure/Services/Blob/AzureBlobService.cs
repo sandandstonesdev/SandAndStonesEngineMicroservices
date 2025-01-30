@@ -47,11 +47,10 @@ namespace SandAndStones.Infrastructure.Services.Blob
 
             var properties = await blobClient.GetPropertiesAsync(cancellationToken: token);
             var contentType = properties.Value.ContentType;
-            long blobSize = properties.Value.ContentLength;
-
+            
             int attempts = 0;
             int tryCount = 3;
-            long offset = 0;
+
             using var downloadStream = new MemoryStream();
             while (attempts++ < tryCount)
             {

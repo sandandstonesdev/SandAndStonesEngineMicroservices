@@ -77,7 +77,6 @@ namespace SandAndStones.Infrastructure.Tests.UnitTests.Services
             var height = 2;
 
             var filename = "test.png";
-            var path = "./Images";
             var basePath = "/base/path";
 
             _appContextWrapper
@@ -181,8 +180,8 @@ namespace SandAndStones.Infrastructure.Tests.UnitTests.Services
         public void GetBytesAsPng_ShouldReturnPngData()
         {
             // Arrange
-            byte[] pngData = new byte[]
-            {
+            byte[] pngData =
+            [
                 0x89, 0x50, 0x4E, 0x47, 0x0D, 0x0A, 0x1A, 0x0A, // PNG signature
                 0x00, 0x00, 0x00, 0x0D, // IHDR chunk length
                 0x49, 0x48, 0x44, 0x52, // IHDR chunk type
@@ -204,7 +203,7 @@ namespace SandAndStones.Infrastructure.Tests.UnitTests.Services
                 0x00, 0x00, 0x00, 0x00, // IEND chunk length
                 0x49, 0x45, 0x4E, 0x44, // IEND chunk type
                 0xAE, 0x42, 0x60, 0x82  // CRC
-            };
+            ];
 
             var rawData = new byte[] { 1, 2 };
             var width = 2;
