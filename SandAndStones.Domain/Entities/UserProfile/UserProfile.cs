@@ -1,4 +1,4 @@
-﻿namespace SandAndStones.Domain.Entities
+﻿namespace SandAndStones.Domain.Entities.UserProfile
 {
     public record UserProfile(
         string Email,

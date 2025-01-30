@@ -1,4 +1,5 @@
 ﻿using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.Texture;
 
 namespace SandAndStones.Domain.Tests
 {

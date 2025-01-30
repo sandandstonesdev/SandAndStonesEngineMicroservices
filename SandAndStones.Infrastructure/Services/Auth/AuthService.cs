@@ -32,8 +32,8 @@ namespace SandAndStones.Infrastructure.Services.Auth
                     throw new Exception($"Cannot create user: {userDto.Email} ");
                 }
 
-                await userManager.AddToRoleAsync(user, UserRoles.UserRole);
-                await userManager.AddToRoleAsync(user, UserRoles.AdminRole);
+                await _userManager.AddToRoleAsync(user, UserRoles.UserRole);
+                await _userManager.AddToRoleAsync(user, UserRoles.AdminRole);
 
                 return result.Succeeded;
             }
@@ -47,9 +47,10 @@ namespace SandAndStones.Infrastructure.Services.Auth
         {
             try
             {
+                ArgumentNullException.ThrowIfNull(userDto, nameof(userDto));
                 ArgumentException.ThrowIfNullOrWhiteSpace(userDto.Email, nameof(userDto.Email));
 
-                ApplicationUser user = await _userManager.FindByEmailAsync(userDto.Email);
+                ApplicationUser? user = await _userManager.FindByEmailAsync(userDto.Email);
 
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
 
@@ -60,7 +61,7 @@ namespace SandAndStones.Infrastructure.Services.Auth
                     throw new ArgumentException("Invalid password.");
                 }
 
-                var userRoles = await userManager.GetRolesAsync(user);
+                var userRoles = await _userManager.GetRolesAsync(user);
 
                 var token = _tokenGenerator.GenerateToken(user.Id, userRoles, user.Email!);
                 var refreshToken = _tokenGenerator.GenerateToken(user.Id, userRoles, user.Email!);
@@ -102,7 +103,7 @@ namespace SandAndStones.Infrastructure.Services.Auth
                 throw new Exception("Error while logout: " + ex.Message);
             }
 
-            return true;
+            return await Task.FromResult(true);
         }
 
         public async Task<bool> CheckCurrentTokenValidity(IHttpContextAccessor contextAccessor)
@@ -138,7 +139,7 @@ namespace SandAndStones.Infrastructure.Services.Auth
                 ArgumentNullException.ThrowIfNull(user, nameof(user));
                 ArgumentException.ThrowIfNullOrWhiteSpace(user.Email, nameof(user.Email));
 
-                var userRoles = await userManager.GetRolesAsync(user);
+                var userRoles = await _userManager.GetRolesAsync(user);
 
                 var newAccessToken = _tokenGenerator.GenerateToken(user.Id, userRoles, user.Email);
                 var tokenDto = new TokenDto(accessToken, refreshToken);

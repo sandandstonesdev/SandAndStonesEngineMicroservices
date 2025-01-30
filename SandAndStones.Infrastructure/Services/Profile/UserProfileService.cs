@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Identity;
 using SandAndStones.App.Contracts.Services;
 using SandAndStones.Domain.Constants;
-using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.UserProfile;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using System.Security.Claims;

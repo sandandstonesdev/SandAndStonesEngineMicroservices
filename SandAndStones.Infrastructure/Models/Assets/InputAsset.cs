@@ -1,7 +1,9 @@
-﻿using System.Numerics;
+﻿using SandAndStones.App.Assets;
+using SandAndStones.Domain.Enums;
+using System.Numerics;
 using System.Text.Json.Serialization;
 
-namespace SandAndStones.App.Assets
+namespace SandAndStones.Infrastructure.Models.Assets
 {
     public class InputAsset
     {

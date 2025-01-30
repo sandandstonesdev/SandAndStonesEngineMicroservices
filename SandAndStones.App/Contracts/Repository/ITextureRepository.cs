@@ -1,5 +1,5 @@
 ﻿using SandAndStones.App.UseCases.Texture.UploadTexture;
-using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.Texture;
 
 namespace SandAndStones.App.Contracts.Repository
 {

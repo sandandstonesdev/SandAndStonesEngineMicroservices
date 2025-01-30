@@ -1,6 +1,6 @@
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
-import { InputAssetBatch } from "../types/InputAssetBatch";
+import { AssetBatch } from "../types/AssetBatch";
 import { axiosInstance } from "../hooks/useAxios";
 import UploadTexture from "../components/UploadTexture";
 
@@ -25,8 +25,8 @@ function Textures() {
 
             try {
                 const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/asset-api/assetBatch/0`);
-                const inputAssetBatch = response.data as InputAssetBatch;
-                const mappedItems = inputAssetBatch.assets.map(({ name, animationTextureFiles, text }) => {
+                const assetBatch = response.data as AssetBatch;
+                const mappedItems = assetBatch.assets.map(({ name, animationTextureFiles, text }) => {
                     return {
                         name: name,
                         textureNames: animationTextureFiles,

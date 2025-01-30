@@ -1,6 +1,6 @@
 ﻿using Moq;
 using SandAndStones.App.Contracts.Repository;
-using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.Texture;
 using SandAndStones.Infrastructure.Models;
 using SandAndStones.Infrastructure.Services.Bitmaps;
 using SandAndStones.Infrastructure.Services.Textures;

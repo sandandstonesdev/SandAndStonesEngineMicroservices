@@ -12,7 +12,7 @@ namespace SandAndStones.App.Assets
             JsonSerializerOptions options)
         {
             var list = JsonSerializer.Deserialize<List<float>>(ref reader, options);
-            _ = list ?? throw new Exception();
+            _ = list ?? throw new Exception($"Cannot deserialize float list for Pos, type: {typeToConvert.FullName}");
             return new Vector4(list[0], list[1],
                             list.Count > 2 ? list[2] : 0,
                             list.Count > 3 ? list[3] : 0);

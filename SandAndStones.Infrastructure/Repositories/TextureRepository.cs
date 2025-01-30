@@ -1,6 +1,6 @@
 ﻿using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.UseCases.Texture.UploadTexture;
-using SandAndStones.Domain.Entities;
+using SandAndStones.Domain.Entities.Texture;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 

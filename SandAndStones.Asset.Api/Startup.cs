@@ -1,11 +1,16 @@
 ﻿using MediatR;
 using SandAndStones.App.Contracts.Repository;
 using SandAndStones.App.Contracts.Services;
-using SandAndStones.App.UseCases.AssetBatch.GetInputAssetBatchById;
+using SandAndStones.App.UseCases.AssetBatches.GetInputAssetBatchById;
 using SandAndStones.Infrastructure;
-using SandAndStones.Infrastructure.Handlers.UseCases.AssetBatch;
+using SandAndStones.Infrastructure.Configuration;
+using SandAndStones.Infrastructure.Handlers.UseCases.AssetBatches;
+using SandAndStones.Infrastructure.Models;
+using SandAndStones.Infrastructure.Models.Assets;
 using SandAndStones.Infrastructure.Repositories;
+using SandAndStones.Infrastructure.Services.Assets;
 using SandAndStones.Infrastructure.Services.Auth;
+using SandAndStones.Infrastructure.Services.JsonSerialization;
 
 namespace SandAndStones.Asset.Api
 {
@@ -15,8 +20,15 @@ namespace SandAndStones.Asset.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddTransient<IJwtFactory, JwtFactory>();
             services.AddTransient<ITokenReaderService, TokenReaderService>();
-            services.AddTransient<IInputAssetBatchRepository, InputAssetBatchRepository>();
+
+            services.AddScoped(
+                _ => JsonSerializerService<InputAssetBatch>.Create(JsonSerializerServiceOptions.GeneralOptions));
+            
+            services.AddSingleton(new BatchReaderConfig());
+            services.AddTransient<IAsyncAssetReader, InputAssetReader>();
+            services.AddScoped<IInputAssetBatchRepository, InputAssetBatchRepository>();
             
             Console.WriteLine(_enviroment.IsDevelopment() ? "Development" : "Production");
 
@@ -33,6 +45,10 @@ namespace SandAndStones.Asset.Api
                                            .AllowCredentials();
                                   });
             });
+
+            services.AddScoped(
+                x => JsonSerializerService<EventItem>.Create(JsonSerializerServiceOptions.EventItemOptions));
+
 
             services.AddScoped<IMediator, Mediator>();
 

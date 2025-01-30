@@ -1,6 +1,6 @@
 import CollapsedFileList from "../components/CollapsedFileList";
 import { useEffect, useState } from "react";
-import { InputAssetBatch } from "../types/InputAssetBatch";
+import { AssetBatch } from "../types/AssetBatch";
 import { axiosInstance } from "../hooks/useAxios";
  
 interface ItemInfo {
@@ -23,9 +23,9 @@ function Assets() {
 
             try {
                 const response = await axiosInstance.get(`${import.meta.env.VITE_APP_BASE_URL}/asset-api/assetBatch/0`);
-                const inputAssetBatch = await response.data as InputAssetBatch;
+                const assetBatch = await response.data as AssetBatch;
 
-                const mappedItems = inputAssetBatch.assets.map(({ name, ...rest }) => {
+                const mappedItems = assetBatch.assets.map(({ name, ...rest }) => {
                     return {
                         name: name,
                         content: JSON.stringify(rest, null, 2)

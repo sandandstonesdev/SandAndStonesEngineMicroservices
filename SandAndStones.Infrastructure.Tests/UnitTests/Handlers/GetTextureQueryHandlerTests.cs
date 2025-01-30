@@ -1,9 +1,9 @@
 ﻿using Moq;
-using SandAndStones.Domain.Entities;
 using SandAndStones.App.Contracts.Repository;
 using SandAndStones.Infrastructure.Handlers.UseCases.Texture;
 using SandAndStones.App.UseCases.Texture.DownloadTextureByName;
 using SandAndStones.Infrastructure.Contracts;
+using SandAndStones.Domain.Entities.Texture;
 
 namespace SandAndStones.Infrastructure.Tests.UnitTests.Handlers
 {

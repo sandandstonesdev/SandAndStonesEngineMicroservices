@@ -1,10 +1,8 @@
-﻿using SandAndStones.Domain.Constants;
-using SandAndStones.Domain.Entities;
-using SandAndStones.Infrastructure.Contracts;
+﻿using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
 using SandAndStones.Infrastructure.Services.Bitmaps;
 
-namespace SandAndStones.Infrastructure.Services.Blob
+namespace SandAndStones.Infrastructure.Services.Textures
 {
     public class FileTextureService(IBitmapService bitmapService) : ITextureFileService
     {
@@ -15,14 +13,14 @@ namespace SandAndStones.Infrastructure.Services.Blob
             if (bitmap is null)
                 throw new FileNotFoundException($"Cannot read bitmap: {fileName}");
 
-            return new Bitmap
+            return await Task.FromResult(new Bitmap
             (
                 bitmap.Name,
                 bitmap.Width,
                 bitmap.Height,
                 _bitmapService.GetRawPixelsFromPng(bitmap.Data),
                 bitmap.ContentType
-            );
+            ));
         }
 
         public async Task<bool> DeleteAsync(string fileName)
@@ -33,7 +31,8 @@ namespace SandAndStones.Infrastructure.Services.Blob
         public async Task<Uri> UploadFileAsync(Bitmap bitmap, CancellationToken token = default)
         {
             _bitmapService.Write(bitmap);
-            return new Uri(_bitmapService.GetTextureImageFilePath(bitmap.Name));
+            return await Task.FromResult(
+                new Uri(_bitmapService.GetTextureImageFilePath(bitmap.Name)));
         }
     }
 
