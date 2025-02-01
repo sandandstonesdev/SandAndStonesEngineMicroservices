@@ -5,6 +5,7 @@ namespace SandAndStones.Infrastructure.Contracts
 {
     public interface ITextureFileService
     {
+        Task<IEnumerable<string>> ListTexturesAsync();
         Task<Bitmap> DownloadAsync(string fileName, CancellationToken token = default);
         Task<bool> DeleteAsync(string fileName);
         Task<Uri> UploadFileAsync(Bitmap bitmap, CancellationToken token = default);

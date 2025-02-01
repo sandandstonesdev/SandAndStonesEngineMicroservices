@@ -73,11 +73,7 @@ namespace SandAndStones.Infrastructure
                 {
                     var env = resolver.GetRequiredService<IHostEnvironment>();
 
-                    if (env.IsDevelopment())
-                    {
-                        return new BlobServiceClient(settings.BlobConnectionString);
-                    }
-                    else if (env.IsEnvironment("Local"))
+                    if (env.IsDevelopment() || env.IsEnvironment("Local"))
                     {
                         return new BlobServiceClient(settings.BlobConnectionString);
                     }

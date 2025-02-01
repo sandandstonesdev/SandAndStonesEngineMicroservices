@@ -25,10 +25,10 @@ spec:
         resources:
           requests:
             memory: "60Mi"
-            cpu: "250m" # same as 0.25
+            cpu: "250m"
           limits:
             memory: "100Mi"
-            cpu: "500m" # same as 0.5
+            cpu: "500m"
         securityContext:
           allowPrivilegeEscalation: false
 ---

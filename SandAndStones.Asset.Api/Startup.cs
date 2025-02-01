@@ -17,6 +17,7 @@ namespace SandAndStones.Asset.Api
     public class Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
     {
         private readonly IWebHostEnvironment _enviroment = enviroment;
+        private readonly IConfiguration _configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
@@ -29,17 +30,18 @@ namespace SandAndStones.Asset.Api
             services.AddSingleton(new BatchReaderConfig());
             services.AddTransient<IAsyncAssetReader, InputAssetReader>();
             services.AddScoped<IInputAssetBatchRepository, InputAssetBatchRepository>();
-            
-            Console.WriteLine(_enviroment.IsDevelopment() ? "Development" : "Production");
+
+            Console.WriteLine($"EnvironmentName: {_enviroment.EnvironmentName}");
+
+            var allowedOrigins = _configuration.GetSection("CorsOrigins:AllowedOrigins").Get<string[]>();
+            ArgumentNullException.ThrowIfNull(allowedOrigins, nameof(allowedOrigins));
 
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "AssetApiCorsPolicy",
                                   builder =>
                                   {
-                                      builder.WithOrigins(
-                                            "https://localhost:5000",
-                                            "https://sand-and-stones-gateway-0001.azurewebsites.net")
+                                      builder.WithOrigins(allowedOrigins)
                                            .AllowAnyHeader()
                                            .AllowAnyMethod()
                                            .AllowCredentials();
@@ -49,15 +51,19 @@ namespace SandAndStones.Asset.Api
             services.AddScoped(
                 x => JsonSerializerService<EventItem>.Create(JsonSerializerServiceOptions.EventItemOptions));
 
-
-            services.AddScoped<IMediator, Mediator>();
-
-            services.AddScoped<IRequestHandler<GetInputAssetBatchByIdQuery, GetInputAssetBatchByIdQueryResponse>, GetInputAssetBatchByIdQueryHandler>();
+            AddMediatRDependencies(services);
 
             services
                 .AddPresentation()
                 .AddHttpContextAccessor()
-                .AddProducerInfrastructure(configuration);
+                .AddProducerInfrastructure(_configuration);
+        }
+
+        private void AddMediatRDependencies(IServiceCollection services)
+        {
+            services.AddScoped<IMediator, Mediator>();
+
+            services.AddScoped<IRequestHandler<GetInputAssetBatchByIdQuery, GetInputAssetBatchByIdQueryResponse>, GetInputAssetBatchByIdQueryHandler>();
         }
     }
 }

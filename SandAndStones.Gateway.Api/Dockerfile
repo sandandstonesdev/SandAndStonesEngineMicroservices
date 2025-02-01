@@ -1,10 +1,12 @@
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS base
 WORKDIR /app
 
-ENV ASPNETCORE_ENVIRONMENT Local
+EXPOSE 80
+EXPOSE 443
 
 FROM mcr.microsoft.com/dotnet/sdk:9.0 AS build
 WORKDIR /src
+COPY ["Directory.Packages.props","/"]
 COPY ["SandAndStones.Infrastructure/SandAndStones.Infrastructure.csproj", "SandAndStones.Infrastructure/"]
 COPY ["SandAndStones.Domain/SandAndStones.Domain.csproj", "SandAndStones.Domain/"]
 COPY ["SandAndStones.App/SandAndStones.App.csproj", "SandAndStones.App/"]

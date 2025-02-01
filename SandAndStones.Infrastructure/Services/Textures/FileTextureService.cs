@@ -34,6 +34,11 @@ namespace SandAndStones.Infrastructure.Services.Textures
             return await Task.FromResult(
                 new Uri(_bitmapService.GetTextureImageFilePath(bitmap.Name)));
         }
+
+        public async Task<IEnumerable<string>> ListTexturesAsync()
+        {
+            return await Task.FromResult(_bitmapService.EnumerateBitmaps());
+        }
     }
 
 }
