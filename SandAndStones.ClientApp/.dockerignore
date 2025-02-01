@@ -1,0 +1,13 @@
+# Ignore log files
+*.log
+
+# Ignore Docker-related files
+Dockerfile
+docker-compose.yaml
+
+# Ignore other unnecessary files
+.git
+.gitignore
+.vscode
+.DS_Store
+Thumbs.db

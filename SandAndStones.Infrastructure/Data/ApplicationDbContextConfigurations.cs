@@ -3,7 +3,6 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 using SandAndStones.Infrastructure.Models;
-using System.Security.Claims;
 
 namespace SandAndStones.Infrastructure.Data
 {

@@ -8,19 +8,21 @@ namespace SandAndStones.EventLog.Api
     public class Startup(IConfiguration configuration, IWebHostEnvironment enviroment)
     {
         private readonly IWebHostEnvironment _enviroment = enviroment;
+        private readonly IConfiguration _configuration = configuration;
 
         public void ConfigureServices(IServiceCollection services)
         {
             Console.WriteLine($"EnvironmentName: {_enviroment.EnvironmentName}");
+
+            var allowedOrigins = _configuration.GetSection("CorsOrigins:AllowedOrigins").Get<string[]>();
+            ArgumentNullException.ThrowIfNull(allowedOrigins, nameof(allowedOrigins));
 
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "EventLogApiCorsPolicy",
                                   builder =>
                                   {
-                                      builder.WithOrigins(
-                                            "https://localhost:5000",
-                                            "https://sand-and-stones-gateway-0001.azurewebsites.net")
+                                      builder.WithOrigins(allowedOrigins)
                                            .AllowAnyHeader()
                                            .AllowAnyMethod()
                                            .AllowCredentials();
@@ -39,7 +41,7 @@ namespace SandAndStones.EventLog.Api
             services
                 .AddPresentation()
                 .AddHttpContextAccessor()
-                .AddConsumerInfrastructure(configuration);
+                .AddConsumerInfrastructure(_configuration);
         }
     }
 }

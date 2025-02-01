@@ -1,5 +1,4 @@
 ﻿using SandAndStones.App.Contracts.Repository;
-using SandAndStones.App.UseCases.Texture.UploadTexture;
 using SandAndStones.Domain.Entities.Texture;
 using SandAndStones.Infrastructure.Contracts;
 using SandAndStones.Infrastructure.Models;
@@ -26,6 +25,7 @@ namespace SandAndStones.Infrastructure.Repositories
         public async Task<Texture> UploadTexture(string name, int width, int height, byte[] data, string contentType)
         {
             var bitmap = new Bitmap(name, width, height, data, contentType);
+
             await _textureService.UploadFileAsync(bitmap);
             
             return new Texture(
@@ -34,6 +34,11 @@ namespace SandAndStones.Infrastructure.Repositories
                 bitmap.Height,
                 bitmap.Data,
                 bitmap.ContentType);
+        }
+
+        public async Task<IEnumerable<string>> ListTexturesAsync()
+        {
+            return await _textureService.ListTexturesAsync();
         }
     }
 }

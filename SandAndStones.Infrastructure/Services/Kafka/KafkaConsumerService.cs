@@ -63,6 +63,10 @@ namespace SandAndStones.Infrastructure.Services.Kafka
                     await Task.Delay(1000, stoppingToken);
                 }
             }
+            catch (Exception ex)
+            {
+                _logger.LogError($"Error consuming Kafka message: {ex.Message}");
+            }
             finally
             {
                 _consumer.Close();
