@@ -1,16 +1,38 @@
 networks:
     appnetwork:
         name: appnetwork
-        driver: bridge
+        driver: host
 
 volumes:
     app-db-data:
+    mongo-db-data:
          
 secrets:
   DEVPASS:
     environment: "DEVPASS"
 
 services:
+    clientapp:
+        build:
+            context: .
+            dockerfile: SandAndStones.ClientApp/Dockerfile
+        ports:
+            - "8080:8080"
+        networks:
+            - appnetwork
+        volumes:
+            - ./SandAndStones.ClientApp:/app
+            - /app/node_modules
+            - ./SandAndStones.ClientApp/cert.pem:/app/cert.pem:ro
+            - ./SandAndStones.ClientApp/key.pem:/app/key.pem:ro
+        environment:
+            NODE_ENV: production
+        stdin_open: true
+        tty: true
+        env_file:
+            - .env
+
+
     gatewayservice:
         image: gatewayservice
         build:
@@ -48,7 +70,7 @@ services:
             ASPNETCORE_HTTP_PORTS: 5295
             ASPNETCORE_HTTPS_PORTS: 7232
             ASPNETCORE_Kestrel__Certificates__Default__Password: ${DEVPASS}
-            ASPNETCORE_Kestrel__Certificates__Default__Path: /https/assetapp.pfx
+            ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
         ports: 
            - "7232:7232"
            - "5295:5295"
@@ -57,7 +79,7 @@ services:
         networks:
             - appnetwork
         volumes:
-        - ./assetapp.pfx:/https/assetapp.pfx:ro
+        - ./aspnetapp.pfx:/https/aspnetapp.pfx:ro
     
     textureservice:
         image: textureservice
@@ -68,16 +90,17 @@ services:
               - DEVPASS
         environment:
             ASPNETCORE_ENVIRONMENT: Local
-            ASPNETCORE_URLS: https://+:7232;http://+:5295
-            ASPNETCORE_HTTP_PORTS: 5295
-            ASPNETCORE_HTTPS_PORTS: 7232
+            ASPNETCORE_URLS: https://+:7077;http://+:5018
+            ASPNETCORE_HTTP_PORTS: 5018
+            ASPNETCORE_HTTPS_PORTS: 7077
             ASPNETCORE_Kestrel__Certificates__Default__Password: ${DEVPASS}
             ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
         ports: 
-           - "7232:7232"
-           - "5295:5295"
+           - "7077:7077"
+           - "5018:5018"
         depends_on:
            - mssql-server
+           - texture-blob-storage
         networks:
             - appnetwork
         volumes:
@@ -92,14 +115,16 @@ services:
               - DEVPASS
         environment:
             ASPNETCORE_ENVIRONMENT: Local
-            ASPNETCORE_URLS: https://+:7180;http://+:5226
-            ASPNETCORE_HTTP_PORTS: 5226
-            ASPNETCORE_HTTPS_PORTS: 7180
+            ASPNETCORE_URLS: https://+:7004;http://+:5215
+            ASPNETCORE_HTTP_PORTS: 5215
+            ASPNETCORE_HTTPS_PORTS: 7004
             ASPNETCORE_Kestrel__Certificates__Default__Password: ${DEVPASS}
             ASPNETCORE_Kestrel__Certificates__Default__Path: /https/aspnetapp.pfx
         ports: 
-           - "7180:7180"
-           - "5226:5226"
+           - "7004:7004"
+           - "5215:5215"
+        depends_on:
+          - mongodb
         networks:
             - appnetwork
         volumes:
@@ -123,11 +148,24 @@ services:
         networks:
             - appnetwork
 
-    sandandstones-texture-blob-storage:
+    texture-blob-storage:
       image: mcr.microsoft.com/azure-storage/azurite:latest
-      container_name: sandandstones.texture.blob-storage
+      container_name: sandandstones-texture.blob-storage
       volumes:
       - ./.container/blob_storage/data:/data
       ports:
-      - "10000:10000"
-      command: "azurite-blob --blobhost 0.0.0.0 -l /data"
+      - "20000:10000"
+      command: "azurite-blob -- --blobhost 0.0.0.0:20000 -l /data"
+
+    mongodb:
+        image: mongo:latest
+        container_name: mongodb
+        environment:
+          MONGO_INITDB_ROOT_USERNAME: root
+          MONGO_INITDB_ROOT_PASSWORD: example
+        volumes:
+          - mongo-db-data:/data/db
+        ports:
+          - 27017:27017
+        networks:
+            - appnetwork

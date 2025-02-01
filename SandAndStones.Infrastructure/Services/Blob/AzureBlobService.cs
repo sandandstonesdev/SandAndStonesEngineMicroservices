@@ -24,17 +24,18 @@ namespace SandAndStones.Infrastructure.Services.Blob
             }
         }
 
-        public async Task<IAsyncEnumerable<BlobItem>> ListBlobsAsync()
+        public async Task<IEnumerable<string>> ListTexturesAsync()
         {
             var container = _blobServiceClient.GetBlobContainerClient(containerName);
             var blobs = container.GetBlobsAsync();
-
+            var blobNames = new List<string>();
+            
             await foreach (var blob in blobs)
             {
-                Console.WriteLine("Blob name: {0}", blob.Name);
+                blobNames.Add(blob.Name);
             }
 
-            return blobs;
+            return blobNames;
         }
 
         public async Task<Bitmap> DownloadAsync(string fileName, CancellationToken token = default)

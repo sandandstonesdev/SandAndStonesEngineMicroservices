@@ -26,14 +26,28 @@ namespace SandAndStones.Infrastructure.Services.Textures
 
         private async Task<bool> SeedTextures()
         {
-            foreach (var textureName in _bitmapService.EnumerateBitmaps())
+            try
             {
-                var bitmap = _bitmapService.Read(textureName);
-                var result = await textureRepository.UploadTexture(bitmap.Name, bitmap.Width, bitmap.Height, bitmap.Data, MediaType.ImagePng);
-                if (!result.Loaded)
+                var existingTextures = await textureRepository.ListTexturesAsync();
+
+                foreach (var textureName in _bitmapService.EnumerateBitmaps())
                 {
-                    return false;
+                    if (existingTextures.Contains(textureName))
+                        continue;
+
+                    var bitmap = _bitmapService.Read(textureName);
+                    var result = await textureRepository.UploadTexture(bitmap.Name, bitmap.Width, bitmap.Height, bitmap.Data, MediaType.ImagePng);
+                    if (!result.Loaded)
+                    {
+                        return false;
+                    }
                 }
+
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("Error while seeding textures: " + ex.Message);
+                return false;
             }
 
             return true;

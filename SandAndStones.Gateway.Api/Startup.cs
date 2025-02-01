@@ -19,40 +19,31 @@ namespace SandAndStones.Gateway.Api
 
         public void ConfigureServices(IServiceCollection services)
         {
-            var server = _configuration["DbServer"] ?? "";
-            var port = _configuration["DbPort"] ?? "";
-            var user = _configuration["DbUser"] ?? "";
-            var password = _configuration["DbPass"] ?? "";
-            var dbName = _configuration["DbName"] ?? "";
-
-            var connectionString = _enviroment.IsDevelopment() ?
-                _configuration.GetConnectionString("AppDbConnectionString") :
-                $"Server={server}, {port}; Database={dbName}; User Id={user}; Password={password};TrustServerCertificate=true";
-
-            _ = connectionString ?? throw new InvalidOperationException("Connection string not found."); ;
-
+            var connectionString = _configuration.GetConnectionString("AppDbConnectionString");
+            ArgumentException.ThrowIfNullOrWhiteSpace(connectionString, "Connection string not found.");
+            
             Console.WriteLine(connectionString);
-            Console.WriteLine(_enviroment.IsDevelopment() ? "Development" : "Production");
+            Console.WriteLine($"Environment: {_enviroment.EnvironmentName}");
 
             services.AddDbContext<ApplicationDbContext>(options =>
             {
                 options.UseSqlServer(connectionString,
                     options => {
                         options.MigrationsAssembly(typeof(ApplicationDbContext).Assembly.FullName);
-                        options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(7), null);
+                        options.EnableRetryOnFailure(5, TimeSpan.FromSeconds(5), null);
                     });
             });
+
+            var allowedOrigins = _configuration.GetSection("CorsOrigins:AllowedOrigins").Get<string[]>();
+            ArgumentNullException.ThrowIfNull(allowedOrigins, nameof(allowedOrigins));
 
             services.AddCors(options =>
             {
                 options.AddPolicy(name: "GatewayApiCorsPolicy",
                                   builder =>
                                   {
-                                      var corsOrigin = _configuration["JwtSettings:Issuer"] ?? "https://localhost:5173";
                                       builder
-                                          .WithOrigins(corsOrigin,
-                                                       "https://localhost:5000",
-                                                       "https://sand-and-stones-client-app-0001-cyg9asb6eahgf6ab.canadacentral-01.azurewebsites.net")
+                                          .WithOrigins(allowedOrigins)
                                           .AllowAnyHeader()
                                           .AllowAnyMethod()
                                           .AllowCredentials();
@@ -61,6 +52,15 @@ namespace SandAndStones.Gateway.Api
 
             services.AddAuthDependencies(_configuration);
 
+            AddMediatRDependencies(services);
+
+            services
+                .AddPresentation()
+                .AddHttpContextAccessor();
+        }
+
+        private void AddMediatRDependencies(IServiceCollection services)
+        {
             services.AddScoped<IMediator, Mediator>();
 
             services.AddScoped<IRequestHandler<LoginUserQuery, LoginUserQueryResponse>, LoginUserQueryHandler>();
@@ -70,10 +70,6 @@ namespace SandAndStones.Gateway.Api
             services.AddScoped<IRequestHandler<CheckCurrentTokenValidityQuery, CheckCurrentTokenValidityQueryResponse>, CheckCurrentTokenValidityQueryHandler>();
             services.AddScoped<IRequestHandler<GetUserInfoQuery, GetUserInfoQueryResponse>, GetUserInfoQueryHandler>();
             services.AddScoped<IRequestHandler<GetUserProfileQuery, GetUserProfileQueryResponse>, GetUserProfileQueryHandler>();
-
-            services
-                .AddPresentation()
-                .AddHttpContextAccessor();
         }
     }
 }

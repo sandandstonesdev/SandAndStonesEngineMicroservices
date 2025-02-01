@@ -25,7 +25,8 @@ namespace SandAndStones.Infrastructure.Services.Kafka
             {
                 BootstrapServers = _bootstrapServers,
                 ClientId = _clientId,
-                Acks = Acks.All
+                Acks = Acks.All,
+                AllowAutoCreateTopics = true,
             };
 
             _producer = new ProducerBuilder<Null, string>(producerconfig).Build();
